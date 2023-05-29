@@ -1,18 +1,17 @@
 package com.cloud0072.apigrid.datasheet.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Datasheet {
+@Builder
+@EqualsAndHashCode
+public class Datasheet implements Serializable {
 
     @Id
     private String dstId;

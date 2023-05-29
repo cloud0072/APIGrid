@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.common.domain;
 
+import com.cloud0072.apigrid.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 
@@ -55,7 +55,7 @@ public class AjaxResult extends HashMap<String, Object> {
     public AjaxResult(int code, String msg, Object data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
-        if (StringUtils.isEmpty(data)) {
+        if (StringUtils.isNotNull(data)) {
             super.put(DATA_TAG, data);
         }
     }

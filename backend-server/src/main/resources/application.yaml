@@ -44,9 +44,7 @@ spring:
   # mongodb
   data:
     mongodb:
-      uri: mongodb://192.168.4.234:27017/apigrid
-      username: admin
-      password: S2AbuXsMUDHCzMQM
+      uri: mongodb://admin:S2AbuXsMUDHCzMQM@192.168.4.234:27017/apigrid
 
 # token配置
 token:
