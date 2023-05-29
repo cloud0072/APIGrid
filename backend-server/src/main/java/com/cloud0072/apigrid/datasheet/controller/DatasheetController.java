@@ -28,7 +28,7 @@ public class DatasheetController {
         return AjaxResult.success(result);
     }
 
-    @PatchMapping
+    @PutMapping
     public AjaxResult update(@RequestBody Datasheet datasheet) {
         Datasheet result = datasheetRepository.save(datasheet);
         return AjaxResult.success(result);
