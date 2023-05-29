@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  # backend-server:
+  #   image: ${IMAGE_REGISTRY}/${IMAGE_BACKEND_SERVER}
+  #   pull_policy: ${IMAGE_PULL_POLICY:if_not_present}
+  #   container_name: apigrid-backend-server
+  #   restart: always
+  #   env_file:
+  #     - "${ENV_FILE:-.env}"
+  #   ports:
+  #     - "9020:8080"
+  #   environment:
+  #     - TZ=${TIMEZONE}
+  #   networks:
+  #     - apigrid
+  #   volumes:
+  #     - ~/docker/backend-server/bin:/app/bin
+  #     - ~/docker/backend-server/logs:/app/logs
+  #     - ~/docker/backend-server/uploads:/app/uploads
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -sS 'http://localhost:8080' || exit 1"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     start_period: 30s
+  #     retries: 60
+
+  mongo-server:
+    image: ${IMAGE_REGISTRY}/${IMAGE_MONGODB_SERVER}
+    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    container_name: mongo-server
+    restart: always
+    env_file:
+      - "${ENV_FILE:-.env}"
+    ports:
+      - "27017:27017"
+    environment:
+      - TZ=${TIMEZONE}
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=S2AbuXsMUDHCzMQM
+    networks:
+      - apigrid
+    volumes:
+      - ~/docker/mongo-server:/data/mongodb
+    command: --wiredTigerCacheSizeGB 4 --auth # 限制内存大小, 需要认证
+
+  mongo-express:
+    image: ${IMAGE_REGISTRY}/${IMAGE_MONGO_EXPRESS_SERVER}
+    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "9021:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=S2AbuXsMUDHCzMQM
+      - ME_CONFIG_MONGODB_SERVER=192.168.4.234
+
+networks:
+  apigrid:
+    name: apigrid_default
+    driver: bridge
