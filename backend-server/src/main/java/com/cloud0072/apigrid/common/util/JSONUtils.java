@@ -49,7 +49,7 @@ public class JSONUtils {
 
     public static String parseJSONArray2String(JSONArray array) {
         if (array != null) {
-            return array.stream().map(o -> (String)o).collect(Collectors.joining(","));
+            return array.stream().map(o -> (String) o).collect(Collectors.joining(","));
         }
         return "";
     }

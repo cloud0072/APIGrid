@@ -1,10 +1,10 @@
 package com.cloud0072.apigrid.framework.security;
 
 import com.cloud0072.apigrid.common.domain.AjaxResult;
-import com.cloud0072.apigrid.framework.domain.LoginUser;
 import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
+import com.cloud0072.apigrid.framework.domain.User;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -31,10 +31,10 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
      */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser)) {
+        User user = tokenService.getUser(request);
+        if (StringUtils.isNotNull(user)) {
             // 删除用户缓存记录
-            tokenService.delLoginUser(loginUser.getToken());
+            tokenService.delUser(user.getToken());
             // 记录用户退出日志
 //            String userName = loginUser.getUsername();
 //            AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, "退出成功"));

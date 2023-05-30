@@ -4,7 +4,7 @@ import com.cloud0072.apigrid.common.constant.Constants;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.domain.LoginBody;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
-import com.cloud0072.apigrid.framework.service.LoginService;
+import com.cloud0072.apigrid.framework.service.impl.LoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 登录验证
- *
- * @author ruoyi
  */
 @RestController
 public class LoginController {
 
     @Autowired
-    private LoginService loginService;
+    private LoginServiceImpl loginService;
 
     /**
      * 登录方法
@@ -44,7 +42,7 @@ public class LoginController {
      */
     @GetMapping("getUserInfo")
     public AjaxResult getUserInfo() {
-        return AjaxResult.success(SecurityUtils.getLoginUser());
+        return AjaxResult.success(SecurityUtils.getUser());
     }
 
 }
