@@ -1,6 +1,7 @@
 package com.cloud0072.apigrid.framework.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
@@ -65,19 +66,25 @@ public class User extends BaseEntity implements UserDetails {
     protected String updateBy;
 
     /* ========  不保存  ======= */
+    @TableField(exist = false)
     private String token;
 
+    @TableField(exist = false)
     private Long loginTime;
 
+    @TableField(exist = false)
     private Long expireTime;
 
+    @TableField(exist = false)
     private String ipaddr;
 
+    @TableField(exist = false)
     private String browser;
 
     /**
      * 关联成员 / 空间站
      */
+    @TableField(exist = false)
     private List<UnitMember> memberList;
 
     public User(String username, String password) {

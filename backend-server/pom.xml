@@ -21,6 +21,7 @@
         <hutool.version>5.7.3</hutool.version>
         <jwt.version>0.9.1</jwt.version>
         <lombok.version>1.18.24</lombok.version>
+        <p6spy.version>3.9.1</p6spy.version>
         <mysql.version>8.0.29</mysql.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
     </properties>
@@ -111,6 +112,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
         </dependency>
 
         <dependency>
