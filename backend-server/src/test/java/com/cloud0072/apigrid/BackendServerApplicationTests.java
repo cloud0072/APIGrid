@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
-import java.util.Map;
 
 @SpringBootTest
 class BackendServerApplicationTests {
@@ -66,7 +65,8 @@ class BackendServerApplicationTests {
     public void testPageUser() {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.select("user_id", "username").like("username", "01");
-        Page page = userMapper.selectMapsPage(new Page<>(1, 10), wrapper);
+//        Page page = userMapper.selectMapsPage(new Page<>(1, 10), wrapper);
+        Page<User> page = userMapper.selectPage(new Page<>(1, 10), wrapper);
         System.out.println(JSONUtils.toJSONString(page));
     }
 

@@ -1,9 +1,11 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cloud0072.apigrid.common.exception.ServiceException;
 import com.cloud0072.apigrid.common.util.StringUtils;
 import com.cloud0072.apigrid.framework.domain.User;
 import com.cloud0072.apigrid.framework.mapper.UserMapper;
+import com.cloud0072.apigrid.framework.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements BaseService<User, Long>, UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -72,4 +74,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    @Override
+    public BaseMapper<User> getMapper() {
+        return userMapper;
+    }
 }
