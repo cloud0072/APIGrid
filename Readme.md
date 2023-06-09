@@ -22,10 +22,15 @@
 
 5 尽量复刻一个小组件功能
 
-###3 备注
+### 3 备注
 
 更新特别慢，并且没有必要的约束
 
-###4 证书
+### 4 证书
 
 MIT2.0
+
+roadmap 1 初始化前端部分
+
+2 加入batchInsert
+https://gitee.com/baomidou/mybatis-plus-samples/tree/master/mybatis-plus-sample-deluxe
