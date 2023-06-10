@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
 import com.cloud0072.apigrid.common.exception.ServiceException;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.security.context.AuthenticationContextHolder;
 import com.cloud0072.apigrid.framework.service.LoginService;
 import com.cloud0072.apigrid.framework.service.TokenService;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -61,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
         } finally {
             AuthenticationContextHolder.clearContext();
         }
-        User user = (User) authentication.getPrincipal();
+        LoginUser user = (LoginUser) authentication.getPrincipal();
         // 生成token
         return tokenService.createToken(user);
     }
@@ -81,7 +80,7 @@ public class LoginServiceImpl implements LoginService {
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         // 生成令牌
-        return tokenService.createToken((User)user);
+        return tokenService.createToken((LoginUser) user);
     }
 
 }

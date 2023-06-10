@@ -2,19 +2,13 @@ import {useRefreshInitialState} from '@/models';
 import Actions from '@/pages/login/components/Actions';
 import FormLoginByPhone from '@/pages/login/components/FormLoginByPhone';
 import FormLoginByPwd from '@/pages/login/components/FormLoginByPwd';
-import type {SmsLoginBo, UserNameLoginBo} from '@/services/system/data-contracts';
-import {sysLoginPostLogin} from '@/services/system/Login';
+import {sysUserLogin} from '@/services/framework/Login';
 import {setToken, StorageType} from '@/utils';
 import {LoginFormPage, ProFormCheckbox} from '@ant-design/pro-components';
-import {useRequest} from 'ahooks';
 import {message, Tabs} from 'antd';
 import type {FC} from 'react';
 import {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
-
-interface FormData extends UserNameLoginBo, SmsLoginBo {
-  autoLogin: boolean;
-}
 
 enum LoginType {
   MOBILE = 'MOBILE',
@@ -37,14 +31,14 @@ const PageLogin: FC = () => {
     navigate(searchParams.get('redirect') ?? '/');
   };
 
-  const loginByUsername = async (autoLogin: boolean, data: UserNameLoginBo) => {
+  const loginByUsername = async (autoLogin: boolean, data: any) => {
 
-    const {token} = await sysLoginPostLogin({...data, code: ''}, {secure: false});
+    const {token} = await sysUserLogin({...data, code: ''}, {secure: false});
 
     await handleLoginSuccess(autoLogin, token);
   };
 
-  const submit = async (e: FormData) => {
+  const submit = async (e: any) => {
     try {
       const {autoLogin, ...formData} = e;
 
@@ -68,7 +62,7 @@ const PageLogin: FC = () => {
 
   return (
     <div className="h-[100vh]">
-      <LoginFormPage<FormData>
+      <LoginFormPage<any>
         backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
         logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
         title="APIGrid"

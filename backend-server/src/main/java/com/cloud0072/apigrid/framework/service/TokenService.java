@@ -1,24 +1,24 @@
 package com.cloud0072.apigrid.framework.service;
 
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface TokenService {
 
-    User getUser(HttpServletRequest request);
+    LoginUser getUser(HttpServletRequest request);
 
-    void setUser(User user);
+    void setUser(LoginUser user);
 
     void delUser(String token);
 
-    String createToken(User user);
+    String createToken(LoginUser user);
 
-    void verifyToken(User user);
+    void verifyToken(LoginUser user);
 
-    void refreshToken(User user);
+    void refreshToken(LoginUser user);
 
-    void setUserAgent(User user);
+    void setUserAgent(LoginUser user);
 
     String getUsernameFromToken(String token);
 }

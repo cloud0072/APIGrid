@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cloud0072.apigrid.common.constant.Constants;
 import com.cloud0072.apigrid.common.util.SpringUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +51,7 @@ public class BasicAuthenticationFilter implements Filter {
             }
         } else if (!StringUtils.isEmpty(auth) && auth.contains(Constants.TOKEN_PREFIX)) {
             try {
-                User user = tokenService.getUser(request);
+                LoginUser user = tokenService.getUser(request);
                 if (StringUtils.isNotNull(user)) {
                     tokenService.verifyToken(user);
                     chain.doFilter(request, response);

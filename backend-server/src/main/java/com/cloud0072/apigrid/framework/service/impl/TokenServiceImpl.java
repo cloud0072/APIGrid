@@ -7,7 +7,7 @@ import com.cloud0072.apigrid.common.util.IdUtils;
 import com.cloud0072.apigrid.common.util.IpUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
@@ -56,7 +56,7 @@ public class TokenServiceImpl implements TokenService {
      * @return 用户信息
      */
     @Override
-    public User getUser(HttpServletRequest request) {
+    public LoginUser getUser(HttpServletRequest request) {
         // 获取请求携带的令牌
         String token = getToken(request);
         if (StringUtils.isNotEmpty(token)) {
@@ -65,7 +65,7 @@ public class TokenServiceImpl implements TokenService {
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                User user = redisCache.getCacheObject(userKey);
+                LoginUser user = redisCache.getCacheObject(userKey);
                 return user;
             } catch (Exception e) {
             }
@@ -77,7 +77,7 @@ public class TokenServiceImpl implements TokenService {
      * 设置用户身份信息
      */
     @Override
-    public void setUser(User user) {
+    public void setUser(LoginUser user) {
         if (StringUtils.isNotNull(user) && StringUtils.isNotEmpty(user.getToken())) {
             refreshToken(user);
         }
@@ -101,7 +101,7 @@ public class TokenServiceImpl implements TokenService {
      * @return 令牌
      */
     @Override
-    public String createToken(User user) {
+    public String createToken(LoginUser user) {
         String token = IdUtils.fastUUID();
         user.setToken(token);
         setUserAgent(user);
@@ -119,7 +119,7 @@ public class TokenServiceImpl implements TokenService {
      * @return 令牌
      */
     @Override
-    public void verifyToken(User user) {
+    public void verifyToken(LoginUser user) {
         long expireTime = user.getExpireTime();
         long currentTime = System.currentTimeMillis();
         if (expireTime - currentTime <= MILLIS_MINUTE_TEN) {
@@ -133,7 +133,7 @@ public class TokenServiceImpl implements TokenService {
      * @param user 登录信息
      */
     @Override
-    public void refreshToken(User user) {
+    public void refreshToken(LoginUser user) {
         user.setLoginTime(System.currentTimeMillis());
         user.setExpireTime(user.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
@@ -147,7 +147,7 @@ public class TokenServiceImpl implements TokenService {
      * @param user 登录信息
      */
     @Override
-    public void setUserAgent(User user) {
+    public void setUserAgent(LoginUser user) {
         UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         String ip = IpUtils.getIpAddr();
         user.setIpaddr(ip);

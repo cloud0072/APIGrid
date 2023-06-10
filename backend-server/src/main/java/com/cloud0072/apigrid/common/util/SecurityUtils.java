@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.common.util;
 
 import com.cloud0072.apigrid.common.exception.ServiceException;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,9 +38,9 @@ public class SecurityUtils {
     /**
      * 获取用户
      **/
-    public static User getUser() {
+    public static LoginUser getUser() {
         try {
-            return (User) getAuthentication().getPrincipal();
+            return (LoginUser) getAuthentication().getPrincipal();
         } catch (Exception e) {
             throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED.value());
         }

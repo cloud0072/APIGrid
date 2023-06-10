@@ -25,6 +25,8 @@ public class UnitMember extends BaseEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    private Long userId;
+
     /**
      * 空间站Id
      */
@@ -35,20 +37,20 @@ public class UnitMember extends BaseEntity {
      */
     private String memberName;
 
-    private Integer isLocked;
-
     private Integer isAdmin;
 
-    protected Integer isDeleted;
+    private Integer isLocked;
+
+    private Integer isDeleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
+    private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date updateTime;
+    private Date updateTime;
 
-    protected String createBy;
+    private String createBy;
 
-    protected String updateBy;
+    private String updateBy;
 
 }

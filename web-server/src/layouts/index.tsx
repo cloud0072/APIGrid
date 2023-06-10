@@ -15,6 +15,7 @@ import Logo from '@/assets/logo.svg';
 import {Transition} from "react-transition-group";
 import './index.less';
 import {useTheme} from "@/hooks/useTheme";
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 const Layouts: FC = () => {
   const {pathname} = useLocation();
@@ -26,7 +27,6 @@ const Layouts: FC = () => {
     return <Navigate to="/login" replace/>;
   }
   const routeSettingMap: Record<string, RouteSetting> = initialState?.routeSettingMap ?? {};
-
   const keepAliveElements = useRef<KeepAliveElements>({});
   const currRouteSettingsKey = Object.keys(routeSettingMap).find((key) => matchPath(key, pathname));
   const isKeepAlive = currRouteSettingsKey ? routeSettingMap[currRouteSettingsKey].isKeepAlive : false;
@@ -52,7 +52,6 @@ const Layouts: FC = () => {
   };
   const appConfig = useAppConfig();
   const [collapsed, setCollapsed] = useState(true);
-
   const {themeMode, themeColors} = useTheme()
   const layoutToken = useMemo(() => {
     return {
@@ -68,8 +67,13 @@ const Layouts: FC = () => {
         colorHeaderTitle: 'hsla(0,0%,100%,.85)',
       },
       sider: {
+        // 展开时样式
         colorMenuBackground: themeColors.colorBgMenu,
         colorBgMenuItemSelected: themeColors.colorBgMenuItemSelected,
+        // 折叠时的样式
+        colorBgMenuItemCollapsedElevated: themeColors.colorBgMenu,
+        colorBgMenuItemCollapsedSelected: themeColors.colorBgMenuItemSelected,
+        colorBgMenuItemCollapsedHover: 'hsla(0,0%,100%,.85)',
         colorMenuItemDivider: 'hsla(0,0%,100%,.08)',
         colorTextMenu: 'hsla(0,0%,100%,.85)',
         colorTextMenuActive: 'hsla(0,0%,100%,.85)',
@@ -79,9 +83,14 @@ const Layouts: FC = () => {
     }
   }, [themeMode])
 
+  const settings = useMemo(() => {
+    return {}
+  }, [])
+
   return (
     <ProLayout
       layout="mix"
+      fixedHeader={false}
       loading={isLoading}
       location={{pathname}}
       menu={{loading: isLoading}}
@@ -135,11 +144,11 @@ const Layouts: FC = () => {
         </div>
       )}
     >
-      <TabsHeader
+      {/*<TabsHeader
         currRouteSettings={currRouteSettingsKey ? routeSettingMap[currRouteSettingsKey] : undefined}
         refreshElementByKey={refreshElementByKey}
         removeElementByKey={removeElementByKey}
-      />
+      />*/}
       {!isLoading && (
         <Access accessible={!!currRouteSettingsKey} fallback={<PermissionDenied/>}>
           {Object.entries(keepAliveElements.current).map(([key, element]) => (
@@ -154,6 +163,7 @@ const Layouts: FC = () => {
           )}
         </Access>
       )}
+
     </ProLayout>
   );
 };

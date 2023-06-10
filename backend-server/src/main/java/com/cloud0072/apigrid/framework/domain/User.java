@@ -26,7 +26,7 @@ import java.util.List;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName(keepGlobalPrefix = true, value = "user")
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity {
 
     /**
      * 用户ID
@@ -45,6 +45,10 @@ public class User extends BaseEntity implements UserDetails {
 
     private String email;
 
+    private String avatar;
+
+    private String nickName;
+
     /**
      * 状态 0 未锁定 1 锁定
      */
@@ -53,97 +57,17 @@ public class User extends BaseEntity implements UserDetails {
     /**
      * isEnabled
      */
-    protected Integer isDeleted;
+    private Integer isDeleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
+    private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date updateTime;
+    private Date updateTime;
 
-    protected String createBy;
+    private String createBy;
 
-    protected String updateBy;
-
-    /* ========  不保存  ======= */
-    @TableField(exist = false)
-    private String token;
-
-    @TableField(exist = false)
-    private Long loginTime;
-
-    @TableField(exist = false)
-    private Long expireTime;
-
-    @TableField(exist = false)
-    private String ipaddr;
-
-    @TableField(exist = false)
-    private String browser;
-
-    /**
-     * 关联成员 / 空间站
-     */
-    @TableField(exist = false)
-    private List<UnitMember> memberList;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @JsonIgnore
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * 账户是否未过期,过期无法验证
-     */
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    /**
-     * 指示是否已过期的用户的凭据(密码),过期的凭据防止认证
-     *
-     * @return
-     */
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    /**
-     * 指定用户是否解锁,锁定的用户无法进行身份验证
-     *
-     * @return
-     */
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.isLocked == 0;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
-        return this.isDeleted == 0;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+    private String updateBy;
 
     @Override
     public Long getId() {

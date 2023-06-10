@@ -72,7 +72,7 @@ public class MybatisPlusConfig {
             public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
                 List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
                 InsertBatchSomeColumn insertBatchSomeColumn = new InsertBatchSomeColumn(t ->
-                        !StrUtil.equalsAny(t.getProperty(), "createdTime", "updatedTime", "isDeleted"));
+                        !StrUtil.equalsAny(t.getProperty(), "createTime", "updateTime", "isDeleted"));
                 methodList.add(insertBatchSomeColumn);
                 return methodList;
             }

@@ -13,6 +13,8 @@ export const App: FC = () => {
 
   const {themeMode, themeColors} = useTheme();
   const theme = useMemo(() => {
+    const html = document.querySelector('html');
+    html?.setAttribute('data-theme', "light");
     console.log('themeMode', themeMode)
     return {
       token: {

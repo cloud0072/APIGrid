@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {throttle} from "lodash-es";
+import {debounce} from "lodash-es";
 
 // 全局变量
 // const atomPageHeight = atom<number>(0)
@@ -14,8 +14,6 @@ export type sizeType = {
 }
 
 export const useResize = () => {
-  // const setAtomPageHeight = useSetAtomPageHeight();
-  // const pageHeight = useAtomValuePageHeight();
   const [pageSize, setPageSize] = useState<sizeType>({
     clientHeight: 0,
     clientWidth: 0,
@@ -23,22 +21,23 @@ export const useResize = () => {
     width: 0,
   })
 
-  const getSize = () => {
+  const getPageSize = () => {
     const {clientHeight, clientWidth} = document.documentElement;
-    setPageSize(() => ({
+    const pageSize = {
       clientHeight,
       clientWidth,
-      height: clientHeight - 120, //head 56 + tab 40 + padding 12 * 2
-      width: clientWidth - 272, // menu 248 + padding 12 * 2
-    }))
+      height: clientHeight - 56, //head 56 + tab 40 + padding 12 * 2
+      width: clientWidth - 248, // menu 248 + padding 12 * 2
+    };
+    // console.log('getPageSize', pageSize);
+    // console.log('getPageSize', Date.now());
+    setPageSize(() => pageSize)
   };
 
   useEffect(() => {
-    getSize();
-    window.onresize = throttle(getSize, 100);
+    getPageSize();
+    window.onresize = debounce(getPageSize, 10);
   }, [])
 
-  return {
-    pageSize
-  }
+  return pageSize
 }

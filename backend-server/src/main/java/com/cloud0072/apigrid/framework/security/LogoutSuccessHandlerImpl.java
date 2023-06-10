@@ -4,7 +4,7 @@ import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
      */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        User user = tokenService.getUser(request);
+        LoginUser user = tokenService.getUser(request);
         if (StringUtils.isNotNull(user)) {
             // 删除用户缓存记录
             tokenService.delUser(user.getToken());

@@ -36,8 +36,8 @@ public class Asset extends BaseEntity {
     private String md5;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
+    private Date createTime;
 
-    protected String createBy;
+    private String createBy;
 
 }

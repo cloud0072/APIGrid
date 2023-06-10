@@ -3,23 +3,7 @@ import Layouts from '@/layouts';
 import {lazyLoad} from '@/utils';
 import type {RouteObject} from 'react-router-dom';
 
-const customRoutes: RouteObject[] = [
-  {
-    path: 'demo',
-    children: [
-      {
-        path: 'demo',
-        element: lazyLoad('demo/demo'),
-      },
-      {
-        path: 'tree',
-        element: lazyLoad('demo/tree'),
-      },
-    ],
-  },
-];
-
-export const layoutRoutes: RouteObject[] = [
+export const routes: RouteObject[] = [
   {
     path: '/',
     errorElement: <RouteError/>,
@@ -36,15 +20,14 @@ export const layoutRoutes: RouteObject[] = [
             path: 'user',
             element: lazyLoad('system/user'),
           },
+          {
+            path: 'role',
+            element: lazyLoad('system/role'),
+          },
         ]
       },
-      ...customRoutes,
     ],
   },
-];
-
-export const routes: RouteObject[] = [
-  ...layoutRoutes,
   {
     path: 'login',
     element: lazyLoad('login'),

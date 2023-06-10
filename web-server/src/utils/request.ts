@@ -156,7 +156,7 @@ export function request({secure, path, type, query, format, body, skipErrorHandl
     const code = axiosResponse.data?.code;
 
     if (code === 200) {
-      return axiosResponse.data?.data ?? axiosResponse.data;
+      return axiosResponse.data;
     }
 
     if (code === 401) {

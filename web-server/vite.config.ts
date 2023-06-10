@@ -15,7 +15,11 @@ export default defineConfig(({mode}) => {
 
   return {
     base: baseMap[mode],
+    server: {
+      port: 8000
+    },
     plugins: [
+      // reactRefresh(),
       react({babel: {plugins: [jotaiDebugLabel, jotaiReactRefresh]}}),
       {
         ...visualizer({
@@ -32,7 +36,7 @@ export default defineConfig(({mode}) => {
       }),
     ],
     resolve: {
-      alias: [{find: '@/', replacement: '/src/'}],
+      alias: [{find: '@/', replacement: '/src/'}, {find: '~@/', replacement: '/src/'}],
     },
     css: {
       preprocessorOptions: {

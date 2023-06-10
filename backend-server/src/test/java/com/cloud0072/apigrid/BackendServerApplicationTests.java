@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.framework.domain.User;
 import com.cloud0072.apigrid.framework.mapper.UserMapper;
+import com.cloud0072.apigrid.framework.service.UnitMemberService;
+import com.cloud0072.apigrid.framework.vo.UserVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
@@ -19,10 +20,28 @@ class BackendServerApplicationTests {
     @Autowired
     private UserMapper userMapper;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private UnitMemberService unitMemberService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
-    void contextLoads() {
+    void testAddMember() {
+        UserVo userVo = UserVo.builder()
+                .userId(1L)
+                .username("admin")
+                .password("admin")
+                .mobile("18638731263")
+                .email("352419394@qq.com")
+                .nickName("管理员")
+                .isLocked(0)
+                .isDeleted(0)
+                .createTime(new Date())
+                .updateTime(new Date())
+
+                .build();
+        unitMemberService.addMember(userVo);
     }
 
     @Test
@@ -33,6 +52,7 @@ class BackendServerApplicationTests {
                 .password(passwordEncoder.encode("admin"))
                 .mobile("18638731263")
                 .email("352419394@qq.com")
+                .nickName("管理员")
                 .isLocked(0)
                 .isDeleted(0)
                 .createTime(new Date())

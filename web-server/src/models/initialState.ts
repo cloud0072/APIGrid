@@ -1,7 +1,6 @@
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {atom, useAtomValue, useSetAtom} from 'jotai';
 import {convertUserRoutesToMenus, getRouteSettingMap, RouteSetting} from "@/utils";
-import {RouterVo} from "@/services/system/data-contracts";
 
 const initialStateQueryKey = ['global', 'initialState'];
 
@@ -13,42 +12,44 @@ const atomKeepAliveRoutes = atom<string[]>([]);
 export const useSetAtomKeepAliveRoutes = () => useSetAtom(atomKeepAliveRoutes);
 export const useAtomValueKeepAliveRoutes = () => useAtomValue(atomKeepAliveRoutes);
 
-export const routes: RouterVo[] = [
+export const routes: any[] = [
   {
-    name: 'test',
-    path: '/demo',
+    name: 'home',
+    path: '/',
     component: '',
-    meta: {title: '演示菜单', icon: '', noCache: false},
+    meta: {title: '首页', icon: '', noCache: false},
+    hidden: true,
+    alwaysShow: false,
+    children: undefined
+  },
+  {
+    name: 'system',
+    path: '/system',
+    component: '',
+    meta: {title: '系统管理', icon: 'ant-setting', noCache: false},
     hidden: false,
     alwaysShow: false,
     children: [
       {
-        name: 'demo',
-        path: '/demo/demo',
+        name: 'user',
+        path: '/system/user',
         component: '',
-        meta: {title: 'Demo', icon: '', noCache: false},
+        meta: {title: '成员列表', icon: 'ant-user', noCache: false},
         hidden: false,
         alwaysShow: false,
+        children: undefined
       },
       {
-        name: 'tree',
-        path: '/demo/tree',
+        name: 'role',
+        path: '/system/role',
         component: '',
-        meta: {title: 'Tree', icon: '', noCache: false},
+        meta: {title: '角色列表', icon: 'ant-role', noCache: false},
         hidden: false,
         alwaysShow: false,
-      }
+        children: undefined
+      },
     ]
   },
-  {
-    name: 'user',
-    path: '/system/user',
-    component: '',
-    meta: {title: '用户列表', icon: '', noCache: false},
-    hidden: false,
-    alwaysShow: false,
-    children: undefined
-  }
 ]
 
 export const useQueryInitialState = () => {
@@ -58,8 +59,8 @@ export const useQueryInitialState = () => {
   return useQuery(
     initialStateQueryKey,
     async () => {
-      // const [userInfo, userRoutes] = await Promise.all([sysLoginGetInfo(), sysLoginGetRouters()]);
-      const userInfo = {nickName: '', permissions: ['demo', '/demo/demo']}
+      // const [userInfo, userRoutes] = await Promise.all([sysGetUserInfo(), sysLoginGetRouters()]);
+      const userInfo = {nickName: 'cloud0072', permissions: []}
       setAtomPermissions(new Set(userInfo.permissions));
 
       const routeSettingMap = getRouteSettingMap(routes);

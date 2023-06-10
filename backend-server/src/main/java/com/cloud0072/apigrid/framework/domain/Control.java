@@ -8,7 +8,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
- * 成员
+ * 节点权限 / 列权限
  */
 @Data
 @Builder(toBuilder = true)

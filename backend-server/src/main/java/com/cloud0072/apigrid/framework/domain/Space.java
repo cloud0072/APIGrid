@@ -38,16 +38,16 @@ public class Space extends BaseEntity {
      */
     private String props;
 
-    protected Integer isDeleted;
+    private Integer isDeleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
+    private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date updateTime;
+    private Date updateTime;
 
-    protected String createBy;
+    private String createBy;
 
-    protected String updateBy;
+    private String updateBy;
 
 }

@@ -54,8 +54,9 @@ const BjhAgGrid = (props) => {
   const [colDefsList, setColDefsList] = useState([]);
   const [colGroupsList, setColGroupsList] = useState([]);
   const [spinning, setSpinning] = useState(false);
-  const {pageSize} = useResize();
-  const gridStyle = useMemo(() => ({height: `${pageSize.height - 48}px`, width: '100%'}), [pageSize]);
+  // const {pageSize} = useResize();
+  // const gridStyle = useMemo(() => ({height: `${pageSize.height - 48}px`, width: '100%'}), [pageSize]);
+  const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
 
   const defaultColDef = useMemo(() => ({
     sortable: true,

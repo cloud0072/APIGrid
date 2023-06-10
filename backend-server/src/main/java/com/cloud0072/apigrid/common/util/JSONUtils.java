@@ -1,12 +1,8 @@
 package com.cloud0072.apigrid.common.util;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.cloud0072.apigrid.common.domain.ResultMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.stream.Collectors;
 
 /**
  * 使用系统默认的序列化方案
@@ -42,15 +38,4 @@ public class JSONUtils {
         }
     }
 
-    public static <T> T parseResultMap(ResultMap map, Class<T> clazz) {
-        String json = toJSONString(map);
-        return parseJSONString(json, clazz);
-    }
-
-    public static String parseJSONArray2String(JSONArray array) {
-        if (array != null) {
-            return array.stream().map(o -> (String) o).collect(Collectors.joining(","));
-        }
-        return "";
-    }
 }

@@ -1,9 +1,9 @@
-import {sysLoginPostLogout} from '@/services/system/Logout';
+import {sysUserLogout} from '@/services/framework/Login';
 import {clearToken} from '@/utils';
 
 export const useLogout = () => {
   return async () => {
-    await sysLoginPostLogout();
+    await sysUserLogout();
     clearToken();
     window.location.replace('/login');
   };
