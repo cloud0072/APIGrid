@@ -7,7 +7,7 @@ import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.domain.User;
 import com.cloud0072.apigrid.framework.mapper.UserMapper;
 import com.cloud0072.apigrid.framework.service.UserService;
-import com.cloud0072.apigrid.framework.vo.UserVo;
+import com.cloud0072.apigrid.framework.vo.MemberUserVo;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void resetPassword(UserVo vo) {
+    public void resetPassword(MemberUserVo vo) {
         if (StringUtils.isEmpty(vo.getNewPwd())) {
             throw new ServiceException("请输入新密码");
         }

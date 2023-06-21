@@ -1,5 +1,4 @@
 import {MenuType} from '@/constants';
-import type {SysMenuVo} from '@/services/system/data-contracts';
 
 interface OptionsParentId {
   menuId: number;
@@ -7,7 +6,7 @@ interface OptionsParentId {
   children?: OptionsParentId[];
 }
 
-const handleSort = (data: SysMenuVo[]): SysMenuVo[] => {
+const handleSort = (data: any[]): any[] => {
   return data.sort((a, b) => {
     if (a.orderNum === b.orderNum) {
       return new Date(a.createTime!).getTime() - new Date(b.createTime!).getTime();
@@ -18,7 +17,7 @@ const handleSort = (data: SysMenuVo[]): SysMenuVo[] => {
 };
 
 // 数组按 orderNum 排序
-export const sortByOrderNum = (data: SysMenuVo[]): SysMenuVo[] => {
+export const sortByOrderNum = (data: any[]): any[] => {
   const newData = data.map((item) => {
     if (item.children) {
       item.children = sortByOrderNum(item.children);
@@ -32,8 +31,8 @@ export const sortByOrderNum = (data: SysMenuVo[]): SysMenuVo[] => {
   return [...directoryAndMenuList, ...buttonList];
 };
 
-export const getOptions = (data?: SysMenuVo[]): OptionsParentId[] => {
-  const formatOptions = (items: SysMenuVo[]): OptionsParentId[] => {
+export const getOptions = (data?: any[]): OptionsParentId[] => {
+  const formatOptions = (items: any[]): OptionsParentId[] => {
     return items
       .filter((item) => item.menuType !== MenuType.F)
       .map(({menuId, menuName, children}) => {
@@ -44,7 +43,7 @@ export const getOptions = (data?: SysMenuVo[]): OptionsParentId[] => {
   return [{menuId: 0, menuName: '根目录', children: data ? formatOptions(data) : []}];
 };
 
-export const getSelectedParentIds = (data: Map<number, SysMenuVo>, menuId: number): number[] => {
+export const getSelectedParentIds = (data: Map<number, any>, menuId: number): number[] => {
   const parentIds: number[] = [0];
 
   if (menuId === 0) {

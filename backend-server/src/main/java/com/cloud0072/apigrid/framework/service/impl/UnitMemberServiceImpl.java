@@ -1,6 +1,7 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.exception.ServiceException;
@@ -12,13 +13,14 @@ import com.cloud0072.apigrid.framework.mapper.UnitMemberMapper;
 import com.cloud0072.apigrid.framework.service.UnitMemberService;
 import com.cloud0072.apigrid.framework.service.UnitTeamMemberService;
 import com.cloud0072.apigrid.framework.service.UserService;
-import com.cloud0072.apigrid.framework.vo.UserVo;
+import com.cloud0072.apigrid.framework.vo.MemberUserVo;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +33,13 @@ public class UnitMemberServiceImpl extends ServiceImpl<UnitMemberMapper, UnitMem
     private UnitMemberService unitMemberService;
 
     @Autowired
+    private UnitMemberMapper unitMemberMapper;
+
+    @Autowired
     private UserService userService;
 
     @Override
-    public AjaxResult addMember(UserVo vo) {
+    public AjaxResult addMember(MemberUserVo vo) {
         if (vo.getMobile() == null || vo.getNickName() == null) {
             throw new ServiceException("用户信息不完整");
         }
@@ -58,9 +63,9 @@ public class UnitMemberServiceImpl extends ServiceImpl<UnitMemberMapper, UnitMem
         var member = UnitMember.builder()
                 .memberName(vo.getNickName())
                 .userId(u.getUserId())
-                .isDeleted(0)
-                .isLocked(0)
+                .status(0)
                 .isAdmin(0)
+                .isDeleted(0)
                 .build();
         unitMemberService.save(member);
 
@@ -73,4 +78,15 @@ public class UnitMemberServiceImpl extends ServiceImpl<UnitMemberMapper, UnitMem
 
         return AjaxResult.success(member);
     }
+
+    @Override
+    public Page<MemberUserVo> pageMemberUserByRootTeamId(Page<MemberUserVo> page, String isDeleted) {
+        return unitMemberMapper.pageMemberUserByRootTeamId(page, isDeleted);
+    }
+
+    @Override
+    public Page<MemberUserVo> pageMemberUserByTeamIds(Page<MemberUserVo> page, List<Long> teamIds, String isDeleted) {
+        return unitMemberMapper.pageMemberUserByTeamIds(page, teamIds, isDeleted);
+    }
+
 }

@@ -1,8 +1,10 @@
 import styles from "@/pages/system/user/style.module.less";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {CaretRightOutlined, DeleteOutlined, EditOutlined, MoreOutlined, PlusOutlined} from "@ant-design/icons";
 import {theme, Tooltip, Tree} from "antd";
 import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
+import {t} from "@/utils/i18n";
+import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
 
 export interface ITeamTreeNode {
   teamId: string;
@@ -14,7 +16,7 @@ export interface ITeamTreeNode {
 }
 
 const ConfigConstant = {
-  ROOT_TEAM_ID: '1000'
+  ROOT_TEAM_ID: '0'
 }
 const TEAM_OPERATE = 'TEAM_OPERATE';
 const TEAM_ROOT_OPERATE = 'TEAM_ROOT_OPERATE';
@@ -26,7 +28,7 @@ const _ContextMenuTrigger: any = ContextMenuTrigger;
 
 const treeData = [
   {
-    key: '1000',
+    key: '0',
     title: '根目录',
     isLeaf: false,
     children: [
@@ -44,11 +46,13 @@ const treeData = [
   },
 ];
 
-const MemberTable = (props: any) => {
+const TeamTree = (props: any) => {
 
   const {useToken} = theme;
   const {token} = useToken();
   const [selectKey, setSelectKey] = useState(null);
+  const [current, setCurrent] = useState<any>(null);
+  const [editTeamModalOpen, setEditTeamModalOpen] = useState<any>(false);
 
   const moreClick = (
     e: React.MouseEvent,
@@ -58,7 +62,8 @@ const MemberTable = (props: any) => {
     }
   };
   const onCollect = (data: any) => ({
-    key: data.key
+    key: data.key,
+    title: data.title
   })
   const onSelect = (keys: any[]) => {
     const key = keys[0];
@@ -67,12 +72,16 @@ const MemberTable = (props: any) => {
   }
   const handleAddTeamClick = (e: MouseEvent, data: any) => {
     console.log('handleAddTeamClick', data)
+    setCurrent(() => ({parentId: data.key, parentTeamName: data.title, type: 'add'}));
+    setEditTeamModalOpen(true)
   }
   const handleDeleteTeamClick = (e: MouseEvent, data: any) => {
     console.log('handleDeleteTeamClick', data)
   }
   const handleRenameTeamClick = (e: MouseEvent, data: any) => {
     console.log('handleRenameTeamClick', data)
+    setCurrent(() => ({id: data.key, teamName: data.title, type: 'rename'}));
+    setEditTeamModalOpen(true)
   }
 
   const renderTitle = (node: any) => {
@@ -98,7 +107,7 @@ const MemberTable = (props: any) => {
 
   return (
     <div className={styles.teamList}>
-      <div className={styles.panelTitle}>小组管理</div>
+      <div className={styles.panelTitle}>{t.team_list_title}</div>
       <DirectoryTree
         switcherIcon={<div><CaretRightOutlined/></div>}
         titleRender={renderTitle}
@@ -107,18 +116,22 @@ const MemberTable = (props: any) => {
         expandAction={false}
         showIcon={false}
       />
+
+      {
+        editTeamModalOpen && <EditTeamModal setEditTeamModalOpen={setEditTeamModalOpen} current={current}/>
+      }
       <>
         <_ContextMenu id={TEAM_OPERATE}>
-          <_MenuItem onClick={handleAddTeamClick}><PlusOutlined/>新建小组</_MenuItem>
-          <_MenuItem onClick={handleRenameTeamClick}><EditOutlined/>重命名</_MenuItem>
-          <_MenuItem onClick={handleDeleteTeamClick}><DeleteOutlined/>删除小组</_MenuItem>
+          <_MenuItem onClick={handleAddTeamClick}><PlusOutlined/>{t.team_menu_create}</_MenuItem>
+          <_MenuItem onClick={handleRenameTeamClick}><EditOutlined/>{t.team_menu_rename}</_MenuItem>
+          <_MenuItem onClick={handleDeleteTeamClick}><DeleteOutlined/>{t.team_menu_delete}</_MenuItem>
         </_ContextMenu>
         <_ContextMenu id={TEAM_ROOT_OPERATE}>
-          <_MenuItem onClick={handleAddTeamClick}><PlusOutlined/>新建小组</_MenuItem>
+          <_MenuItem onClick={handleAddTeamClick}><PlusOutlined/>{t.team_menu_create}</_MenuItem>
         </_ContextMenu>
       </>
     </div>
   )
 };
 
-export default MemberTable;
+export default TeamTree;

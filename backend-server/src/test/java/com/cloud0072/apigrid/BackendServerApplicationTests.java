@@ -6,7 +6,7 @@ import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.framework.domain.User;
 import com.cloud0072.apigrid.framework.mapper.UserMapper;
 import com.cloud0072.apigrid.framework.service.UnitMemberService;
-import com.cloud0072.apigrid.framework.vo.UserVo;
+import com.cloud0072.apigrid.framework.vo.MemberUserVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ class BackendServerApplicationTests {
 
     @Test
     void testAddMember() {
-        UserVo userVo = UserVo.builder()
+        MemberUserVo memberUserVo = MemberUserVo.builder()
                 .userId(1L)
                 .username("admin")
                 .password("admin")
@@ -41,7 +41,7 @@ class BackendServerApplicationTests {
                 .updateTime(new Date())
 
                 .build();
-        unitMemberService.addMember(userVo);
+        unitMemberService.addMember(memberUserVo);
     }
 
     @Test

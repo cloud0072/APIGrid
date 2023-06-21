@@ -26,8 +26,8 @@ const FormLoginByPwd: FC = () => {
           size: 'large',
           prefix: <LockOutlined/>,
         }}
-        placeholder="admin"
-        initialValue="admin"
+        placeholder="123456"
+        initialValue="123456"
         rules={[
           {
             required: true,

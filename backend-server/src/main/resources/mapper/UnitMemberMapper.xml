@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud0072.apigrid.framework.mapper.UnitMemberMapper">
+
+    <resultMap id="MemberUserVo" type="com.cloud0072.apigrid.framework.vo.MemberUserVo">
+        <result column="id" property="memberId"/>
+        <result column="member_name" property="memberName"/>
+        <result column="status" property="status"/>
+        <result column="is_admin" property="isAdmin"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="spc_id" property="spcId"/>
+
+        <result column="team_id" property="teamId"/>
+        <result column="team_name" property="teamName"/>
+        <result column="team_ids" property="teamIds"/>
+
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
+
+    <select id="selectMembersByRootTeamId" resultMap="MemberUserVo">
+        SELECT vom.id,
+               vu.user_id,
+               vu.nick_name,
+               vu.avatar,
+               vu.mobile,
+               vu.email,
+               GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids,
+               vom.member_name,
+               vom.is_deleted,
+               vom.is_admin,
+               vom.create_time,
+               vom.update_time
+        FROM ${tablePrefix}unit_member vom
+                 JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
+                 JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
+                 LEFT JOIN ${tablePrefix}user vu ON vom.user_id = vu.user_id
+        WHERE vom.spc_id = #{spcId}
+          AND vom.is_deleted = #{isDeleted}
+        GROUP BY vom.id
+    </select>
+
+    <select id="selectMemberPageByTeamId" resultMap="MemberUserVo">
+        SELECT
+        vom.id,
+        vu.user_id,
+        vu.nick_name,
+        vu.avatar,
+        vu.mobile,
+        vu.email,
+        GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids,
+        vom.member_name,
+        vom.is_deleted,
+        vom.is_admin,
+        vom.create_time,
+        vom.update_time
+        FROM ${tablePrefix}unit_member vom
+        JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
+        JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
+        LEFT JOIN ${tablePrefix}user vu ON vom.user_id = vu.user_id
+        WHERE votm.team_id IN
+        <foreach item="item" index="index" collection="teamIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="isDeleted != null">
+            AND vom.is_deleted = #{isDeleted}
+        </if>
+        GROUP BY vom.id
+    </select>
+
+</mapper>

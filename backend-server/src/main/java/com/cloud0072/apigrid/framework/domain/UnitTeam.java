@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -44,8 +46,10 @@ public class UnitTeam extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private String createBy;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long createBy;
 
-    private String updateBy;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
 
 }

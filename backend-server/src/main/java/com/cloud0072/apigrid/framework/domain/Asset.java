@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -27,17 +29,18 @@ public class Asset extends BaseEntity {
 
     private String bucketName;
 
-    private String fileUrl;
-
-    private String fileName;
+    private String token;
 
     private String mimeType;
 
     private String md5;
 
+    private String fileName;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    private String createBy;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long createBy;
 
 }

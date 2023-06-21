@@ -26,7 +26,7 @@ const BjhDragItem = (props) => {
     return (
       <div ref={setNodeRef} style={{...style, ...props.style}} {...attributes}
            className={'bjh-drag-item ' + props.className}>
-        <div className='bjh-drag-item-handle' {...listeners}>
+        <div className={'bjh-drag-item-handle'} {...listeners}>
           <IconFont type="adms-drag"/>
         </div>
         {props.children}

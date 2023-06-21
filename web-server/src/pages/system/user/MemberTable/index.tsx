@@ -2,9 +2,13 @@ import styles from "@/pages/system/user/style.module.less";
 import React, {useCallback, useEffect, useState} from "react";
 import {Button, Table} from "antd";
 import {UnitMemberApi} from "@/services/framework/UnitMember";
+import {t} from "@/utils/i18n";
+import EditMemberModal from "@/pages/system/user/modal/EditMemberModal";
 
 const MemberTable = (props: any) => {
   const [members, setMembers] = useState<any>([]);
+  const [editMemberModalOpen, setEditMemberModalOpen] = useState<any>(false);
+
   const tableProps = {
     columns: [
       {
@@ -20,19 +24,25 @@ const MemberTable = (props: any) => {
         align: 'left',
       },
       {
-        title: '创建时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        title: '账号',
+        dataIndex: 'username',
+        key: 'username',
+        align: 'left',
+      },
+      {
+        title: '头像',
+        dataIndex: 'avatar',
+        key: 'avatar',
         align: 'left',
       },
     ] as any
   };
 
   const addUnitMember = useCallback(() => {
+    setEditMemberModalOpen(true);
   }, [])
   const listUnitMember = useCallback(() => {
     UnitMemberApi.getList({teamId: props.teamId}).then(response => {
-      // console.log('UnitMemberApi.getList', response);
       setMembers(() => response.data);
     })
   }, [props.teamId])
@@ -43,9 +53,9 @@ const MemberTable = (props: any) => {
 
   return (
     <div className={styles.memberTable}>
-      <div className={styles.panelTitle}>成员管理</div>
+      <div className={styles.panelTitle}>{t.member_table_title}</div>
       <div className={styles.memberTableBtn}>
-        <Button onClick={addUnitMember}>创建成员</Button>
+        <Button onClick={addUnitMember}>{t.member_table_create}</Button>
       </div>
       <div className={styles.memberTableWrapper}>
         <Table
@@ -56,6 +66,9 @@ const MemberTable = (props: any) => {
           // scroll={{ y: scrollHeight }}
         />
       </div>
+      {
+        editMemberModalOpen && <EditMemberModal setEditMemberModalOpen={setEditMemberModalOpen}/>
+      }
     </div>
   )
 };

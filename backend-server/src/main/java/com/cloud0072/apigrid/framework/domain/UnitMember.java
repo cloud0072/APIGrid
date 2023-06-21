@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -23,8 +25,10 @@ import java.util.Date;
 public class UnitMember extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
@@ -37,9 +41,12 @@ public class UnitMember extends BaseEntity {
      */
     private String memberName;
 
-    private Integer isAdmin;
+    /**
+     * 确认上次使用的成员/空间站
+     */
+    private Integer status;
 
-    private Integer isLocked;
+    private Integer isAdmin;
 
     private Integer isDeleted;
 
@@ -49,8 +56,10 @@ public class UnitMember extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private String createBy;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long createBy;
 
-    private String updateBy;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
 
 }
