@@ -147,27 +147,24 @@ export function request({secure, path, type, query, format, body, skipErrorHandl
     data,
     url: path,
   }).then(async (axiosResponse) => {
-    console.log('response: ', axiosResponse);
+    console.log('response: ', axiosResponse.data);
+    const {code, data, msg} = axiosResponse.data;
 
     if (skipErrorHandler) {
       return axiosResponse;
     }
 
-    const code = axiosResponse.data?.code;
-
     if (code === 200) {
-      return axiosResponse.data;
-    }
-
-    if (code === 401) {
+      return data;
+    } else if (code === 401) {
       requestCanceler.clearPendingRequest();
       clearToken();
       redirectToLoginPage('登录已过期，请重新登录');
       return;
+    } else {
+      message.error(msg ?? '网络错误，请稍后再试');
+      throw axiosResponse.data;
     }
 
-    message.error(axiosResponse.data?.msg ?? '网络错误，请稍后再试');
-
-    throw axiosResponse.data;
   });
 }

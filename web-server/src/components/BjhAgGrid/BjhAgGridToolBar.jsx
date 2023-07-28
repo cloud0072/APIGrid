@@ -86,7 +86,7 @@ const BjhAgGridToolBar = (props) => {
     gridCtx?.setColDefsList((colDefs) => {
       return colDefs.map(item => {
         if (item.field === col.field) {
-          return Object.assign(col, {hidden: !checked})
+          return Object.assign(col, {hide: !checked})
         }
         return item
       })
@@ -162,7 +162,7 @@ const BjhAgGridToolBar = (props) => {
                         <div style={{flexShrink: 0, marginRight: '4px'}}>
                           <Switch
                             size={"small"}
-                            checked={!col.hidden}
+                            checked={!col.hide}
                             onChange={(checked) => onChangeColVisible(col, checked)}
                           />
                         </div>
@@ -265,7 +265,7 @@ const BjhAgGridToolBar = (props) => {
                 onChange={(item) => gridCtx.setRowHeight(() => item.value)}
               />
             )}>
-              <BjhButton icon="ant-colum-height"/>
+              <BjhButton text="行高" icon="ant-colum-height"/>
             </BjhDropdown>
           </Space>
         </div>

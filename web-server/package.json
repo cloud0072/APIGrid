@@ -99,6 +99,6 @@
   "packageManager": "pnpm@7.27.0",
   "engines": {
     "node": "16.x",
-    "pnpm": "7.x"
+    "pnpm": "8.x"
   }
 }

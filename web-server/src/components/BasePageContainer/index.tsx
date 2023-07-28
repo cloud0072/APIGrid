@@ -1,11 +1,11 @@
 import type {PageContainerProps} from '@ant-design/pro-components';
 // import {PageContainer} from '@ant-design/pro-components';
 import type {FC} from 'react';
-import {cloneElement, useMemo} from 'react';
-import {useResize} from "@/hooks/useResize";
+import {cloneElement, useContext, useMemo} from 'react';
+import {ResizeContext} from "@/layouts";
 
 export const BasePageContainer: FC<PageContainerProps> = (props) => {
-  const {height} = useResize();
+  const {height} = useContext(ResizeContext)
   const pageStyle = useMemo(() => ({
     height: `${height}px`,
     width: '100%',

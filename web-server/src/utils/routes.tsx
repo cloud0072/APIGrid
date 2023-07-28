@@ -1,9 +1,8 @@
 import {IconAntd} from '@/components';
-import type {RouterVo} from '@/services/system/data-contracts';
 import type {MenuDataItem} from '@ant-design/pro-components';
 import IconFont from "@/components/IconFont";
 
-export const convertUserRoutesToMenus = (userRoutes: RouterVo[] = []): MenuDataItem[] => {
+export const convertUserRoutesToMenus = (userRoutes: any[] = []): MenuDataItem[] => {
   const menus: MenuDataItem[] = [];
 
   userRoutes.forEach((item) => {
@@ -47,7 +46,7 @@ export interface RouteSetting {
   key: string;
 }
 
-export const getRouteSettingMap = (userMenus: RouterVo[] = []): Record<string, RouteSetting> => {
+export const getRouteSettingMap = (userMenus: any[] = []): Record<string, RouteSetting> => {
   const settingMap: Record<string, RouteSetting> = {};
 
   userMenus.forEach((menu) => {

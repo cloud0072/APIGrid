@@ -37,11 +37,11 @@ const BjhAgGridHeader = (props) => {
     // console.log('onMouseLeave', e)
   }
 
-  useEffect(() => {
-    if (props.column.colId === 'index') {
-      console.log('props', props)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (props.column.colId === 'index') {
+  //     console.log('props', props)
+  //   }
+  // }, [])
 
   return (
     <>

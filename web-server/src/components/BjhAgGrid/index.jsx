@@ -1,4 +1,4 @@
-import {createContext, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import BjhAgGridHeader from "@/components/BjhAgGrid/BjhAgGridHeader";
 import BjhAgGridToolBar from "@/components/BjhAgGrid/BjhAgGridToolBar";
@@ -6,12 +6,16 @@ import BjhAgGridToolBar from "@/components/BjhAgGrid/BjhAgGridToolBar";
 import IdCellRenderer from './CellRender/IdCellRenderer'
 
 import 'ag-grid-enterprise';
+import {LicenseManager} from 'ag-grid-enterprise';
+
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 import './style.less';
 import {message, Spin} from "antd";
-import {useResize} from "@/hooks/useResize";
+import {ResizeContext} from "@/layouts";
+
+LicenseManager.prototype.validateLicense = () => true
 
 const indexCol = [{
   field: "index",
@@ -54,9 +58,11 @@ const BjhAgGrid = (props) => {
   const [colDefsList, setColDefsList] = useState([]);
   const [colGroupsList, setColGroupsList] = useState([]);
   const [spinning, setSpinning] = useState(false);
-  // const {pageSize} = useResize();
-  // const gridStyle = useMemo(() => ({height: `${pageSize.height - 48}px`, width: '100%'}), [pageSize]);
-  const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
+
+  const {height} = useContext(ResizeContext);
+  const gridStyle = useMemo(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
+  // const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
+  // console.log('gridStyle', gridStyle)
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
@@ -67,7 +73,7 @@ const BjhAgGrid = (props) => {
 
   const localColDefs = useMemo(() => {
     const local = indexCol.concat(colDefsList)
-      .filter(col => !col.hidden)
+      .filter(col => !col.hide)
       .map((col, index) => {
         const flag = !!colGroupsList.find(gi => gi.field === col.field);
         const i = colGroupsList.findIndex(gi => gi.field === col.field);
@@ -78,7 +84,7 @@ const BjhAgGrid = (props) => {
         delete col.i
         return col;
       })
-    console.log('localColDefs', local)
+    // console.log('localColDefs', local)
     return local;
   }, [colDefsList, colGroupsList])
 
@@ -113,8 +119,9 @@ const BjhAgGrid = (props) => {
       setRowData(() => response)
     }).finally(() => {
       setSpinning(false)
-      const end = Date.now()
-      message.success(`请求加载完毕,耗时:${end - start}毫秒`, 6)
+      const msg = `请求加载完毕,耗时:${Date.now() - start}毫秒`;
+      // message.success(msg, 6)
+      console.log(msg);
     })
   }
 

@@ -70,4 +70,5 @@ const EditTeamModal = ({setEditTeamModalOpen, current}: any) => {
   </Modal>);
 };
 
-export default React.forwardRef(EditTeamModal);
+// export default React.forwardRef(EditTeamModal);
+export default EditTeamModal;
