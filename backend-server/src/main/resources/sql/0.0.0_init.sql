@@ -1,18 +1,19 @@
 CREATE TABLE apigrid_user
 (
-    `user_id`     BIGINT ( 20 ) NOT NULL,
-    `username`    VARCHAR(32),
-    `password`    VARCHAR(255),
-    `mobile`      VARCHAR(32),
-    `email`       VARCHAR(32),
-    `avatar`      VARCHAR(255),
-    `nick_name`   VARCHAR(32),
-    `is_locked`   INT ( 1 ),
-    `is_deleted`  INT ( 1 ),
-    `create_by`   VARCHAR(32),
-    `create_time` datetime ( 0 ),
-    `update_by`   VARCHAR(32),
-    `update_time` datetime ( 0 ),
+    `user_id`      BIGINT ( 20 ) NOT NULL,
+    `username`     VARCHAR(32),
+    `password`     VARCHAR(255),
+    `mobile`       VARCHAR(32),
+    `email`        VARCHAR(32),
+    `avatar`       VARCHAR(255),
+    `avatar_color` INT ( 1 ),
+    `nick_name`    VARCHAR(32),
+    `is_locked`    INT ( 1 ),
+    `is_deleted`   INT ( 1 ),
+    `create_by`    VARCHAR(32),
+    `create_time`  datetime ( 0 ),
+    `update_by`    VARCHAR(32),
+    `update_time`  datetime ( 0 ),
     PRIMARY KEY (`user_id`)
 );
 CREATE TABLE apigrid_space
@@ -98,8 +99,8 @@ CREATE TABLE apigrid_asset
 (
     `id`          BIGINT ( 20 ) NOT NULL,
     `bucket_name` VARCHAR(32),
-    `file_url`    VARCHAR(255),
     `file_name`   VARCHAR(255),
+    `token`       VARCHAR(255),
     `mime_type`   VARCHAR(32),
     `md5`         VARCHAR(255),
     `is_deleted`  INT ( 1 ),

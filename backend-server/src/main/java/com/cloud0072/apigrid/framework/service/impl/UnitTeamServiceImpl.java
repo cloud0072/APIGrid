@@ -54,6 +54,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
                     List<TreeNode> children = buildTree(teamList, t.getId());
                     return TreeNode.builder()
                             .key(t.getId().toString())
+                            .value(t.getId().toString())
                             .title(t.getTeamName())
                             .isLeaf(children.isEmpty())
                             .children(children)

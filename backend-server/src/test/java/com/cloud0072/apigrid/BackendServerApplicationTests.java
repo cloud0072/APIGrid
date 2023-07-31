@@ -39,9 +39,8 @@ class BackendServerApplicationTests {
                 .isDeleted(0)
                 .createTime(new Date())
                 .updateTime(new Date())
-
                 .build();
-        unitMemberService.addMember(memberUserVo);
+        unitMemberService.insertMemberUser(memberUserVo);
     }
 
     @Test

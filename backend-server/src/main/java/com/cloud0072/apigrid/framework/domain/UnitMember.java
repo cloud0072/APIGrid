@@ -46,6 +46,9 @@ public class UnitMember extends BaseEntity {
      */
     private Integer status;
 
+    /**
+     * 空间站管理员
+     */
     private Integer isAdmin;
 
     private Integer isDeleted;

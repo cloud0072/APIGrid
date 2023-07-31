@@ -69,7 +69,7 @@ const PageUserList = () => {
     ]
     return Promise.resolve({tableInfo, tableColumns, viewList})
   }
-  const loadData = () => UserApi.getPage({pageSize: 10, pageNum: 1}).then(r => r.records)
+  const loadData = () => UserApi.getPage({pageSize: 10, pageNum: 1}).then(r => r.data.records)
 
   return (
     <BasePageContainer>

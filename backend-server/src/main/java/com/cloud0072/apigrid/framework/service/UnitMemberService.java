@@ -10,7 +10,13 @@ import java.util.List;
 
 public interface UnitMemberService extends IService<UnitMember> {
 
-    AjaxResult addMember(MemberUserVo vo);
+    AjaxResult insertMemberUser(MemberUserVo vo);
+
+    AjaxResult updateMemberUser(MemberUserVo vo);
+
+    AjaxResult updateUserAvatar(MemberUserVo vo);
+
+    MemberUserVo getMemberUserById(String id);
 
     Page<MemberUserVo> pageMemberUserByRootTeamId(Page<MemberUserVo> page, String isDeleted);
 

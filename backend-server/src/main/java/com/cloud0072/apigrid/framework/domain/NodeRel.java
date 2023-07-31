@@ -21,6 +21,7 @@ import java.util.Date;
 public class NodeRel {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String nodeId;

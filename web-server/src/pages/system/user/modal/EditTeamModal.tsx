@@ -1,11 +1,13 @@
 import {Form, Input, Modal} from "antd";
 import {t} from "@/utils/i18n";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from '../style.module.less';
 import {UnitTeamApi} from "@/services/framework/UnitTeam";
+import {TeamTreeContext} from "@/pages/system/user";
 
 const EditTeamModal = ({setEditTeamModalOpen, current}: any) => {
 
+  const {listUnitTeam} = useContext(TeamTreeContext);
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState<any>('vertical');
   const [loading, setLoading] = useState<boolean>(false);
@@ -14,11 +16,6 @@ const EditTeamModal = ({setEditTeamModalOpen, current}: any) => {
     return Promise.resolve().then(() => {
       setLoading(() => true)
       form.validateFields().then((values) => {
-        // setTimeout(() => {
-        //   console.log('values', values);
-        //   setLoading(() => false)
-        //   setEditTeamModalOpen(false)
-        // }, 2000)
         if (current.type === 'add') {
           return UnitTeamApi.insert(values)
         } else {
@@ -26,7 +23,8 @@ const EditTeamModal = ({setEditTeamModalOpen, current}: any) => {
         }
       }).finally(() => {
         setLoading(() => false)
-        setEditTeamModalOpen(false)
+        setEditTeamModalOpen(() => false)
+        listUnitTeam()
       })
     })
   }

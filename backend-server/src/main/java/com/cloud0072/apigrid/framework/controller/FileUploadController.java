@@ -3,7 +3,7 @@ package com.cloud0072.apigrid.framework.controller;
 import com.cloud0072.apigrid.common.constant.MinioProperties;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.exception.ServiceException;
-import com.cloud0072.apigrid.common.util.FileUtils;
+import com.cloud0072.apigrid.common.util.FileUploadUtils;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
 import com.cloud0072.apigrid.framework.domain.Asset;
@@ -57,10 +57,10 @@ public class FileUploadController {
         if (StringUtils.isEmpty(data.getFileName())) {
             throw new ServiceException("fileName不能为空");
         }
-        var suffix = FileUtils.getExtension(data.getFileName());
-        var token = FileUtils.getDatePathName() + (StringUtils.isEmpty(suffix) ? "" : "." + suffix);
-//        var fileUrl = minioProperties.getEndpoint() + "/" + minioProperties.getBucketName() + "/" + token;
-        String url = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+        var suffix = FileUploadUtils.getExtension(data.getFileName());
+        var token = FileUploadUtils.getDatePathName() + (StringUtils.isEmpty(suffix) ? "" : "." + suffix);
+        var fileUrl = minioProperties.getEndpoint() + "/" + minioProperties.getBucketName() + "/" + token;
+        var putUrl = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                 .method(Method.PUT)
                 .bucket(minioProperties.getBucketName())
                 .object(token)
@@ -76,10 +76,10 @@ public class FileUploadController {
                 .build();
         assetService.save(asset);
         var result = AjaxResult.success();
-        result.put("url", url);
-        result.put("method", "PUT");
+        result.put("putUrl", putUrl);
+        result.put("token", token);
+        result.put("fileUrl", fileUrl);
         result.put("id", asset.getId());
-        result.put("token", asset.getToken());
         return result;
     }
 

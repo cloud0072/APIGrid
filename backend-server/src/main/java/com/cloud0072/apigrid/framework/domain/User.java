@@ -28,6 +28,7 @@ public class User extends BaseEntity {
      * 用户ID
      */
     @TableId(value = "user_id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
@@ -42,6 +43,8 @@ public class User extends BaseEntity {
     private String email;
 
     private String avatar;
+
+    private Integer avatarColor;
 
     private String nickName;
 

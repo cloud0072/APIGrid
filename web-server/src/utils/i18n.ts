@@ -13,7 +13,10 @@ export const t = {
   member_table_create: '创建成员',
   member_modal_title_create: '创建用户',
   member_modal_title_update: '编辑用户',
+  member_avatar: '成员头像',
   member_name: '成员名称',
+  member_email: '成员邮箱',
+  member_team: '所属小组',
   // team
   team_list_title: '小组管理',
   team_menu_create: '新建小组',

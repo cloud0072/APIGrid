@@ -25,10 +25,12 @@ import java.util.Date;
 public class UnitTeam extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String spcId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     private String teamName;

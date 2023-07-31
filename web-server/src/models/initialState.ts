@@ -13,7 +13,6 @@ const atomKeepAliveRoutes = atom<string[]>([]);
 export const useSetAtomKeepAliveRoutes = () => useSetAtom(atomKeepAliveRoutes);
 export const useAtomValueKeepAliveRoutes = () => useAtomValue(atomKeepAliveRoutes);
 
-
 export const useQueryInitialState = () => {
   const setAtomPermissions = useSetAtomPermissions();
   const setAtomKeepAliveRoutes = useSetAtomKeepAliveRoutes();

@@ -1,4 +1,4 @@
-package com.cloud0072.apigrid.common.redis;
+package com.cloud0072.apigrid.framework.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;

@@ -2,7 +2,7 @@ package com.cloud0072.apigrid.framework.service.impl;
 
 import com.cloud0072.apigrid.common.constant.CacheConstants;
 import com.cloud0072.apigrid.common.constant.Constants;
-import com.cloud0072.apigrid.common.redis.RedisCache;
+import com.cloud0072.apigrid.framework.redis.RedisCache;
 import com.cloud0072.apigrid.common.util.IdUtils;
 import com.cloud0072.apigrid.common.util.IpUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;

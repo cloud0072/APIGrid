@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
 
@@ -29,6 +31,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User registerUser(User user) {
         checkUser(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
         baseMapper.insert(user);
         return user;
     }

@@ -1,5 +1,7 @@
 package com.cloud0072.apigrid.common.util;
 
+import cn.hutool.core.io.file.FileNameUtil;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -8,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author ruoyi
  */
-public class FileUtils {
+public class FileUploadUtils {
     /**
      * 获取不带后缀文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi
      *
@@ -16,11 +18,11 @@ public class FileUtils {
      * @return 没有文件路径和后缀的名称
      */
     public static String getBaseName(String fileName) {
-        return FileUtils.getBaseName(fileName);
+        return FileNameUtil.getName(fileName);
     }
 
     public static String getExtension(String fileName) {
-        return FileUtils.getExtension(fileName);
+        return FileNameUtil.getSuffix(fileName);
     }
 
     public static String getDatePathName() {

@@ -1,6 +1,8 @@
 package com.cloud0072.apigrid.framework.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +19,7 @@ public class MemberUserVo {
     /**
      * member
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long memberId;
 
     private String memberName;
@@ -42,6 +45,7 @@ public class MemberUserVo {
     /**
      * team
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long teamId;
 
     private String teamIds;
@@ -51,6 +55,7 @@ public class MemberUserVo {
     /**
      * user
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     private String username;
@@ -66,6 +71,8 @@ public class MemberUserVo {
     private String nickName;
 
     private String avatar;
+
+    private Integer avatarColor;
 
     private Integer isLocked;
 

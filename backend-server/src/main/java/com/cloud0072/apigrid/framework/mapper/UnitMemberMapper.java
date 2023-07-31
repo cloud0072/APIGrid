@@ -2,6 +2,7 @@ package com.cloud0072.apigrid.framework.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.framework.domain.UnitMember;
 import com.cloud0072.apigrid.framework.vo.MemberUserVo;
 
@@ -13,4 +14,5 @@ public interface UnitMemberMapper extends BaseMapper<UnitMember> {
 
     Page<MemberUserVo> pageMemberUserByTeamIds(Page<MemberUserVo> page, List<Long> teamIds, String isDeleted);
 
+    MemberUserVo getMemberUserById(String id);
 }

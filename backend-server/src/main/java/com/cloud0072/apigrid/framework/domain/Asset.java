@@ -25,9 +25,12 @@ import java.util.Date;
 public class Asset extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String bucketName;
+
+    private String fileName;
 
     private String token;
 
@@ -35,7 +38,7 @@ public class Asset extends BaseEntity {
 
     private String md5;
 
-    private String fileName;
+    private Integer isDeleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

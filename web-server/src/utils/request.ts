@@ -148,14 +148,14 @@ export function request({secure, path, type, query, format, body, skipErrorHandl
     url: path,
   }).then(async (axiosResponse) => {
     console.log('response: ', axiosResponse.data);
-    const {code, data, msg} = axiosResponse.data;
+    const {code, msg} = axiosResponse.data;
 
     if (skipErrorHandler) {
       return axiosResponse;
     }
 
     if (code === 200) {
-      return data;
+      return axiosResponse.data;
     } else if (code === 401) {
       requestCanceler.clearPendingRequest();
       clearToken();

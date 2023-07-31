@@ -1,10 +1,11 @@
 import styles from "@/pages/system/user/style.module.less";
-import React, {useRef, useState} from "react";
+import React, {useContext, useState} from "react";
 import {CaretRightOutlined, DeleteOutlined, EditOutlined, MoreOutlined, PlusOutlined} from "@ant-design/icons";
 import {theme, Tooltip, Tree} from "antd";
 import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
 import {t} from "@/utils/i18n";
 import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
+import {TeamTreeContext} from "@/pages/system/user";
 
 export interface ITeamTreeNode {
   teamId: string;
@@ -26,31 +27,11 @@ const _ContextMenu: any = ContextMenu;
 const _MenuItem: any = MenuItem;
 const _ContextMenuTrigger: any = ContextMenuTrigger;
 
-const treeData = [
-  {
-    key: '0',
-    title: '根目录',
-    isLeaf: false,
-    children: [
-      {
-        key: '1001',
-        title: '销售部',
-        isLeaf: true,
-      },
-      {
-        key: '1002',
-        title: '财务部',
-        isLeaf: true,
-      },
-    ],
-  },
-];
-
-const TeamTree = (props: any) => {
+const TeamTree = () => {
+  const {teamTree, listUnitMember, teamId, setTeamId} = useContext(TeamTreeContext);
 
   const {useToken} = theme;
   const {token} = useToken();
-  const [selectKey, setSelectKey] = useState(null);
   const [current, setCurrent] = useState<any>(null);
   const [editTeamModalOpen, setEditTeamModalOpen] = useState<any>(false);
 
@@ -67,8 +48,7 @@ const TeamTree = (props: any) => {
   })
   const onSelect = (keys: any[]) => {
     const key = keys[0];
-    setSelectKey(() => key);
-    props.setTeamKey(() => key);
+    setTeamId(() => key);
   }
   const handleAddTeamClick = (e: MouseEvent, data: any) => {
     console.log('handleAddTeamClick', data)
@@ -85,21 +65,21 @@ const TeamTree = (props: any) => {
   }
 
   const renderTitle = (node: any) => {
-    const nodeStyle = node.key === selectKey ? {color: token.colorPrimary} : {}
+    const nodeStyle = node.key === teamId ? {color: token.colorPrimary} : {}
     const nodeRef = React.createRef<any>();
     return (
       <_ContextMenuTrigger
         ref={nodeRef}
-        id={node.key === ConfigConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
+        id={node.parentId === ConfigConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
         holdToDisplay={-1}
         collect={() => onCollect(node)}
       >
         <Tooltip title={node.title} placement="bottomLeft">
           <div style={nodeStyle}>{node.title}</div>
         </Tooltip>
-        {node.key === ConfigConstant.ROOT_TEAM_ID &&
+        {node.parentId === ConfigConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><PlusOutlined style={{visibility: 'visible'}}/></span>}
-        {node.key !== ConfigConstant.ROOT_TEAM_ID &&
+        {node.parentId !== ConfigConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><MoreOutlined/></span>}
       </_ContextMenuTrigger>
     )
@@ -108,18 +88,16 @@ const TeamTree = (props: any) => {
   return (
     <div className={styles.teamList}>
       <div className={styles.panelTitle}>{t.team_list_title}</div>
-      <DirectoryTree
+      {teamTree[0] && <DirectoryTree
         switcherIcon={<div><CaretRightOutlined/></div>}
         titleRender={renderTitle}
         onSelect={onSelect}
-        treeData={treeData}
+        treeData={teamTree}
         expandAction={false}
         showIcon={false}
-      />
-
-      {
-        editTeamModalOpen && <EditTeamModal setEditTeamModalOpen={setEditTeamModalOpen} current={current}/>
-      }
+        defaultExpandedKeys={[teamTree[0]?.key]}
+      />}
+      {editTeamModalOpen && <EditTeamModal setEditTeamModalOpen={setEditTeamModalOpen} current={current}/>}
       <>
         <_ContextMenu id={TEAM_OPERATE}>
           <_MenuItem onClick={handleAddTeamClick}><PlusOutlined/>{t.team_menu_create}</_MenuItem>

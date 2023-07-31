@@ -13,6 +13,8 @@ public class TreeNode {
 
     private String key;
 
+    private String value;
+
     private Boolean isLeaf;
 
     private List<TreeNode> children;

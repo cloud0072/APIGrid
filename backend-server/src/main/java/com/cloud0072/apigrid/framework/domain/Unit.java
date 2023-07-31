@@ -40,6 +40,7 @@ public class Unit extends BaseEntity {
     /**
      * 关联表的ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long unitRefId;
 
     private Integer isDeleted;

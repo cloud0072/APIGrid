@@ -5,6 +5,16 @@ const prefix = 'unitTeam'
 
 export const UnitTeamApi = {
   ...getBaseApi(prefix),
+  getTeamTree: (query: any, options: any = {}) =>
+    request<any>({
+      path: `/${prefix}/getTeamTree`,
+      method: 'GET',
+      query,
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+      ...options,
+    }),
 }
 
 

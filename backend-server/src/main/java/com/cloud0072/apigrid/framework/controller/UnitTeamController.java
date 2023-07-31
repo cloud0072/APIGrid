@@ -18,11 +18,10 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     @Autowired
     private UnitTeamService unitTeamService;
 
-    @GetMapping("/spaceTeamTree")
-    public AjaxResult getUnitTeamTree() {
-//        SecurityUtils.getUser().getMemberList();
+    @GetMapping("/getTeamTree")
+    public AjaxResult getUnitTeamTree(String id) {
         QueryWrapper<UnitTeam> wrapper = new QueryWrapper<>();
-        wrapper.eq("isDeleted", 0);
+        wrapper.eq("is_deleted", 0);
         List<TreeNode> teamTree = unitTeamService.getUnitTeamTree(wrapper);
         return AjaxResult.success(teamTree);
     }

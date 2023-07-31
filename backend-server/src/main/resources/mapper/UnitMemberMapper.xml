@@ -22,56 +22,79 @@
         <result column="email" property="email"/>
         <result column="nick_name" property="nickName"/>
         <result column="avatar" property="avatar"/>
+        <result column="avatar_color" property="avatarColor"/>
     </resultMap>
 
-    <select id="selectMembersByRootTeamId" resultMap="MemberUserVo">
+    <select id="pageMemberUserByRootTeamId" resultMap="MemberUserVo">
         SELECT vom.id,
-               vu.user_id,
-               vu.nick_name,
-               vu.avatar,
-               vu.mobile,
-               vu.email,
-               GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids,
                vom.member_name,
                vom.is_deleted,
                vom.is_admin,
                vom.create_time,
-               vom.update_time
+               vom.update_time,
+               vu.user_id,
+               vu.username,
+               vu.nick_name,
+               vu.avatar,
+               vu.avatar_color,
+               vu.mobile,
+               vu.email,
+               GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids
         FROM ${tablePrefix}unit_member vom
-                 JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
-                 JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
+                 LEFT JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
+                 LEFT JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
                  LEFT JOIN ${tablePrefix}user vu ON vom.user_id = vu.user_id
-        WHERE vom.spc_id = #{spcId}
-          AND vom.is_deleted = #{isDeleted}
+        WHERE vom.is_deleted = #{isDeleted}
         GROUP BY vom.id
     </select>
 
-    <select id="selectMemberPageByTeamId" resultMap="MemberUserVo">
+    <select id="pageMemberUserByTeamIds" resultMap="MemberUserVo">
         SELECT
         vom.id,
-        vu.user_id,
-        vu.nick_name,
-        vu.avatar,
-        vu.mobile,
-        vu.email,
-        GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids,
         vom.member_name,
         vom.is_deleted,
         vom.is_admin,
         vom.create_time,
-        vom.update_time
+        vom.update_time,
+        vu.user_id,
+        vu.username,
+        vu.nick_name,
+        vu.avatar,
+        vu.avatar_color,
+        vu.mobile,
+        vu.email,
+        GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids
         FROM ${tablePrefix}unit_member vom
-        JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
-        JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
+        LEFT JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
+        LEFT JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
         LEFT JOIN ${tablePrefix}user vu ON vom.user_id = vu.user_id
-        WHERE votm.team_id IN
+        WHERE vom.is_deleted = #{isDeleted} and votm.team_id IN
         <foreach item="item" index="index" collection="teamIds" open="(" separator="," close=")">
             #{item}
         </foreach>
-        <if test="isDeleted != null">
-            AND vom.is_deleted = #{isDeleted}
-        </if>
         GROUP BY vom.id
+    </select>
+
+    <select id="getMemberUserById" resultMap="MemberUserVo">
+        SELECT vom.id,
+               vom.member_name,
+               vom.is_deleted,
+               vom.is_admin,
+               vom.create_time,
+               vom.update_time,
+               vu.user_id,
+               vu.username,
+               vu.nick_name,
+               vu.avatar,
+               vu.avatar_color,
+               vu.mobile,
+               vu.email,
+               GROUP_CONCAT(distinct vot.id ORDER BY votm.create_time DESC) AS team_ids
+        FROM ${tablePrefix}unit_member vom
+                 LEFT JOIN ${tablePrefix}unit_team_member votm ON votm.member_id = vom.id
+                 LEFT JOIN ${tablePrefix}unit_team vot ON vot.id = votm.team_id
+                 LEFT JOIN ${tablePrefix}user vu ON vom.user_id = vu.user_id
+        WHERE vom.id = #{id}
     </select>
 
 </mapper>
