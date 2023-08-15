@@ -21,7 +21,7 @@ public class UnitTeamVo {
 
     private String teamName;
 
-    private Integer memberCount;
+    private Integer userCount;
 
     private Boolean hasChildren;
 

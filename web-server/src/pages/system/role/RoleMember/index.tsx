@@ -62,7 +62,7 @@ const RoleMember = () => {
     listRoleMember()
   }, [roleId, pageInfo])
 
-  const insertRoleMember = useCallback(() => {
+  const insertRoleUser = useCallback(() => {
     setSelectMemberModalOpen(true);
   }, [])
 
@@ -95,10 +95,10 @@ const RoleMember = () => {
 
   const onSubmit = (unitList: any[]) => {
     const roleMembers = unitList.map(unit => {
-      const {teamId, memberId} = unit;
-      return {unitRefId: teamId ? teamId : memberId, unitType: teamId ? UnitType.Team : UnitType.Member}
+      const {teamId, userId} = unit;
+      return {unitRefId: teamId ? teamId : userId, unitType: teamId ? UnitType.Team : UnitType.Member}
     })
-    UnitRoleApi.insertRoleMember({roleId, roleMembers}).then(() => {
+    UnitRoleApi.insertRoleUser({roleId, roleMembers}).then(() => {
       listRoleMember()
     })
   }
@@ -107,7 +107,7 @@ const RoleMember = () => {
     <div className={styles.memberTable}>
       <div className={styles.panelTitle}>{currentRole?.roleName}</div>
       <div className={styles.memberTableBtn}>
-        <Button onClick={insertRoleMember}>{t.role_table_create}</Button>
+        <Button onClick={insertRoleUser}>{t.role_table_create}</Button>
         {selectedUnitIds.length > 0 && <Button onClick={() => deleteRoleMember()}>{t.role_table_remove}</Button>}
       </div>
       <div className={styles.memberTableWrapper}>

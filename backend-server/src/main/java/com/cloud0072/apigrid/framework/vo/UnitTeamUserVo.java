@@ -14,19 +14,33 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Builder
-public class MemberUserVo {
+public class UnitTeamUserVo {
 
     /**
      * member
      */
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long memberId;
+    private Long userId;
 
-    private String memberName;
+    private String nickName;
 
-    private Integer status;
+    private String username;
+
+    private String password;
+
+    private String newPwd;
+
+    private String mobile;
+
+    private String email;
+
+    private String avatar;
+
+    private Integer avatarColor;
 
     private Integer isAdmin;
+
+    private Integer isLocked;
 
     private Integer isDeleted;
 
@@ -40,8 +54,6 @@ public class MemberUserVo {
 
     private String updateBy;
 
-    private String spcId;
-
     /**
      * team
      */
@@ -53,29 +65,5 @@ public class MemberUserVo {
     private String teamName;
 
     private String teamNames;
-
-    /**
-     * user
-     */
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
-
-    private String username;
-
-    private String password;
-
-    private String newPwd;
-
-    private String mobile;
-
-    private String email;
-
-    private String nickName;
-
-    private String avatar;
-
-    private Integer avatarColor;
-
-    private Integer isLocked;
 
 }

@@ -1,31 +1,31 @@
 import {ContentType, request} from "@/utils";
 import {getBaseApi} from "@/services/BaseApi";
 
-const prefix = 'unitMember'
+const prefix = 'unitUser'
 
 export const UnitMemberApi = {
   ...getBaseApi(prefix),
-  insertMemberUser: (data: any) =>
+  registerUnitUser: (data: any) =>
     request<any>({
-      path: `/${prefix}/insertMemberUser`,
+      path: `/${prefix}/registerUnitUser`,
       method: 'POST',
       body: data,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  updateMemberUser: (data: any) =>
+  updateUnitUser: (data: any) =>
     request<any>({
-      path: `/${prefix}/updateMemberUser`,
+      path: `/${prefix}/updateUnitUser`,
       method: 'POST',
       body: data,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  getMemberUserById: (id: any) =>
+  getTeamUserById: (id: any) =>
     request<any>({
-      path: `/${prefix}/getMemberUserById/${id}`,
+      path: `/${prefix}/getTeamUserById/${id}`,
       method: 'GET',
       secure: true,
       type: ContentType.Json,

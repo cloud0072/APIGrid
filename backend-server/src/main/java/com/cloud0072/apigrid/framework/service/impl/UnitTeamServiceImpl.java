@@ -5,12 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.domain.TreeNode;
 import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
 import com.cloud0072.apigrid.framework.domain.Unit;
 import com.cloud0072.apigrid.framework.domain.UnitTeam;
 import com.cloud0072.apigrid.framework.mapper.UnitMapper;
 import com.cloud0072.apigrid.framework.mapper.UnitTeamMapper;
-import com.cloud0072.apigrid.framework.mapper.UnitTeamMemberMapper;
+import com.cloud0072.apigrid.framework.mapper.UnitTeamUserMapper;
 import com.cloud0072.apigrid.framework.service.UnitTeamService;
 import com.cloud0072.apigrid.framework.vo.UnitTeamVo;
 import lombok.var;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> implements UnitTeamService {
 
     @Autowired
-    private UnitTeamMemberMapper unitTeamMemberMapper;
+    private UnitTeamUserMapper unitTeamUserMapper;
 
     @Autowired
     private UnitMapper unitMapper;
@@ -48,7 +49,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
             unitTeam.setSortNum(0L);
         }
         unitTeam.setIsDeleted(0)
-                .setCreateTime(new Date())
+                .setUpdateBy(SecurityUtils.getUserId())
                 .setUpdateTime(new Date());
         baseMapper.insert(unitTeam);
 
@@ -56,7 +57,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
                 .unitType(1)
                 .unitRefId(unitTeam.getId())
                 .isDeleted(0)
-                .createTime(new Date())
+                .updateBy(SecurityUtils.getUserId())
                 .updateTime(new Date())
                 .build();
         unitMapper.insert(unit);
@@ -106,8 +107,8 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
         List<UnitTeamVo> unitTeamList = baseMapper.selectUnitTeamVoByTeamIds(teamIds);
         return unitTeamList.stream().peek(unitTeamVo -> {
             // the number of statistics
-            int memberCount = countMemberCountByParentId(unitTeamVo.getTeamId());
-            unitTeamVo.setMemberCount(memberCount);
+            int userCount = countUserCountByParentId(unitTeamVo.getTeamId());
+            unitTeamVo.setUserCount(userCount);
             // query whether sub-departments exist
             List<Long> subTeamIds = baseMapper.selectTeamIdsByParentId(unitTeamVo.getTeamId());
             if (CollUtil.isNotEmpty(subTeamIds)) {
@@ -115,18 +116,18 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
                 unitTeamVo.setHasChildrenTeam(true);
             } else {
                 // query whether the department has members
-                unitTeamVo.setHasChildren(memberCount > 0);
+                unitTeamVo.setHasChildren(userCount > 0);
                 unitTeamVo.setHasChildrenTeam(false);
             }
         }).collect(Collectors.toList());
     }
 
     @Override
-    public int countMemberCountByParentId(Long teamId) {
+    public int countUserCountByParentId(Long teamId) {
         List<Long> allSubTeamIds = this.getAllTeamIdsInTeamTree(teamId);
         int count = 0;
         if (CollUtil.isNotEmpty(allSubTeamIds)) {
-            count = unitTeamMemberMapper.countByTeamId(allSubTeamIds);
+            count = unitTeamUserMapper.countByTeamId(allSubTeamIds);
         }
         return count;
     }

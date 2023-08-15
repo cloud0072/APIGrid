@@ -1,7 +1,6 @@
 package com.cloud0072.apigrid.common.domain;
 
-import com.cloud0072.apigrid.framework.domain.UnitMember;
-import com.cloud0072.apigrid.framework.domain.User;
+import com.cloud0072.apigrid.framework.domain.UnitUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +17,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@EqualsAndHashCode(callSuper = true)
 public class LoginUser implements UserDetails {
 
     private Long userId;
+
+    private String nickName;
 
     private String username;
 
@@ -32,7 +34,12 @@ public class LoginUser implements UserDetails {
 
     private String avatar;
 
-    private String nickName;
+    private Integer avatarColor;
+
+    /**
+     * 管理员 0 否 1 是
+     */
+    private Integer isAdmin;
 
     /**
      * 状态 0 未锁定 1 锁定
@@ -40,7 +47,7 @@ public class LoginUser implements UserDetails {
     private Integer isLocked;
 
     /**
-     * isEnabled
+     * isDeleted
      */
     private Integer isDeleted;
 
@@ -54,24 +61,21 @@ public class LoginUser implements UserDetails {
 
     private String browser;
 
-    /**
-     * 关联成员 / 空间站
-     */
-    private List<UnitMember> memberList;
+//    /**
+//     * 关联成员 / 空间站
+//     */
+//    private List<UnitUser> userList;
 
-    public LoginUser(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public LoginUser(User user) {
-        this.userId = user.getUserId();
+    public LoginUser(UnitUser user) {
+        this.userId = user.getId();
+        this.nickName = user.getNickName();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.mobile = user.getMobile();
         this.email = user.getEmail();
         this.avatar = user.getAvatar();
-        this.nickName = user.getNickName();
+        this.avatarColor = user.getAvatarColor();
+        this.isAdmin = user.getIsAdmin();
         this.isLocked = user.getIsLocked();
         this.isDeleted = user.getIsDeleted();
     }

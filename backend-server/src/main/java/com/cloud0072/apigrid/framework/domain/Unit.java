@@ -28,11 +28,6 @@ public class Unit extends BaseEntity {
     private Long id;
 
     /**
-     * 空间站Id
-     */
-    private String spcId;
-
-    /**
      * 类型 1: UnitTeam , 2: UnitMember
      */
     private Integer unitType;
@@ -45,16 +40,10 @@ public class Unit extends BaseEntity {
 
     private Integer isDeleted;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long updateBy;
 
 }

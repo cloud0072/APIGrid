@@ -14,7 +14,7 @@ export const UnitRoleApi = {
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  insertRoleMember: ({roleId, roleMembers}: any) =>
+  insertRoleUser: ({roleId, roleMembers}: any) =>
     request<any>({
       path: `/${prefix}/${roleId}/members`,
       method: 'POST',

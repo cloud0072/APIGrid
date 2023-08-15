@@ -11,19 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class UnitMemberVo {
+public class UnitUserVo {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long unitId;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long memberId;
-
-    private String userId;
+    private Long userId;
 
     private String originName;
 
-    private String memberName;
+    private String nickName;
 
     private String email;
 
@@ -31,14 +29,12 @@ public class UnitMemberVo {
 
     private String avatar;
 
-    private Boolean isLocked;
+    private Integer avatarColor;
+
+    private String teamNames;
 
     private Boolean isAdmin;
 
-    private Integer avatarColor;
-
-    private String nickName;
-
-    private String teamNames;
+    private Boolean isLocked;
 
 }

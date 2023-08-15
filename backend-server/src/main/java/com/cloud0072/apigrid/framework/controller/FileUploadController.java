@@ -6,8 +6,8 @@ import com.cloud0072.apigrid.common.exception.ServiceException;
 import com.cloud0072.apigrid.common.util.FileUploadUtils;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.framework.domain.Asset;
-import com.cloud0072.apigrid.framework.service.AssetService;
+import com.cloud0072.apigrid.framework.domain.FileAsset;
+import com.cloud0072.apigrid.framework.service.FileAssetService;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.http.Method;
@@ -31,7 +31,7 @@ public class FileUploadController {
     private MinioProperties minioProperties;
 
     @Autowired
-    private AssetService assetService;
+    private FileAssetService fileAssetService;
 
     /**
      * 例子
@@ -53,7 +53,7 @@ public class FileUploadController {
      */
     @SneakyThrows
     @GetMapping("/getPreSignedPutUrl")
-    public AjaxResult getPreSignedPutUrl(Asset data) {
+    public AjaxResult getPreSignedPutUrl(FileAsset data) {
         if (StringUtils.isEmpty(data.getFileName())) {
             throw new ServiceException("fileName不能为空");
         }
@@ -65,21 +65,21 @@ public class FileUploadController {
                 .bucket(minioProperties.getBucketName())
                 .object(token)
                 .build());
-        Asset asset = Asset.builder()
+        FileAsset fileAsset = FileAsset.builder()
                 .bucketName(minioProperties.getBucketName())
                 .token(token)
                 .fileName(data.getFileName())
                 .mimeType(data.getMimeType())
                 .md5(data.getMd5())
-                .createTime(new Date())
-                .createBy(SecurityUtils.getUserId())
+                .updateTime(new Date())
+                .updateBy(SecurityUtils.getUserId())
                 .build();
-        assetService.save(asset);
+        fileAssetService.save(fileAsset);
         var result = AjaxResult.success();
         result.put("putUrl", putUrl);
         result.put("token", token);
         result.put("fileUrl", fileUrl);
-        result.put("id", asset.getId());
+        result.put("id", fileAsset.getId());
         return result;
     }
 

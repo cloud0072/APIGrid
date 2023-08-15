@@ -22,6 +22,6 @@ public interface UnitTeamService extends IService<UnitTeam> {
 
     List<UnitTeamVo> findUnitTeamVo(List<Long> teamIds);
 
-    int countMemberCountByParentId(Long teamId);
+    int countUserCountByParentId(Long teamId);
 
 }

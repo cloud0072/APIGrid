@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * 节点权限 / 列权限
@@ -18,17 +21,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@TableName(keepGlobalPrefix = true, value = "control")
-public class Control extends BaseEntity {
+@TableName(keepGlobalPrefix = true, value = "menu_control")
+public class MenuControl extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
-
-    /**
-     * 空间站Id
-     */
-    private String spcId;
 
     /**
      * 权限Id
@@ -57,5 +55,11 @@ public class Control extends BaseEntity {
      * 4 reader     查看
      */
     private Integer permissionType;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
 }

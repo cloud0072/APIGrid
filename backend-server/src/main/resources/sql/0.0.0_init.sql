@@ -49,7 +49,7 @@ CREATE TABLE apigrid_unit_member
     `id`          BIGINT ( 20 ) NOT NULL,
     `user_id`     BIGINT ( 20 ),
     `spc_id`      VARCHAR(32),
-    `member_name` VARCHAR(32),
+    `nick_name`   VARCHAR(32),
     `status`      INT ( 1 ),
     `is_locked`   INT ( 1 ),
     `is_admin`    INT ( 1 ),
@@ -157,6 +157,6 @@ INSERT INTO `apigrid_user`(`user_id`, `username`, `password`, `mobile`, `email`,
 VALUES (1, 'admin', '$2a$10$tYymtpfjyNbkh9BiYtE0r.uwh7/rAtU2Xq/p//IkYBbCj42kz/dFq', '18638731263', '352419394@qq.com',
         NULL, '管理员', 0, 0, NULL, '2023-06-10 17:17:58', NULL, '2023-06-10 17:18:05');
 
-INSERT INTO `apigrid_unit_member`(`id`, `user_id`, `spc_id`, `member_name`, `status`, `is_locked`, `is_admin`,
+INSERT INTO `apigrid_unit_member`(`id`, `user_id`, `spc_id`, `nick_name`, `status`, `is_locked`, `is_admin`,
                                   `is_deleted`, `create_by`, `create_time`, `update_by`, `update_time`)
 VALUES (1667445960337244161, 1, NULL, '管理员', 0, 0, 1, 0, NULL, '2023-06-10 17:25:52', NULL, '2023-06-10 17:25:54');

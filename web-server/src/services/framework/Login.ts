@@ -43,12 +43,12 @@ export const sysUserLogout = (params: RequestParams = {}) =>
  *
  * @tags SysLoginService
  * @name sysGetUserInfo
- * @request GET:/info
+ * @request GET:/getUserInfo
  * @secure
  */
 export const sysGetUserInfo = (params: RequestParams = {}) =>
   request<any>({
-    path: `/getInfo`,
+    path: `/getUserInfo`,
     method: 'GET',
     secure: true,
     skipErrorHandler: false,

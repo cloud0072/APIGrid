@@ -2,30 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloud0072.apigrid.framework.mapper.UnitTeamMapper">
 
-    <resultMap id="MemberUserVo" type="com.cloud0072.apigrid.framework.vo.MemberUserVo">
-        <result column="id" property="memberId"/>
-        <result column="member_name" property="memberName"/>
-        <result column="status" property="status"/>
-        <result column="is_admin" property="isAdmin"/>
-        <result column="is_deleted" property="isDeleted"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="spc_id" property="spcId"/>
-
-        <result column="team_id" property="teamId"/>
-        <result column="team_name" property="teamName"/>
-        <result column="team_ids" property="teamIds"/>
-        <result column="team_names" property="teamNames"/>
-
-        <result column="user_id" property="userId"/>
-        <result column="username" property="username"/>
-        <result column="mobile" property="mobile"/>
-        <result column="email" property="email"/>
-        <result column="nick_name" property="nickName"/>
-        <result column="avatar" property="avatar"/>
-        <result column="avatar_color" property="avatarColor"/>
-    </resultMap>
-
     <select id="selectTeamIdByParentIdIn" resultType="java.lang.Long">
         SELECT id
         FROM ${tablePrefix}unit_team
@@ -36,14 +12,14 @@
         </foreach>
     </select>
 
-    <select id="getRoleTeamByIds" resultType="com.cloud0072.apigrid.framework.vo.RoleMemberVo">
+    <select id="getRoleTeamByIds" resultType="com.cloud0072.apigrid.framework.vo.UnitRoleUserVo">
         SELECT
         vou.id as unitId,
         vorm.unit_type as unitType,
         vout.id as unitRefId,
         vout.team_name as unitName,
         vout.team_name as teamNames
-        FROM ${tablePrefix}unit_role_member vorm
+        FROM ${tablePrefix}unit_role_user vorm
         LEFT JOIN ${tablePrefix}unit_team vout on vout.id = vorm.unit_ref_id and vout.is_deleted = 0
         LEFT JOIN ${tablePrefix}unit vou on vout.id = vou.unit_ref_id and vou.is_deleted = 0
         WHERE vout.id IN

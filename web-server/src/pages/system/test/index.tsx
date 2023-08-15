@@ -1,6 +1,6 @@
 import BjhAgGrid from '@/components/BjhAgGrid';
 import {BasePageContainer} from "@/components";
-import {UserApi} from "@/services/framework/User";
+import {UnitUserApi} from "@/services/framework/UnitUser";
 
 const PageUserList = () => {
 
@@ -23,9 +23,9 @@ const PageUserList = () => {
         sortable: true,		//排序
       },
       {
-        headerName: "password",
-        field: "password",
-        orderNum: 2,
+        headerName: "nickName",
+        field: "nickName",
+        orderNum: 0,
         editable: true,		//编辑单元格
         resizable: true,	//可调宽度
         sortable: true,		//排序
@@ -51,7 +51,7 @@ const PageUserList = () => {
       tableId: '',
       tableName: '',
       tableType: 'list',
-      rowKey: 'id',
+      rowKey: 'userId',
       listApi: '',
       updateApi: '',
       deleteApi: '',
@@ -69,11 +69,11 @@ const PageUserList = () => {
     ]
     return Promise.resolve({tableInfo, tableColumns, viewList})
   }
-  const loadData = () => UserApi.getPage({pageSize: 10, pageNum: 1}).then(r => r.data.records)
+  const loadData = () => UnitUserApi.getPage({pageSize: 10, pageNum: 1}).then(r => r.data.records)
 
   return (
     <BasePageContainer>
-      <BjhAgGrid getTableInfo={getTableInfo} loadData={loadData}/>
+      <BjhAgGrid getTableInfo={getTableInfo} loadData={loadData} getRowId={(p: any) => p.data.userId}/>
     </BasePageContainer>
   );
 };

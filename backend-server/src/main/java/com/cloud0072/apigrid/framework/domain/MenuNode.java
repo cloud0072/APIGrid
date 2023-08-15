@@ -12,47 +12,48 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 
-/**
- * 空间站
- */
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@TableName(keepGlobalPrefix = true, value = "space")
-public class Space extends BaseEntity {
+@TableName(keepGlobalPrefix = true, value = "menu_node")
+public class MenuNode extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
-    private String spcId;
-
-    private String spaceName;
-
-    private String logo;
-
-    private String owner;
+    private String nodeId;
 
     /**
-     * 空间站配置
+     * 父节点nodeId
      */
-    private String props;
+    private String parentId;
+
+    private String nodeName;
+
+    /**
+     * 节点类型
+     * 0 root
+     * 1 folder
+     * 2 datasheet
+     * 3 mirror
+     * 4 form
+     */
+    private Integer nodeType;
+
+    private String cover;
+
+    private String icon;
 
     private Integer isDeleted;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long updateBy;
 
 }

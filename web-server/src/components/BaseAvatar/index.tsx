@@ -8,7 +8,7 @@ const getAvatarColor = (avatarColor: number) => {
 }
 
 const BaseAvatar = (props: any) => {
-  const {avatar, avatarColor, memberName, size} = props
+  const {avatar, avatarColor, nickName, size} = props
   const avatarProps = {
     size: size || 40,
   }
@@ -17,7 +17,7 @@ const BaseAvatar = (props: any) => {
     color: 'white'
   }
   return avatar ? <Avatar {...avatarProps} src={avatar}/> :
-    memberName ? <Avatar {...avatarProps} style={style}>{memberName.charAt(0)}</Avatar> :
+    nickName ? <Avatar {...avatarProps} style={style}>{nickName.charAt(0)}</Avatar> :
       <Avatar {...avatarProps} icon={<UserOutlined/>}/>;
 }
 

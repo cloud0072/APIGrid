@@ -47,7 +47,7 @@ export const GridCtx = createContext({
   setColGroupsList: undefined,
 });
 
-const BjhAgGrid = (props) => {
+const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
   const gridRef = useRef(null); // Optional - for accessing Grid's API
   const [rowHeight, setRowHeight] = useState(34)
   const [indeterminate, setIndeterminate] = useState(true);
@@ -97,12 +97,12 @@ const BjhAgGrid = (props) => {
     return rowHeight;
   }, [rowHeight])
 
-  const getRowId = params => params.data.id;
+  const getId = params => params.data.id;
 
   // 页面加载
   // 1 获取tableInfo
   useEffect(() => {
-    props.getTableInfo().then(response => {
+    getTableInfo().then(response => {
       setTableInfo((info) => response.tableInfo || info)
       setTableColumns(() => response.tableColumns || [])
 
@@ -115,7 +115,7 @@ const BjhAgGrid = (props) => {
   const getRowData = () => {
     const start = Date.now()
     setSpinning(true)
-    props.loadData().then(response => {
+    loadData().then(response => {
       setRowData(() => response)
     }).finally(() => {
       setSpinning(false)
@@ -125,7 +125,7 @@ const BjhAgGrid = (props) => {
   }
 
   useEffect(() => {
-    if (gridRef && props.loadData) {
+    if (gridRef && loadData) {
       getRowData();
     }
   }, [gridRef])
@@ -158,7 +158,7 @@ const BjhAgGrid = (props) => {
               columnDefs={localColDefs} // Column Defs for Columns
               defaultColDef={defaultColDef} // Default Column Properties
               getRowHeight={getRowHeight}
-              getRowId={props.getRowId || getRowId}
+              getRowId={getRowId || getId}
               rowSelection='multiple' // Options - allows click selection of rows
               groupDisplayType={'multipleColumns'}
               suppressRowClickSelection={true}

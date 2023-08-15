@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.common.util;
 
-import com.cloud0072.apigrid.common.exception.ServiceException;
 import com.cloud0072.apigrid.common.domain.LoginUser;
+import com.cloud0072.apigrid.common.exception.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,4 +85,5 @@ public class SecurityUtils {
     public static boolean isAdmin(Long userId) {
         return userId != null && 1L == userId;
     }
+
 }

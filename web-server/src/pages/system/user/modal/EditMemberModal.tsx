@@ -8,7 +8,7 @@ import {FileUploadApi} from "@/services/framework/FileUpload";
 import {TeamTreeContext} from "@/pages/system/user";
 import BaseAvatar from "@/components/BaseAvatar";
 
-const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
+const EditMemberModal = ({userId, setOpen}: any) => {
 
   const {teamTree, listTeamMember} = useContext(TeamTreeContext);
   const [memberInfo, setMemberInfo] = useState<any>({});
@@ -20,7 +20,7 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
   // init
   useEffect(() => {
     setLoading(true)
-    UnitMemberApi.getMemberUserById(memberId).then(response => {
+    UnitMemberApi.getTeamUserById(userId).then(response => {
       const teamIds = response.data?.teamIds?.split(',').map((id: string) => ({value: id})) || []
       setMemberInfo({...response.data, teamIds})
       form.setFieldsValue({...response.data, teamIds});
@@ -33,13 +33,13 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
       form.validateFields().then((values) => {
         const teamIds = values.teamIds?.map((d: any) => d.value).join(',') || undefined
         const avatar = fileList[0] ? fileList[0].url : null;
-        if (values.memberId) {
-          return UnitMemberApi.updateMemberUser({...values, teamIds, avatar});
+        if (values.userId) {
+          return UnitMemberApi.updateUnitUser({...values, teamIds, avatar});
         } else {
-          return UnitMemberApi.insertMemberUser({...values, teamIds, avatar});
+          return UnitMemberApi.registerUnitUser({...values, teamIds, avatar});
         }
       }).finally(() => {
-        setEditMemberModalOpen(() => false)
+        setOpen(() => false)
         setLoading(() => false)
         listTeamMember()
       })
@@ -47,7 +47,7 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
   }
 
   const handleCancel = () => {
-    setEditMemberModalOpen(false)
+    setOpen(false)
   }
 
   const uploadProps: UploadProps = {
@@ -86,7 +86,7 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
   );
 
   return (<Modal
-    title={<div className={styles.modalTitle}>{t.member_modal_title_create}</div>}
+    title={<div className={styles.modalTitle}>{t.user_modal_title_create}</div>}
     width={800}
     open={true}
     onOk={handleOk}
@@ -116,22 +116,19 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
       <Form.Item name={'username'} hidden={true}>
         <Input/>
       </Form.Item>
-      <Form.Item name={'memberId'} hidden={true}>
-        <Input/>
+      <Form.Item label={t.user_nick_name} name={'nickName'}>
+        <Input placeholder={t.common_placeholder_input + t.user_nick_name}/>
       </Form.Item>
-      <Form.Item label={t.member_name} name={'nickName'}>
-        <Input placeholder={t.common_placeholder_input + t.member_name}/>
+      <Form.Item label={t.user_mobile} name={'mobile'}>
+        <Input placeholder={t.common_placeholder_input + t.user_mobile}/>
       </Form.Item>
-      <Form.Item label={t.mobile} name={'mobile'}>
-        <Input placeholder={t.common_placeholder_input + t.mobile}/>
+      <Form.Item label={t.user_email} name={'email'}>
+        <Input placeholder={t.common_placeholder_input + t.user_email}/>
       </Form.Item>
-      <Form.Item label={t.member_email} name={'email'}>
-        <Input placeholder={t.common_placeholder_input + t.member_email}/>
-      </Form.Item>
-      <Form.Item label={t.member_team} name={'teamIds'}>
+      <Form.Item label={t.user_team} name={'teamIds'}>
         <TreeSelect
           style={{width: '100%'}}
-          placeholder={t.common_placeholder_select + t.member_team}
+          placeholder={t.common_placeholder_select + t.user_team}
           treeCheckable={true}
           treeCheckStrictly={true}
           showCheckedStrategy={TreeSelect.SHOW_ALL}

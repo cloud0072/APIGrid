@@ -28,8 +28,6 @@ public class UnitTeam extends BaseEntity {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
-    private String spcId;
-
     @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
@@ -42,16 +40,10 @@ public class UnitTeam extends BaseEntity {
 
     private Integer isDeleted;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updateBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long updateBy;
 
 }

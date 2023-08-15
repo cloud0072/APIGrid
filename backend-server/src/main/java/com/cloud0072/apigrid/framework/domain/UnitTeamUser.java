@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * 成员
+ * 成员组 / 部门
  */
 @Data
 @Builder(toBuilder = true)
@@ -21,48 +21,22 @@ import java.util.Date;
 @AllArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@TableName(keepGlobalPrefix = true, value = "unit_member")
-public class UnitMember extends BaseEntity {
+@TableName(keepGlobalPrefix = true, value = "unit_team_user")
+public class UnitTeamUser extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
-    /**
-     * 空间站Id
-     */
-    private String spcId;
-
-    /**
-     * 昵称
-     */
-    private String memberName;
-
-    /**
-     * 确认上次使用的成员/空间站
-     */
-    private Integer status;
-
-    /**
-     * 空间站管理员
-     */
-    private Integer isAdmin;
-
-    private Integer isDeleted;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
+    private Long teamId;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long updateBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
 }

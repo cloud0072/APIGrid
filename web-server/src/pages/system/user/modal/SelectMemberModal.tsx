@@ -137,7 +137,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
                         <Avatar size={32} className={styles.teamIcon} shape={'square'} icon={<ApartmentOutlined/>}/>
                         <div className={styles.teamInfo}>
                           <div className={styles.teamTitle}>{unit.teamName}</div>
-                          <div className={styles.memberCount}>{unit.memberCount}人</div>
+                          <div className={styles.userCount}>{unit.userCount}人</div>
                         </div>
                       </div>
                     </Checkbox>
@@ -160,7 +160,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
                     <Checkbox value={unit.unitId} onClick={() => onChangeChecked(unit)}>
                       <div className={styles.memberItem}>
                         <BaseAvatar {...unit} size={32}/>
-                        <div className={styles.memberName}>{unit.memberName || unit.nickName}</div>
+                        <div className={styles.nickName}>{unit.nickName || unit.unitName}</div>
                       </div>
                     </Checkbox>
                   </div>
@@ -180,7 +180,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
                   <UnitTag
                     {...unit}
                     isTeam={unit.teamId}
-                    title={unit.teamName || unit.memberName}
+                    title={unit.teamName || unit.nickName}
                     onClose={() => onChangeChecked(unit)}
                   />
                 </div>)

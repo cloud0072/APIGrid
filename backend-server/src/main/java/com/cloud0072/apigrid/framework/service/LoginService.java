@@ -4,6 +4,6 @@ public interface LoginService {
 
     String login(String username, String password, String code, String uuid);
 
-    String appLogin(String username);
+//    String appLogin(String username);
 
 }

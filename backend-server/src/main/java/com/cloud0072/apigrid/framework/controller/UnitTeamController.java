@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.domain.TreeNode;
 import com.cloud0072.apigrid.framework.domain.UnitTeam;
-import com.cloud0072.apigrid.framework.service.UnitMemberService;
+import com.cloud0072.apigrid.framework.service.UnitUserService;
 import com.cloud0072.apigrid.framework.service.UnitTeamService;
-import com.cloud0072.apigrid.framework.vo.UnitMemberVo;
+import com.cloud0072.apigrid.framework.vo.UnitUserVo;
 import com.cloud0072.apigrid.framework.vo.UnitTeamVo;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     private UnitTeamService unitTeamService;
 
     @Autowired
-    private UnitMemberService unitMemberService;
+    private UnitUserService unitUserService;
 
     @GetMapping("/getTeamTree")
     public AjaxResult getUnitTeamTree() {
@@ -36,7 +36,7 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     public AjaxResult getSubUnitList(Long teamId) {
         var result = AjaxResult.success();
         List<UnitTeamVo> teams = unitTeamService.listByTeamId(teamId);
-        List<UnitMemberVo> members = unitMemberService.listByTeamId(teamId);
+        List<UnitUserVo> members = unitUserService.listByTeamId(teamId);
         result.put("teams", teams);
         result.put("members", members);
         return result;

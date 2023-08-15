@@ -21,8 +21,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@TableName(keepGlobalPrefix = true, value = "asset")
-public class Asset extends BaseEntity {
+@TableName(keepGlobalPrefix = true, value = "file_asset")
+public class FileAsset extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
@@ -40,10 +40,10 @@ public class Asset extends BaseEntity {
 
     private Integer isDeleted;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
+    private Long updateBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
 }

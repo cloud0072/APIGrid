@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class RoleMemberVo {
+public class UnitRoleUserVo {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long unitId;
@@ -23,16 +23,14 @@ public class RoleMemberVo {
 
     private String unitName;
 
-    private Integer memberCount;
-
-    private String teamNames;
-
     private String avatar;
 
     private Integer avatarColor;
 
-    private String nickName;
-
     private Boolean isAdmin;
+
+    private Integer userCount;
+
+    private String teamNames;
 
 }
