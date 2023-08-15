@@ -98,7 +98,6 @@ const RoleMember = () => {
       const {teamId, memberId} = unit;
       return {unitRefId: teamId ? teamId : memberId, unitType: teamId ? UnitType.Team : UnitType.Member}
     })
-    // console.log('onSubmit unit', unitList)
     UnitRoleApi.insertRoleMember({roleId, roleMembers}).then(() => {
       listRoleMember()
     })
