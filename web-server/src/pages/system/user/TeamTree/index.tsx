@@ -6,6 +6,8 @@ import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
 import {t} from "@/utils/i18n";
 import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
 import {TeamTreeContext} from "@/pages/system/user";
+import {UnitRoleApi} from "@/services/framework/UnitRole";
+import {UnitTeamApi} from "@/services/framework/UnitTeam";
 
 export interface ITeamTreeNode {
   teamId: string;
@@ -28,8 +30,8 @@ const _MenuItem: any = MenuItem;
 const _ContextMenuTrigger: any = ContextMenuTrigger;
 
 const TeamTree = () => {
-  const {teamTree, listUnitMember, teamId, setTeamId} = useContext(TeamTreeContext);
 
+  const {teamTree, teamId, setTeamId, listUnitTeam} = useContext(TeamTreeContext);
   const {useToken} = theme;
   const {token} = useToken();
   const [current, setCurrent] = useState<any>(null);
@@ -51,15 +53,15 @@ const TeamTree = () => {
     setTeamId(() => key);
   }
   const handleAddTeamClick = (e: MouseEvent, data: any) => {
-    console.log('handleAddTeamClick', data)
     setCurrent(() => ({parentId: data.key, parentTeamName: data.title, type: 'add'}));
     setEditTeamModalOpen(true)
   }
   const handleDeleteTeamClick = (e: MouseEvent, data: any) => {
-    console.log('handleDeleteTeamClick', data)
+    UnitTeamApi.deleteByIds(data.key).then(() => {
+      listUnitTeam()
+    })
   }
   const handleRenameTeamClick = (e: MouseEvent, data: any) => {
-    console.log('handleRenameTeamClick', data)
     setCurrent(() => ({id: data.key, teamName: data.title, type: 'rename'}));
     setEditTeamModalOpen(true)
   }

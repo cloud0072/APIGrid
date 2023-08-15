@@ -33,7 +33,7 @@ const tableProps = ({onUpdate}) => ({
       key: 'avatar',
       align: 'left',
       render: (text: any, record: any) => {
-        return (<BaseAvatar {...record} size={40}>编辑</BaseAvatar>)
+        return (<BaseAvatar {...record} size={40}/>)
       },
     },
     {

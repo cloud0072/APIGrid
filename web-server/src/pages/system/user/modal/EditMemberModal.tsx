@@ -10,7 +10,7 @@ import BaseAvatar from "@/components/BaseAvatar";
 
 const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
 
-  const {teamTree, listUnitMember} = useContext(TeamTreeContext);
+  const {teamTree, listTeamMember} = useContext(TeamTreeContext);
   const [memberInfo, setMemberInfo] = useState<any>({});
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState<any>('vertical');
@@ -41,7 +41,7 @@ const EditMemberModal = ({memberId, setEditMemberModalOpen}: any) => {
       }).finally(() => {
         setEditMemberModalOpen(() => false)
         setLoading(() => false)
-        listUnitMember()
+        listTeamMember()
       })
     })
   }

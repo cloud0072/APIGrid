@@ -4,6 +4,10 @@ export const t = {
   common_placeholder_select: '请选择',
   common_modal_confirm: '确认',
   common_modal_cancel: '取消',
+  common_contacts: '通讯录',
+  // modal
+  unit_modal_select_title: '选择成员/小组',
+  unit_modal_select_search: '搜索成员/小组',
   // user
   mobile: '手机号',
   nickname: '昵称',
@@ -26,4 +30,17 @@ export const t = {
   team_modal_title_update: '编辑小组',
   team_name: '小组名称',
   team_parent_name: '上级名称',
+  // role
+  role_const_admin: '管理员',
+  role_list_title: '角色管理',
+  role_list_create: '新建角色',
+  role_menu_rename: '重命名',
+  role_menu_delete: '删除角色',
+  role_name: '角色名称',
+  role_sort: '角色排序',
+  role_modal_title_create: '创建角色',
+  role_modal_title_update: '编辑角色',
+  role_table_create: '添加成员/小组',
+  role_table_remove: '移除该角色'
+
 }

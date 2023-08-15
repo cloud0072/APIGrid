@@ -5,7 +5,7 @@ import FormLoginByPwd from '@/pages/login/components/FormLoginByPwd';
 import {sysUserLogin} from '@/services/framework/Login';
 import {setToken, StorageType} from '@/utils';
 import {LoginFormPage, ProFormCheckbox} from '@ant-design/pro-components';
-import {message, Tabs} from 'antd';
+import {App, Tabs} from 'antd';
 import type {FC} from 'react';
 import {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
@@ -53,6 +53,8 @@ const PageLogin: FC = () => {
     } catch (error) {
     }
   };
+
+  const {message} = App.useApp();
 
   useEffect(() => {
     if (searchParams.get('msg')) {

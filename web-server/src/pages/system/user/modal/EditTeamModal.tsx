@@ -32,9 +32,14 @@ const EditTeamModal = ({setEditTeamModalOpen, current}: any) => {
     setEditTeamModalOpen(false)
   }
 
+  const TitleRender = () => (
+    <div className={styles.modalTitle}>
+      {current.type === 'add' ? t.team_modal_title_create : t.team_modal_title_update}
+    </div>
+  )
+
   return (<Modal
-    title={<div
-      className={styles.modalTitle}>{current.type === 'add' ? t.team_modal_title_create : t.team_modal_title_update}</div>}
+    title={<TitleRender/>}
     width={800}
     open={true}
     onOk={handleOk}

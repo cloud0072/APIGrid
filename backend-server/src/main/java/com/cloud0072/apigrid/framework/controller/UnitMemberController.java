@@ -26,11 +26,7 @@ public class UnitMemberController extends BaseController<UnitMember> {
 
     @GetMapping("/page")
     public AjaxResult selectEntityPage(UnitMember t, HttpServletRequest request) {
-        String pageSize = request.getParameter("pageSize");
-        String pageNum = request.getParameter("pageNum");
-        long size = StringUtils.isEmpty(pageSize) ? 20 : Long.parseLong(pageSize);
-        long num = StringUtils.isEmpty(pageNum) ? 1 : Long.parseLong(pageNum);
-        Page<MemberUserVo> page = new Page<>(num, size);
+        Page<MemberUserVo> page = getPageInfo(request, MemberUserVo.class);
 
         var isDeleted = request.getParameter("isDeleted");
         isDeleted = StringUtils.isEmpty(isDeleted) ? "0" : isDeleted;

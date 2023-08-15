@@ -73,6 +73,15 @@ CREATE TABLE apigrid_unit_role
     `update_time` datetime ( 0 ),
     PRIMARY KEY (`id`)
 );
+CREATE TABLE apigrid_unit_role_member
+(
+    `id`          BIGINT ( 20 ) NOT NULL,
+    `role_id`     BIGINT ( 20 ),
+    `unit_ref_id` BIGINT ( 20 ),
+    `unit_type`   INT ( 1 ),
+    `create_time` datetime ( 0 ),
+    PRIMARY KEY (`id`)
+);
 CREATE TABLE apigrid_unit_team
 (
     `id`          BIGINT ( 20 ) NOT NULL,

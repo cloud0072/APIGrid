@@ -52,6 +52,8 @@ public class MemberUserVo {
 
     private String teamName;
 
+    private String teamNames;
+
     /**
      * user
      */

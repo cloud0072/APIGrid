@@ -15,6 +15,16 @@ export const UnitTeamApi = {
       skipErrorHandler: false,
       ...options,
     }),
+  getSubUnitList: (query: any, options: any = {}) =>
+    request<any>({
+      path: `/${prefix}/getSubUnitList`,
+      method: 'GET',
+      query,
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+      ...options,
+    }),
 }
 
 

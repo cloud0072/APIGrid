@@ -24,7 +24,7 @@ const PageUserList = () => {
     pageNum: 1
   });
 
-  const listUnitMember = useCallback(() => {
+  const listTeamMember = useCallback(() => {
     const selectKey = teamTree[0]?.key === teamId ? "0" : teamId;
     UnitMemberApi.getPage({teamId: selectKey, ...pageInfo}).then(response => {
       const records = response.data.records;
@@ -45,7 +45,7 @@ const PageUserList = () => {
   }, [])
 
   useEffect(() => {
-    listUnitMember()
+    listTeamMember()
   }, [teamId])
 
   return (
@@ -53,11 +53,12 @@ const PageUserList = () => {
       <div className={'base-panel'}>
         <TeamTreeContext.Provider value={{
           teamId,
-          setTeamId,
           teamTree,
-          listUnitTeam,
           memberList,
-          listUnitMember
+          setTeamId,
+          setMemberList,
+          listUnitTeam,
+          listTeamMember
         }}>
           <BjhSplitPane minSize={280}>
             <TeamTree/>

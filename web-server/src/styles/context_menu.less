@@ -1,0 +1,79 @@
+@import 'lib_mixins.less';
+
+.contextmenuTitle {
+  &.selected {
+    .react-contextmenu-wrapper {
+      background: var(--rowSelectedBg) !important;
+    }
+  }
+
+  :global {
+    .react-contextmenu-wrapper {
+      display: flex !important;
+      height: 40px;
+      line-height: 40px;
+      justify-content: space-between;
+      align-items: center;
+
+      div {
+        flex: 1;
+        .ellipsis();
+      }
+
+      > span {
+        display: inline-block;
+        height: 40px;
+        line-height: 44px;
+        margin-right: 13px;
+        visibility: hidden;
+
+        svg {
+          fill: var(--firstLevelText);
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: var(--rowSelectedBg) !important;
+      }
+
+      &:hover span {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+:global {
+  .react-contextmenu--visible {
+    width: 220px;
+    background: var(--highestBg);
+    z-index: var(--contextmenu);
+    border-radius: 4px;
+    border: 1px solid var(--lineColor);
+
+    .react-contextmenu-item {
+      height: 40px;
+      line-height: 40px;
+      font-size: 13px;
+      color: var(--firstLevelText);
+      display: flex;
+      align-items: center;
+      padding-left: 13px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--firstLevelText);
+        margin-right: 4px;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: var(--rowSelectedBg);
+      }
+    }
+  }
+}

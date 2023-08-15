@@ -12,7 +12,7 @@ import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 import './style.less';
-import {message, Spin} from "antd";
+import {App, message, Spin} from "antd";
 import {ResizeContext} from "@/layouts";
 
 LicenseManager.prototype.validateLicense = () => true
@@ -120,7 +120,6 @@ const BjhAgGrid = (props) => {
     }).finally(() => {
       setSpinning(false)
       const msg = `请求加载完毕,耗时:${Date.now() - start}毫秒`;
-      // message.success(msg, 6)
       console.log(msg);
     })
   }

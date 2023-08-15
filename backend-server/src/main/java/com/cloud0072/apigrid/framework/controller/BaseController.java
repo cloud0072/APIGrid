@@ -61,4 +61,12 @@ public abstract class BaseController<T> {
         return new Page<>(num, size);
     }
 
+    protected <P> Page<P> getPageInfo(HttpServletRequest request, Class<P> clazz) {
+        String pageSize = request.getParameter("pageSize");
+        String pageNum = request.getParameter("pageNum");
+        long size = StringUtils.isEmpty(pageSize) ? 20 : Long.parseLong(pageSize);
+        long num = StringUtils.isEmpty(pageNum) ? 1 : Long.parseLong(pageNum);
+        return new Page<>(num, size);
+    }
+
 }

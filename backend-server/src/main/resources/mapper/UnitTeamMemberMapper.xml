@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud0072.apigrid.framework.mapper.UnitTeamMemberMapper">
+
+    <select id="countByTeamId" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT vom.id)
+        FROM ${tablePrefix}unit_team_member vodmr
+        JOIN ${tablePrefix}unit_member vom ON vodmr.member_id = vom.id AND vom.is_deleted = 0
+        WHERE vodmr.team_id IN
+        <foreach item="item" index="index" collection="teamIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="countByRootId">
+        SELECT COUNT(DISTINCT vom.id)
+        FROM ${tablePrefix}unit_member vom
+        WHERE vom.is_deleted = 0
+    </select>
+
+    <select id="selectMemberIdsByTeamId" resultType="java.lang.Long">
+        SELECT voutmr.member_id
+        FROM ${tablePrefix}unit_team_member voutmr
+        WHERE voutmr.team_id = #{teamId}
+    </select>
+
+</mapper>

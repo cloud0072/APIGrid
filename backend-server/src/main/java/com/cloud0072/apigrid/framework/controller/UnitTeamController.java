@@ -3,9 +3,12 @@ package com.cloud0072.apigrid.framework.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.domain.TreeNode;
-import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.framework.domain.UnitTeam;
+import com.cloud0072.apigrid.framework.service.UnitMemberService;
 import com.cloud0072.apigrid.framework.service.UnitTeamService;
+import com.cloud0072.apigrid.framework.vo.UnitMemberVo;
+import com.cloud0072.apigrid.framework.vo.UnitTeamVo;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,24 +21,30 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     @Autowired
     private UnitTeamService unitTeamService;
 
+    @Autowired
+    private UnitMemberService unitMemberService;
+
     @GetMapping("/getTeamTree")
-    public AjaxResult getUnitTeamTree(String id) {
+    public AjaxResult getUnitTeamTree() {
         QueryWrapper<UnitTeam> wrapper = new QueryWrapper<>();
         wrapper.eq("is_deleted", 0);
         List<TreeNode> teamTree = unitTeamService.getUnitTeamTree(wrapper);
         return AjaxResult.success(teamTree);
     }
 
+    @GetMapping("/getSubUnitList")
+    public AjaxResult getSubUnitList(Long teamId) {
+        var result = AjaxResult.success();
+        List<UnitTeamVo> teams = unitTeamService.listByTeamId(teamId);
+        List<UnitMemberVo> members = unitMemberService.listByTeamId(teamId);
+        result.put("teams", teams);
+        result.put("members", members);
+        return result;
+    }
+
     @PostMapping
     public AjaxResult insertEntity(@RequestBody UnitTeam t) {
-        if (t.getIsDeleted() == null) {
-            t.setIsDeleted(0);
-        }
-        if (t.getSortNum() == null) {
-            t.setSortNum(0L);
-        }
-        baseService.save(t);
-        return AjaxResult.success(t);
+        return AjaxResult.success(unitTeamService.insertUnitTeam(t));
     }
 
 }

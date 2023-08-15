@@ -1,13 +1,22 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.domain.TreeNode;
+import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.util.StringUtils;
+import com.cloud0072.apigrid.framework.domain.Unit;
 import com.cloud0072.apigrid.framework.domain.UnitTeam;
+import com.cloud0072.apigrid.framework.mapper.UnitMapper;
 import com.cloud0072.apigrid.framework.mapper.UnitTeamMapper;
+import com.cloud0072.apigrid.framework.mapper.UnitTeamMemberMapper;
 import com.cloud0072.apigrid.framework.service.UnitTeamService;
+import com.cloud0072.apigrid.framework.vo.UnitTeamVo;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.*;
@@ -17,7 +26,43 @@ import java.util.stream.Collectors;
 public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> implements UnitTeamService {
 
     @Autowired
-    private UnitTeamMapper unitTeamMapper;
+    private UnitTeamMemberMapper unitTeamMemberMapper;
+
+    @Autowired
+    private UnitMapper unitMapper;
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public UnitTeam insertUnitTeam(UnitTeam unitTeam) {
+        if (StringUtils.isEmpty(unitTeam.getTeamName()) || unitTeam.getParentId() == null) {
+            throw new ServiceException("请求失败，请提供正确的上级小组和小组名");
+        }
+        var existList = baseMapper.selectList(new QueryWrapper<UnitTeam>()
+                .eq("team_name", unitTeam.getTeamName())
+                .eq("parent_id", unitTeam.getParentId()));
+        if (existList.size() > 0) {
+            throw new ServiceException("请求失败，本级小组下已存在该名称");
+        }
+
+        if (unitTeam.getSortNum() == null) {
+            unitTeam.setSortNum(0L);
+        }
+        unitTeam.setIsDeleted(0)
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+        baseMapper.insert(unitTeam);
+
+        var unit = Unit.builder()
+                .unitType(1)
+                .unitRefId(unitTeam.getId())
+                .isDeleted(0)
+                .createTime(new Date())
+                .updateTime(new Date())
+                .build();
+        unitMapper.insert(unit);
+
+        return unitTeam;
+    }
 
     @Override
     public List<Long> getAllTeamIdsInTeamTree(Long teamId) {
@@ -29,7 +74,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
         Set<Long> teamIdSet = new LinkedHashSet<>(teamIds);
         List<Long> parentIds = new ArrayList<>(teamIds);
         while (!parentIds.isEmpty()) {
-            List<Long> subTeamIds = unitTeamMapper.selectTeamIdByParentIdIn(parentIds);
+            List<Long> subTeamIds = baseMapper.selectTeamIdByParentIdIn(parentIds);
             if (subTeamIds.isEmpty()) {
                 break;
             }
@@ -43,8 +88,47 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
 
     @Override
     public List<TreeNode> getUnitTeamTree(QueryWrapper<UnitTeam> wrapper) {
-        List<UnitTeam> teamList = unitTeamMapper.selectList(wrapper);
+        List<UnitTeam> teamList = baseMapper.selectList(wrapper);
         return buildTree(teamList, 0L);
+    }
+
+    @Override
+    public List<UnitTeamVo> listByTeamId(Long teamId) {
+        var subTeamIds = baseMapper.selectTeamIdsByParentId(teamId);
+        if (CollUtil.isNotEmpty(subTeamIds)) {
+            return findUnitTeamVo(subTeamIds);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<UnitTeamVo> findUnitTeamVo(List<Long> teamIds) {
+        List<UnitTeamVo> unitTeamList = baseMapper.selectUnitTeamVoByTeamIds(teamIds);
+        return unitTeamList.stream().peek(unitTeamVo -> {
+            // the number of statistics
+            int memberCount = countMemberCountByParentId(unitTeamVo.getTeamId());
+            unitTeamVo.setMemberCount(memberCount);
+            // query whether sub-departments exist
+            List<Long> subTeamIds = baseMapper.selectTeamIdsByParentId(unitTeamVo.getTeamId());
+            if (CollUtil.isNotEmpty(subTeamIds)) {
+                unitTeamVo.setHasChildren(true);
+                unitTeamVo.setHasChildrenTeam(true);
+            } else {
+                // query whether the department has members
+                unitTeamVo.setHasChildren(memberCount > 0);
+                unitTeamVo.setHasChildrenTeam(false);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public int countMemberCountByParentId(Long teamId) {
+        List<Long> allSubTeamIds = this.getAllTeamIdsInTeamTree(teamId);
+        int count = 0;
+        if (CollUtil.isNotEmpty(allSubTeamIds)) {
+            count = unitTeamMemberMapper.countByTeamId(allSubTeamIds);
+        }
+        return count;
     }
 
     private List<TreeNode> buildTree(List<UnitTeam> teamList, Serializable parentId) {
