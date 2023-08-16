@@ -1,6 +1,5 @@
 package com.cloud0072.apigrid.datasheet.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.cloud0072.apigrid.common.annotation.AutoId;
 import lombok.*;
 import lombok.experimental.Accessors;

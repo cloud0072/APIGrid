@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class Record {
+public class DatasheetRecord {
 
     @AutoId(AutoId.IdType.SNOWFLAKE)
     @Id

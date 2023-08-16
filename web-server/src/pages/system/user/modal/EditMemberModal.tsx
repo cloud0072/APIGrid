@@ -3,7 +3,7 @@ import {t} from "@/utils/i18n";
 import {useContext, useEffect, useState} from "react";
 import styles from '../style.module.less';
 import {PlusOutlined} from "@ant-design/icons";
-import {UnitMemberApi} from "@/services/framework/UnitMember";
+import {UnitUserApi} from "@/services/framework/UnitUser";
 import {FileUploadApi} from "@/services/framework/FileUpload";
 import {TeamTreeContext} from "@/pages/system/user";
 import BaseAvatar from "@/components/BaseAvatar";
@@ -20,7 +20,7 @@ const EditMemberModal = ({userId, setOpen}: any) => {
   // init
   useEffect(() => {
     setLoading(true)
-    UnitMemberApi.getTeamUserById(userId).then(response => {
+    UnitUserApi.getTeamUserById(userId).then(response => {
       const teamIds = response.data?.teamIds?.split(',').map((id: string) => ({value: id})) || []
       setMemberInfo({...response.data, teamIds})
       form.setFieldsValue({...response.data, teamIds});
@@ -34,9 +34,9 @@ const EditMemberModal = ({userId, setOpen}: any) => {
         const teamIds = values.teamIds?.map((d: any) => d.value).join(',') || undefined
         const avatar = fileList[0] ? fileList[0].url : null;
         if (values.userId) {
-          return UnitMemberApi.updateUnitUser({...values, teamIds, avatar});
+          return UnitUserApi.updateUnitUser({...values, teamIds, avatar});
         } else {
-          return UnitMemberApi.registerUnitUser({...values, teamIds, avatar});
+          return UnitUserApi.registerUnitUser({...values, teamIds, avatar});
         }
       }).finally(() => {
         setOpen(() => false)

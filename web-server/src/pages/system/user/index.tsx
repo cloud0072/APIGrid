@@ -5,7 +5,7 @@ import BjhSplitPane from "@/components/BjhSplitPane";
 import MemberTable from "@/pages/system/user/MemberTable";
 import TeamTree from "@/pages/system/user/TeamTree";
 import {UnitTeamApi} from "@/services/framework/UnitTeam";
-import {UnitMemberApi} from "@/services/framework/UnitMember";
+import {UnitUserApi} from "@/services/framework/UnitUser";
 
 export const TeamTreeContext = createContext({
   teamTree: [],
@@ -26,7 +26,7 @@ const PageUserList = () => {
 
   const listTeamMember = useCallback(() => {
     const selectKey = teamTree[0]?.key === teamId ? "0" : teamId;
-    UnitMemberApi.getPage({teamId: selectKey, ...pageInfo}).then(response => {
+    UnitUserApi.getPage({teamId: selectKey, ...pageInfo}).then(response => {
       const records = response.data.records;
       setMemberList(() => records);
     })

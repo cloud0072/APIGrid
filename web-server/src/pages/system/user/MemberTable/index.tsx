@@ -15,12 +15,12 @@ const MemberTable = () => {
   const [editMemberModalOpen, setEditMemberModalOpen] = useState<any>(false);
   const [editPasswordModalOpen, setEditPasswordModalOpen] = useState<any>(false);
 
-  const insertUnitMember = useCallback(() => {
+  const insertUnitUser = useCallback(() => {
     setMember(() => undefined)
     setEditMemberModalOpen(true);
   }, [])
 
-  const updateUnitMember = useCallback((member: any) => {
+  const updateUnitUser = useCallback((member: any) => {
     setMember(member)
     setEditMemberModalOpen(true);
   }, [])
@@ -65,7 +65,7 @@ const MemberTable = () => {
       render: (text: any, record: any) => {
         return (
           <Space>
-            <Button type={'link'} onClick={() => updateUnitMember(record)}>编辑</Button>
+            <Button type={'link'} onClick={() => updateUnitUser(record)}>编辑</Button>
             <Button type={'link'} onClick={() => onResetPwd(record)}>重置</Button>
           </Space>
         )
@@ -77,7 +77,7 @@ const MemberTable = () => {
     <div className={styles.memberTable}>
       <div className={styles.panelTitle}>{t.user_table_title}</div>
       <div className={styles.memberTableBtn}>
-        <Button onClick={insertUnitMember}>{t.user_table_create}</Button>
+        <Button onClick={insertUnitUser}>{t.user_table_create}</Button>
       </div>
       <div className={styles.memberTableWrapper}>
         <Table

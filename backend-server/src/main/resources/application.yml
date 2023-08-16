@@ -1,6 +1,6 @@
 # 自定义配置
 apigrid-config:
-  default-password: ${DEFAULT_PASSWORD:bjh123}
+  default-password: ${DEFAULT_PASSWORD:123456}
 
 # 数据源配置
 spring:

@@ -3,7 +3,7 @@ import {t} from "@/utils/i18n";
 import {Form, Input, Modal, TreeSelect} from "antd";
 import {useEffect, useState} from "react";
 import {useQueryInitialState} from "@/models";
-import {UnitMemberApi} from "@/services/framework/UnitMember";
+import {UnitUserApi} from "@/services/framework/UnitUser";
 
 const EditPasswordModal = (props: any) => {
   const {userId, setOpen} = props;
@@ -16,7 +16,7 @@ const EditPasswordModal = (props: any) => {
   // init
   useEffect(() => {
     setLoading(true)
-    UnitMemberApi.getTeamUserById(userId).then(response => {
+    UnitUserApi.getTeamUserById(userId).then(response => {
       console.log('userInfo', data);
       form.setFieldsValue({...response.data});
     }).finally(() => setLoading(false))

@@ -42,7 +42,7 @@ public class UnitUserController extends BaseController<UnitUser> {
     }
 
 //    @Override
-//    protected AjaxResult selectEntityPage(UnitMember unitMember, HttpServletRequest request) {
+//    protected AjaxResult selectEntityPage(UnitUser unitMember, HttpServletRequest request) {
 //        return super.selectEntityPage(unitMember, request);
 //    }
 
@@ -51,7 +51,7 @@ public class UnitUserController extends BaseController<UnitUser> {
         return unitUserService.registerUnitUser(vo);
     }
 
-    @PostMapping("/updateUnitUser")
+    @PutMapping("/updateUnitUser")
     public AjaxResult updateUnitUser(@RequestBody UnitTeamUserVo vo) {
         return unitUserService.updateUnitUser(vo);
     }

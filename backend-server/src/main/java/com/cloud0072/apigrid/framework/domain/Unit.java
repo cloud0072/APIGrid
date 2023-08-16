@@ -28,7 +28,7 @@ public class Unit extends BaseEntity {
     private Long id;
 
     /**
-     * 类型 1: UnitTeam , 2: UnitMember
+     * 类型 1: UnitTeam , 2: UnitUser
      */
     private Integer unitType;
 
