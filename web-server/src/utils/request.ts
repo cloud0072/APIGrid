@@ -4,7 +4,7 @@ import type {AxiosRequestConfig, AxiosResponse, ResponseType} from 'axios';
 import axios from 'axios';
 import {createSearchParams} from 'react-router-dom';
 import {RequestCanceler} from './requestCanceler';
-import {useAppConfig} from "@/models";
+import env from "@/models/env";
 
 export type QueryParamsType = Record<string | number, any>;
 
@@ -67,12 +67,12 @@ const createFormData = (input: Record<string, unknown>): FormData => {
 
 export const redirectToLoginPage = (msg?: string) => {
   const searchParams: Record<string, string> = {
-    redirect: window.location.pathname.replace(import.meta.env.BASE_URL, '/'),
+    redirect: window.location.pathname.replace(env.VITE_PUBLIC_PATH, '/'),
   };
 
   if (msg) searchParams.msg = msg;
 
-  window.location.href = `${import.meta.env.BASE_URL}login?${createSearchParams(searchParams)}`;
+  window.location.href = `${env.VITE_PUBLIC_PATH}login?${createSearchParams(searchParams)}`;
 };
 
 const requestCanceler = new RequestCanceler();
@@ -85,8 +85,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-  const appConfig = useAppConfig();
-  config.baseURL = appConfig.baseURL;
+  config.baseURL = env.VITE_API_URL;
   config.headers.Authorization = getToken();
   config.headers.datasource = 'master';
 

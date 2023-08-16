@@ -6,33 +6,28 @@ import 'mac-scrollbar/dist/mac-scrollbar.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import {createRoot} from 'react-dom/client';
-import {getAppConfig} from "@/services";
-import {setAppConfig, useAppConfig} from "@/models";
+import {setAppConfig} from "@/models";
 import {checkToken, redirectToLoginPage} from '@/utils';
 import {App} from "@/App";
 import {Provider} from "jotai";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import React from 'react';
+import env from "@/models/env";
 
 export const bootstrap = () => {
 
-  getAppConfig().then(data => {
+  setAppConfig({})
+  // useQueryInitialState()
 
-    setAppConfig(data)
-    const appConfig = useAppConfig()
-    console.log('appConfig', appConfig)
+  const basename = env.VITE_PUBLIC_PATH;
+  // 不存在 token 时跳转到登录页
+  const currBasename = window.location.pathname.replace(basename, '/');
+  if (currBasename !== '/login' && !checkToken()) {
+    redirectToLoginPage();
+    return;
+  }
 
-  }).then(() => {
-
-    const basename = import.meta.env.BASE_URL;
-    // 不存在 token 时跳转到登录页
-    const currBasename = window.location.pathname.replace(basename, '/');
-    if (currBasename !== '/login' && !checkToken()) {
-      redirectToLoginPage();
-      return;
-    }
-
-    dayjs.locale('zh-cn');
+  dayjs.locale('zh-cn');
 
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -56,7 +51,7 @@ export const bootstrap = () => {
       </Provider>
       // </React.StrictMode>,
     );
-  })
+
 };
 
 bootstrap()

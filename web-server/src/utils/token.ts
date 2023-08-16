@@ -1,4 +1,6 @@
-const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
+import env from "@/models/env";
+
+const TOKEN_KEY = env.VITE_TOKEN_KEY;
 
 export enum StorageType {
   LOCAL_STORAGE,

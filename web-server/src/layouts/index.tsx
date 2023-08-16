@@ -2,7 +2,7 @@ import {Access, PermissionDenied} from '@/components';
 import MenuItem from '@/layouts/components/MenuItem';
 import type {KeepAliveElements} from '@/layouts/components/TabsHeader';
 // import TabsHeader from '@/layouts/components/TabsHeader';
-import {useAppConfig, useQueryInitialState} from '@/models';
+import {useQueryInitialState} from '@/models';
 import type {RouteSetting} from '@/utils';
 import {ProLayout} from '@ant-design/pro-components';
 import TabBarExtraContent from '@/layouts/components/TabBarExtraContent';
@@ -10,12 +10,13 @@ import type {FC} from 'react';
 import {createContext, useEffect, useMemo, useRef, useState} from 'react';
 import {matchPath, Navigate, useLocation, useOutlet} from 'react-router-dom';
 import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
-import Logo from '@/assets/logo.svg';
+import Logo from '../../public/logo.svg';
 // @ts-ignore
 import {Transition} from "react-transition-group";
 import './index.less';
 import {useTheme} from "@/hooks/useTheme";
 import {debounce} from "lodash-es";
+import env from "@/models/env";
 
 export type sizeType = {
   clientHeight: number,
@@ -49,22 +50,21 @@ const Layouts: FC = () => {
   }
 
   const [cacheKeyMap, setCacheKeyMap] = useState<Record<string, number>>({});
-  const removeElementByKey = (key: string) => {
-    if (keepAliveElements.current.hasOwnProperty(key)) {
-      delete keepAliveElements.current[key];
-      setCacheKeyMap((cacheKeyMap) => ({
-        ...cacheKeyMap,
-        [key]: Math.random(),
-      }));
-    }
-  };
-  const refreshElementByKey = (key: string) => {
-    setCacheKeyMap((cacheKeyMap) => ({
-      ...cacheKeyMap,
-      [key]: Math.random(),
-    }));
-  };
-  const appConfig = useAppConfig();
+  // const removeElementByKey = (key: string) => {
+  //   if (keepAliveElements.current.hasOwnProperty(key)) {
+  //     delete keepAliveElements.current[key];
+  //     setCacheKeyMap((cacheKeyMap) => ({
+  //       ...cacheKeyMap,
+  //       [key]: Math.random(),
+  //     }));
+  //   }
+  // };
+  // const refreshElementByKey = (key: string) => {
+  //   setCacheKeyMap((cacheKeyMap) => ({
+  //     ...cacheKeyMap,
+  //     [key]: Math.random(),
+  //   }));
+  // };
   const [collapsed, setCollapsed] = useState(true);
   const {themeMode, themeColors} = useTheme()
   const layoutToken = useMemo(() => {
@@ -142,9 +142,9 @@ const Layouts: FC = () => {
             {(state: string) => (
               <div className={`bjh-header bjh-header-${state}`}>
                 <a className="bjh-header-title">
-                  <img src={appConfig.logo || Logo} alt=""/>
+                  <img src={env.VITE_APP_LOGO || Logo} alt=""/>
                   <Transition in={collapsed} timeout={300}>
-                    <h1 className={`bjh-header-title-text bjh-header-title-text-${state}`}>{appConfig.title}</h1>
+                    <h1 className={`bjh-header-title-text bjh-header-title-text-${state}`}>{env.VITE_APP_TITLE}</h1>
                   </Transition>
                 </a>
               </div>

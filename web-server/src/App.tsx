@@ -6,9 +6,10 @@ import zhCN from "antd/es/locale/zh_CN";
 import {ProComponentsProvider} from "@/features";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {useTheme} from "@/hooks/useTheme";
+import env from "@/models/env";
 
 export const App: FC = () => {
-  const basename = import.meta.env.BASE_URL;
+  const basename = env.VITE_PUBLIC_PATH;
   const router = createBrowserRouter(routes, {basename});
 
   const {themeMode, themeColors} = useTheme();
