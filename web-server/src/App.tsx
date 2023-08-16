@@ -8,7 +8,7 @@ import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {useTheme} from "@/hooks/useTheme";
 import env from "@/models/env";
 
-export const App: FC = () => {
+const App: FC = () => {
   const basename = env.VITE_PUBLIC_PATH;
   const router = createBrowserRouter(routes, {basename});
 
@@ -37,3 +37,5 @@ export const App: FC = () => {
     </>
   )
 }
+
+export default App;

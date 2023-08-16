@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 
 import React from 'react';
-import {App} from "@/App";
+import App from "@/App";
 import {createRoot} from 'react-dom/client';
 import {Provider} from "jotai";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
