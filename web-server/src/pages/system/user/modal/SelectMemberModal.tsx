@@ -21,7 +21,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
   // Breadcrumb data source
   const [breadCrumbData, setBreadCrumbData] = useState<any[]>([{name: t.common_contacts, teamId: 0}]);
 
-  const theme = useMemo(() => ({
+  const themeToken = useMemo(() => ({
     components: {
       Input: {
         borderRadius: 16
@@ -110,7 +110,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
       <BjhSplitPane minSize={480} allowResize={false}>
         <div className={styles.modalLeft}>
           <div className={styles.searchWrapper}>
-            <ConfigProvider theme={theme}>
+            <ConfigProvider theme={themeToken}>
               <Input
                 onChange={onSearch}
                 placeholder={t.unit_modal_select_search}

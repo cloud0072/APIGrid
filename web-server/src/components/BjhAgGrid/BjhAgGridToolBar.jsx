@@ -4,7 +4,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from "reac
 import BjhButton from "@/components/BjhButton";
 import BjhDropdown from "@/components/BjhDropdown";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
-import {GridCtx} from "@/components/BjhAgGrid/index";
+import {GridContext} from "@/components/BjhAgGrid/index";
 import BjhDragList from "@/components/BjhDragList";
 import BjhDragItem from "@/components/BjhDragItem";
 import {MacScrollbar} from 'mac-scrollbar';
@@ -50,7 +50,7 @@ const BjhAgGridToolBar = (props) => {
   const {useToken} = theme;
   const {token} = useToken()
 
-  const gridCtx = useContext(GridCtx)
+  const gridCtx = useContext(GridContext)
   useEffect(() => {
     // console.log('gridCtx.tableColumns', gridCtx?.tableColumns)
     // console.log('gridCtx.colDefsList', gridCtx?.colDefsList)

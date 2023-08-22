@@ -5,15 +5,14 @@ import BjhAgGridToolBar from "@/components/BjhAgGrid/BjhAgGridToolBar";
 
 import IdCellRenderer from './CellRender/IdCellRenderer'
 
+import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-enterprise';
 import {LicenseManager} from 'ag-grid-enterprise';
 
-import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-
 import './style.less';
 import {App, message, Spin} from "antd";
-import {ResizeContext} from "@/layouts";
+import {LayoutContext} from "@/layouts";
 
 LicenseManager.prototype.validateLicense = () => true
 
@@ -30,47 +29,74 @@ const indexCol = [{
 }];
 
 // let rowHeight = 34;
-export const GridCtx = createContext({
+export const GridContext = createContext({
   checkAll: false,
-  setCheckAll: undefined,
-  indeterminate: true,
-  setIndeterminate: undefined,
+  setCheckAll: () => {
+  },
+  indeterminate: false,
+  setIndeterminate: () => {
+  },
+  checkedList: [],
+  onSelectedRows: () => {
+  },
   rowHeight: 34,
-  setRowHeight: undefined,
+  setRowHeight: () => {
+  },
   tableColumns: [],
-  setTableColumns: undefined,
+  setTableColumns: () => {
+  },
   rowData: [],
-  setRowData: undefined,
+  setRowData: () => {
+  },
   colDefsList: [],
-  setColDefsList: undefined,
+  setColDefsList: () => {
+  },
   colGroupsList: [],
-  setColGroupsList: undefined,
+  setColGroupsList: () => {
+  },
 });
 
 const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
   const gridRef = useRef(null); // Optional - for accessing Grid's API
-  const [rowHeight, setRowHeight] = useState(34)
-  const [indeterminate, setIndeterminate] = useState(true);
+
+  const [indeterminate, setIndeterminate] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
+  const [checkedList, setCheckedList] = useState([]);
+  const onSelectedRows = () => {
+    const api = gridRef.current?.api;
+    const selectedRows = api?.getSelectedRows();
+    const pageSize = api?.paginationGetPageSize();
+    setCheckedList(() => selectedRows);
+    if (selectedRows.length === 0) {
+      setCheckAll(false)
+      setIndeterminate(false)
+    } else if (selectedRows.length < pageSize) {
+      setCheckAll(false)
+      setIndeterminate(true)
+    } else if (selectedRows.length === pageSize) {
+      setCheckAll(true)
+      setIndeterminate(false)
+    }
+  }
+
   const [rowData, setRowData] = useState([]);
   const [tableInfo, setTableInfo] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
-  const [colDefsList, setColDefsList] = useState([]);
-  const [colGroupsList, setColGroupsList] = useState([]);
   const [spinning, setSpinning] = useState(false);
 
-  const {height} = useContext(ResizeContext);
+  const {height} = useContext(LayoutContext);
   const gridStyle = useMemo(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
   // const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
   // console.log('gridStyle', gridStyle)
 
+  const [colDefsList, setColDefsList] = useState([]);
+  const [colGroupsList, setColGroupsList] = useState([]);
   const defaultColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
     editable: true,
     lockPinned: true,
   }), []);
-
   const localColDefs = useMemo(() => {
     const local = indexCol.concat(colDefsList)
       .filter(col => !col.hide)
@@ -88,6 +114,7 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
     return local;
   }, [colDefsList, colGroupsList])
 
+  const [rowHeight, setRowHeight] = useState(34)
   useEffect(() => {
     // console.log(`rowHeight:${rowHeight}`)
     gridRef.current.api && gridRef.current.api.resetRowHeights();
@@ -132,11 +159,13 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
 
   return (
     <div className="bjh-grid-body">
-      <GridCtx.Provider value={{
+      <GridContext.Provider value={{
         checkAll,
         setCheckAll,
         indeterminate,
         setIndeterminate,
+        checkedList,
+        onSelectedRows,
         rowHeight,
         setRowHeight,
         tableColumns,
@@ -168,7 +197,7 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
             />
           </div>
         </Spin>
-      </GridCtx.Provider>
+      </GridContext.Provider>
     </div>
   );
 };

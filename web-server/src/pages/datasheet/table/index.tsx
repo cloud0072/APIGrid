@@ -1,8 +1,18 @@
 import BjhAgGrid from '@/components/BjhAgGrid';
 import {BasePageContainer} from "@/components";
 import {UnitUserApi} from "@/services/framework/UnitUser";
+import {useLocation} from "react-router-dom";
+import {useContext, useEffect} from "react";
+import {LayoutContext} from "@/layouts";
 
-const PageUserList = () => {
+const DatasheetPanel = () => {
+  const {setMenuType} = useContext(LayoutContext);
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('location', location)
+    setMenuType('datasheet')
+  }, [])
 
   const getTableInfo = () => {
     const tableColumns = [
@@ -78,4 +88,4 @@ const PageUserList = () => {
   );
 };
 
-export default PageUserList;
+export default DatasheetPanel;

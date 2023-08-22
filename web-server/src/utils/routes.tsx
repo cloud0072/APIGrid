@@ -1,4 +1,3 @@
-import {IconAntd} from '@/components';
 import type {MenuDataItem} from '@ant-design/pro-components';
 import IconFont from "@/components/IconFont";
 

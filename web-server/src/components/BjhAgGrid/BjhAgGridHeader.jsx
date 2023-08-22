@@ -1,12 +1,14 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Checkbox, Dropdown, Input, theme, Tooltip} from 'antd';
-import {CheckOutlined, EllipsisOutlined, SearchOutlined} from "@ant-design/icons";
-import {GridCtx} from './index';
+import {CheckOutlined, SearchOutlined} from "@ant-design/icons";
+import {GridContext} from './index';
 import IconFont from "@/components/IconFont";
 
 const BjhAgGridHeader = (props) => {
 
-  const grid = useContext(GridCtx);
+  const {api, column, displayName} = props;
+
+  const {indeterminate, setIndeterminate, checkAll, setCheckAll} = useContext(GridContext);
   const {useToken} = theme;
   const {token} = useToken();
 
@@ -17,12 +19,12 @@ const BjhAgGridHeader = (props) => {
     setOpen(() => open)
   }
   const onCheckedChange = () => {
-    grid.setIndeterminate(false)
-    grid.setCheckAll(!grid.checkAll)
-    if (grid.checkAll) {
-      props.api.deselectAll()
+    setCheckAll(!checkAll)
+    setIndeterminate(false);
+    if (checkAll) {
+      api.deselectAll()
     } else {
-      props.api.selectAll()
+      api.selectAll()
     }
   }
   const onFilterChange = (e) => {
@@ -37,27 +39,21 @@ const BjhAgGridHeader = (props) => {
     // console.log('onMouseLeave', e)
   }
 
-  // useEffect(() => {
-  //   if (props.column.colId === 'index') {
-  //     console.log('props', props)
-  //   }
-  // }, [])
-
   return (
     <>
-      {props.column.colId === 'index' && (
+      {column.colId === 'index' && (
         <div className="bjh-index-header">
           <div className="bjh-row-index" onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
             <div className="bjh-row-index-checkbox">
-              <Checkbox checked={grid.checkAll} indeterminate={grid.indeterminate} onChange={onCheckedChange}/>
+              <Checkbox checked={checkAll} indeterminate={indeterminate} onChange={onCheckedChange}/>
             </div>
           </div>
         </div>
       )}
-      {props.column.colId !== 'index' && (
+      {column.colId !== 'index' && (
         <div className="bjh-column-header" onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
           <div className="bjh-column-header-title">
-            {props.displayName}
+            {displayName}
           </div>
           <Tooltip title="快捷筛选" overlayInnerStyle={{fontSize: '13px', color: '#333'}} color="#fff">
             <Dropdown trigger="click" onOpenChange={onOpenChange} dropdownRender={() => (

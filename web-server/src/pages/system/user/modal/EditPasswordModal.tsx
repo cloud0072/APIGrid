@@ -17,7 +17,7 @@ const EditPasswordModal = (props: any) => {
   useEffect(() => {
     setLoading(true)
     UnitUserApi.getTeamUserById(userId).then(response => {
-      console.log('userInfo', data);
+      // console.log('userInfo', data);
       form.setFieldsValue({...response.data});
     }).finally(() => setLoading(false))
   }, [])

@@ -1,22 +1,20 @@
-import {Access, PermissionDenied} from '@/components';
-import MenuItem from '@/layouts/components/MenuItem';
-import type {KeepAliveElements} from '@/layouts/components/TabsHeader';
-// import TabsHeader from '@/layouts/components/TabsHeader';
-import {useQueryInitialState} from '@/models';
-import type {RouteSetting} from '@/utils';
-import {ProLayout} from '@ant-design/pro-components';
-import TabBarExtraContent from '@/layouts/components/TabBarExtraContent';
 import type {FC} from 'react';
 import {createContext, useEffect, useMemo, useRef, useState} from 'react';
 import {matchPath, Navigate, useLocation, useOutlet} from 'react-router-dom';
-import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
-import Logo from '../../public/logo.svg';
-// @ts-ignore
-import {Transition} from "react-transition-group";
-import './index.less';
+
+import {Access, PermissionDenied} from '@/components';
+import HeaderContent from "@/layouts/components/HeaderContent";
+import HeaderTitle from "@/layouts/components/HeaderTitle";
+import MenuItem from '@/layouts/components/MenuItem';
+import type {KeepAliveElements} from '@/layouts/components/TabsHeader';
+import {ProLayout} from '@ant-design/pro-components';
+import {useQueryInitialState} from '@/models';
+import type {RouteSetting} from '@/utils';
 import {useTheme} from "@/hooks/useTheme";
 import {debounce} from "lodash-es";
-import env from "@/models/env";
+
+import './index.less';
+import MenuHeader from "@/layouts/components/MenuHeader";
 
 export type sizeType = {
   clientHeight: number,
@@ -25,17 +23,24 @@ export type sizeType = {
   width: number,
 }
 
-export const ResizeContext = createContext({
-  clientHeight: 0,
-  clientWidth: 0,
+export const LayoutContext = createContext({
   height: 0,
   width: 0,
-});
+  clientHeight: 0,
+  clientWidth: 0,
+  collapsed: false,
+  setCollapsed: () => {
+  },
+  menuType: '',
+  setMenuType: () => {
+  },
+} as any)
 
 const Layouts: FC = () => {
   const {pathname} = useLocation();
   const element = useOutlet();
-  // const navigate = useNavigate();
+  // const navigate = useNavigate()
+  const {layoutToken} = useTheme()
 
   const {data: initialState, isLoading, isError} = useQueryInitialState();
   if (isError) {
@@ -65,39 +70,14 @@ const Layouts: FC = () => {
   //     [key]: Math.random(),
   //   }));
   // };
-  const [collapsed, setCollapsed] = useState(true);
-  const {themeMode, themeColors} = useTheme()
-  const layoutToken = useMemo(() => {
-    return {
-      colorPrimary: themeColors.colorPrimary,
-      colorSecondary: themeColors.colorSecondary,
-      bgLayout: '#f5f5f5',
-      pageContainer: {
-        paddingBlockPageContainerContent: 0,
-        paddingInlinePageContainerContent: 0,
-      },
-      header: {
-        colorBgHeader: themeColors.colorBgMenu,
-        colorHeaderTitle: 'hsla(0,0%,100%,.85)',
-      },
-      sider: {
-        // 展开时样式
-        colorMenuBackground: themeColors.colorBgMenu,
-        colorBgMenuItemSelected: themeColors.colorBgMenuItemSelected,
-        // 折叠时的样式
-        colorBgMenuItemCollapsedElevated: themeColors.colorBgMenu,
-        colorBgMenuItemCollapsedSelected: themeColors.colorBgMenuItemSelected,
-        colorBgMenuItemCollapsedHover: 'hsla(0,0%,100%,.85)',
-        colorMenuItemDivider: 'hsla(0,0%,100%,.08)',
-        colorTextMenu: 'hsla(0,0%,100%,.85)',
-        colorTextMenuActive: 'hsla(0,0%,100%,.85)',
-        colorTextMenuItemHover: 'hsla(0,0%,100%,.85)',
-        colorTextMenuSelected: 'hsla(0,0%,100%,.85)',
-      }
-    }
-  }, [themeMode])
 
-  const [pageSize, setPageSize] = useState<sizeType>({
+  const [collapsed, setCollapsed] = useState(true);
+  const [menuType, setMenuType] = useState('');
+  const menuData = useMemo(() => {
+    return initialState?.menus ?? []
+  }, [menuType])
+
+  const [frameSize, setFrameSize] = useState<sizeType>({
     clientHeight: 0,
     clientWidth: 0,
     height: 0,
@@ -107,83 +87,44 @@ const Layouts: FC = () => {
   useEffect(() => {
     const getPageSize = debounce(() => {
       const {clientHeight, clientWidth} = document.documentElement;
-      const pageSize = {
+      const frameSize = {
         clientHeight,
         clientWidth,
         height: clientHeight - 56, //head 56 + padding 12 * 2
         width: clientWidth - 248, // menu 248 + padding 12 * 2
       };
-      setPageSize(() => pageSize)
-      // console.log('getPageSize', pageSize);
+      setFrameSize(() => frameSize)
+      // console.log('getPageSize', frameSize);
     }, 50);
     getPageSize()
     window.addEventListener('resize', getPageSize)
     return () => window.removeEventListener('resize', getPageSize)
   }, [])
-
   return (
-    <ResizeContext.Provider value={pageSize}>
+    <LayoutContext.Provider value={{menuType, setMenuType, collapsed, setCollapsed, ...frameSize}}>
       <ProLayout
-        layout="mix"
         fixedHeader={false}
-        loading={isLoading}
+        layout="mix"
         location={{pathname}}
+        loading={isLoading}
         menu={{loading: isLoading}}
-        menuDataRender={() => initialState?.menus ?? []}
+        menuDataRender={() => menuData}
+        menuHeaderRender={MenuHeader}
         menuItemRender={MenuItem}
+        headerTitleRender={HeaderTitle}
+        headerContentRender={HeaderContent}
         token={layoutToken}
         siderWidth={248}
         disableMobile
         collapsedButtonRender={false}
         collapsed={collapsed}
         onCollapse={setCollapsed}
-        headerTitleRender={() => (
-          <Transition in={collapsed} timeout={300}>
-            {(state: string) => (
-              <div className={`bjh-header bjh-header-${state}`}>
-                <a className="bjh-header-title">
-                  <img src={env.VITE_APP_LOGO || Logo} alt=""/>
-                  <Transition in={collapsed} timeout={300}>
-                    <h1 className={`bjh-header-title-text bjh-header-title-text-${state}`}>{env.VITE_APP_TITLE}</h1>
-                  </Transition>
-                </a>
-              </div>
-            )}
-          </Transition>
-        )}
-        headerContentRender={() => (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            backgroundColor: layoutToken.colorSecondary,
-            color: layoutToken?.sider?.colorTextMenu
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center'
-            }}>
-              <div
-                onClick={() => setCollapsed(!collapsed)}
-                style={{
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  width: '44px',
-                  textAlign: 'center'
-                }}
-              >
-                {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
-              </div>
-            </div>
-
-            <TabBarExtraContent/>
-          </div>
-        )}
       >
         {/*<TabsHeader
-        currRouteSettings={currRouteSettingsKey ? routeSettingMap[currRouteSettingsKey] : undefined}
-        refreshElementByKey={refreshElementByKey}
-        removeElementByKey={removeElementByKey}
-      />*/}
+          currRouteSettings={currRouteSettingsKey ? routeSettingMap[currRouteSettingsKey] : undefined}
+          refreshElementByKey={refreshElementByKey}
+          removeElementByKey={removeElementByKey}
+        />*/}
         {!isLoading && (
           <Access accessible={!!currRouteSettingsKey} fallback={<PermissionDenied/>}>
             {Object.entries(keepAliveElements.current).map(([key, element]) => (
@@ -199,7 +140,7 @@ const Layouts: FC = () => {
           </Access>
         )}
       </ProLayout>
-    </ResizeContext.Provider>
+    </LayoutContext.Provider>
   );
 };
 

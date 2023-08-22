@@ -30,9 +30,40 @@ export const useTheme = () => {
     return Object.assign(theme, extend)
   }, [themeMode]);
 
+  const layoutToken = useMemo(() => {
+    return {
+      colorPrimary: themeColors.colorPrimary,
+      colorSecondary: themeColors.colorSecondary,
+      bgLayout: '#f5f5f5',
+      pageContainer: {
+        paddingBlockPageContainerContent: 0,
+        paddingInlinePageContainerContent: 0,
+      },
+      header: {
+        colorBgHeader: themeColors.colorBgMenu,
+        colorHeaderTitle: 'hsla(0,0%,100%,.85)',
+      },
+      sider: {
+        // 展开时样式
+        colorMenuBackground: themeColors.colorBgMenu,
+        colorBgMenuItemSelected: themeColors.colorBgMenuItemSelected,
+        // 折叠时的样式
+        colorBgMenuItemCollapsedElevated: themeColors.colorBgMenu,
+        colorBgMenuItemCollapsedSelected: themeColors.colorBgMenuItemSelected,
+        colorBgMenuItemCollapsedHover: 'hsla(0,0%,100%,.85)',
+        colorMenuItemDivider: 'hsla(0,0%,100%,.08)',
+        colorTextMenu: 'hsla(0,0%,100%,.85)',
+        colorTextMenuActive: 'hsla(0,0%,100%,.85)',
+        colorTextMenuItemHover: 'hsla(0,0%,100%,.85)',
+        colorTextMenuSelected: 'hsla(0,0%,100%,.85)',
+      }
+    }
+  }, [themeMode])
+
   return {
     themeMode,
     setThemeMode,
-    themeColors
+    themeColors,
+    layoutToken
   }
 }
