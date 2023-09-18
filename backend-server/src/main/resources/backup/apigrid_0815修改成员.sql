@@ -4,7 +4,7 @@
  Source Server         : uat-data
  Source Server Type    : MySQL
  Source Server Version : 80032
- Source Host           : 192.168.4.234:3306
+ Source Host           : 192.168.4.198:3306
  Source Schema         : apigrid
 
  Target Server Type    : MySQL
@@ -415,17 +415,17 @@ CREATE TABLE `apigrid_user`
 -- ----------------------------
 INSERT INTO `apigrid_user`
 VALUES (1, 'admin', '$2a$10$tYymtpfjyNbkh9BiYtE0r.uwh7/rAtU2Xq/p//IkYBbCj42kz/dFq', '18612345678', '352419394@qq.com',
-        'http://192.168.4.234:9000/assets/assist/2023/0731/d8b86059cb2b4e2da1550cd596318601.jpg', 10, '管理员', 0, 0, NULL,
+        'http://192.168.4.198:9000/assets/assist/2023/0731/d8b86059cb2b4e2da1550cd596318601.jpg', 10, '管理员', 0, 0, NULL,
         '2023-06-10 17:17:58', NULL, '2023-08-15 11:52:44');
 INSERT INTO `apigrid_user`
 VALUES (1686992349983375362, '18638731263', '$2a$10$.iCUO61wpuRJxKZmu1BMm.c6dTNKVWSO626oI533pn8OspVjSvXja',
         '18638731263', 'caolei@bjh.com',
-        'http://192.168.4.234:9000/assets/assist/2023/0803/c43b513e2ba345aa97c181b0f2f40f5a.jpg', 10, '曹磊', 0, 0, NULL,
+        'http://192.168.4.198:9000/assets/assist/2023/0803/c43b513e2ba345aa97c181b0f2f40f5a.jpg', 10, '曹磊', 0, 0, NULL,
         '2023-08-03 14:48:14', NULL, '2023-08-03 14:50:56');
 INSERT INTO `apigrid_user`
 VALUES (1686992544464863234, '18611111111', '$2a$10$agq5jSxzX75fOZ7NjT9VMuS/XgldzPEQhzV8HNwbZx1tLx9MmaSK6',
         '18611111111', 'wangbin@bjh.cn',
-        'http://192.168.4.234:9000/assets/assist/2023/0803/82ca027d2c2546ebb6b25e80e21cb55e.jpg', 10, '王斌', 0, 0, NULL,
+        'http://192.168.4.198:9000/assets/assist/2023/0803/82ca027d2c2546ebb6b25e80e21cb55e.jpg', 10, '王斌', 0, 0, NULL,
         '2023-08-03 14:49:00', NULL, '2023-08-03 14:49:00');
 
 SET FOREIGN_KEY_CHECKS = 1;

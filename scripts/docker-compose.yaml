@@ -9,7 +9,7 @@ services:
   #   env_file:
   #     - "${ENV_FILE:-.env}"
   #   ports:
-  #     - "9020:8080"
+  #     - "9001:9001"
   #   environment:
   #     - TZ=${TIMEZONE}
   #   networks:
@@ -19,7 +19,7 @@ services:
   #     - ~/docker/backend-server/logs:/app/logs
   #     - ~/docker/backend-server/uploads:/app/uploads
   #   healthcheck:
-  #     test: ["CMD-SHELL", "curl -sS 'http://localhost:8080' || exit 1"]
+  #     test: ["CMD-SHELL", "curl -sS 'http://localhost:9001' || exit 1"]
   #     interval: 5s
   #     timeout: 5s
   #     start_period: 30s
@@ -54,7 +54,7 @@ services:
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=S2AbuXsMUDHCzMQM
-      - ME_CONFIG_MONGODB_SERVER=192.168.4.234
+      - ME_CONFIG_MONGODB_SERVER=192.168.4.198
 
 networks:
   apigrid:

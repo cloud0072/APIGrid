@@ -57,6 +57,8 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
                 .unitType(1)
                 .unitRefId(unitTeam.getId())
                 .isDeleted(0)
+                .createBy(SecurityUtils.getUserId())
+                .createTime(new Date())
                 .updateBy(SecurityUtils.getUserId())
                 .updateTime(new Date())
                 .build();

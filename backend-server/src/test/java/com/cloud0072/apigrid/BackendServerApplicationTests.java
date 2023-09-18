@@ -1,52 +1,97 @@
 package com.cloud0072.apigrid;
 
+import com.cloud0072.apigrid.framework.domain.UnitRole;
+import com.cloud0072.apigrid.framework.domain.UnitTeam;
+import com.cloud0072.apigrid.framework.service.UnitRoleService;
+import com.cloud0072.apigrid.framework.service.UnitTeamService;
 import com.cloud0072.apigrid.framework.service.UnitUserService;
-import lombok.var;
+import com.cloud0072.apigrid.framework.vo.UnitTeamUserVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Date;
 
 @SpringBootTest
 class BackendServerApplicationTests {
-
-//    @Autowired
-//    private UserMapper userMapper;
 
     @Autowired
     private UnitUserService unitUserService;
 
     @Autowired
+    private UnitTeamService unitTeamService;
+
+    @Autowired
+    private UnitRoleService unitRoleService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
+//    public static void main(String[] args) {
+//        var encoder = new BCryptPasswordEncoder();
+//        // $2a$10$qtpdn0XLBUh0sTMI0YEosOav/JODRTtJv.m.gLEmUXE666rGl6/z6
+//        System.out.println(encoder.encode("123456"));
+//    }
+
     @Test
-    void testAddMember() {
-//        MemberUserVo memberUserVo = MemberUserVo.builder()
-//                .username("admin")
-//                .password("admin")
-//                .mobile("18638731263")
-//                .email("352419394@qq.com")
-//                .isLocked(0)
-//                .isDeleted(0)
-//                .createTime(new Date())
-//                .updateTime(new Date())
-//                .build();
-//        unitMemberService.registerUnitUser(memberUserVo);
+    void testAddUser() {
+        UnitTeamUserVo user = UnitTeamUserVo.builder()
+                .userId(1L)
+                .username("admin")
+                .password("admin")
+                .mobile("18638731263")
+                .email("352419394@qq.com")
+                .isAdmin(1)
+                .isLocked(0)
+                .isDeleted(0)
+                .createTime(new Date())
+                .updateTime(new Date())
+                .build();
+        unitUserService.registerUnitUser(user);
     }
 
     @Test
-    public void testPageUser() {
-//        QueryWrapper<User> wrapper = new QueryWrapper<>();
-//        wrapper.select("user_id", "username").like("username", "01");
-//        Page<User> page = userMapper.selectPage(new Page<>(1, 10), wrapper);
-//        System.out.println(JSONUtils.toJSONString(page));
+    void testAddTeam() {
+        UnitTeam team0 = UnitTeam.builder()
+                .id(0L)
+                .teamName("根节点")
+                .parentId(-1L)
+                .sortNum(0L)
+                .isDeleted(0)
+                .build();
+        UnitTeam team1 = UnitTeam.builder()
+                .teamName("销售部")
+                .parentId(0L)
+                .sortNum(0L)
+                .isDeleted(0)
+                .build();
+        UnitTeam team2 = UnitTeam.builder()
+                .teamName("技术部")
+                .parentId(0L)
+                .sortNum(1L)
+                .isDeleted(0)
+                .build();
+
+        unitTeamService.insertUnitTeam(team0);
+        unitTeamService.insertUnitTeam(team1);
+        unitTeamService.insertUnitTeam(team2);
+
     }
 
-    public static void main(String[] args) {
-        var encoder = new BCryptPasswordEncoder();
-        // $2a$10$qtpdn0XLBUh0sTMI0YEosOav/JODRTtJv.m.gLEmUXE666rGl6/z6
-        System.out.println(encoder.encode("123456"));
+    @Test
+    void testAddRole() {
+        UnitRole role1 = UnitRole.builder()
+                .roleName("产品")
+                .isDeleted(0)
+                .build();
+        UnitRole role2 = UnitRole.builder()
+                .roleName("技术")
+                .isDeleted(0)
+                .build();
+        unitRoleService.save(role1);
+        unitRoleService.save(role2);
     }
+
 
 }

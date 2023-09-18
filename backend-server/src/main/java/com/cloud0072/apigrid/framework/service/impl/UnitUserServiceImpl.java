@@ -59,6 +59,7 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
         checkMember(vo);
 
         var unitUser = UnitUser.builder()
+                .id(vo.getUserId())
                 .nickName(vo.getNickName())
                 .username(vo.getMobile())
                 .password(passwordEncoder.encode(vo.getPassword()))

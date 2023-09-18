@@ -51,9 +51,16 @@ public class MenuNode extends BaseEntity {
     private Integer isDeleted;
 
     @JsonSerialize(using = ToStringSerializer.class)
+    private Long createBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long updateBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
 
 }

@@ -6,10 +6,12 @@ import com.cloud0072.apigrid.framework.domain.UnitUser;
 import com.cloud0072.apigrid.framework.vo.UnitTeamUserVo;
 import com.cloud0072.apigrid.framework.vo.UnitRoleUserVo;
 import com.cloud0072.apigrid.framework.vo.UnitUserVo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface UnitUserMapper extends BaseMapper<UnitUser> {
 
     UnitUser selectUserByUsername(@Param("username") String username);

@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
   return {
     base: env.VITE_PUBLIC_PATH,
     server: {
-      port: 8000
+      port: 9000
     },
     plugins: [
       // reactRefresh(),

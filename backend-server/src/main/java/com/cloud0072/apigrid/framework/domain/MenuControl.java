@@ -56,6 +56,8 @@ public class MenuControl extends BaseEntity {
      */
     private Integer permissionType;
 
+    private Integer isDeleted;
+
     @JsonSerialize(using = ToStringSerializer.class)
     private Long updateBy;
 

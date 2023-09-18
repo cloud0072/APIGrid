@@ -1,6 +1,16 @@
+#端口安排
+# web-server      9000
+# backend-server  9001
+# redis           6379
+# mysql           3306
+# mongodb         27017
+
 # 自定义配置
 apigrid-config:
   default-password: ${DEFAULT_PASSWORD:123456}
+
+server:
+  port: 9001
 
 # 数据源配置
 spring:

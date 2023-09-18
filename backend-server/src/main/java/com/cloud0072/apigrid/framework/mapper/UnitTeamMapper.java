@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cloud0072.apigrid.framework.domain.UnitTeam;
 import com.cloud0072.apigrid.framework.vo.UnitRoleUserVo;
 import com.cloud0072.apigrid.framework.vo.UnitTeamVo;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface UnitTeamMapper extends BaseMapper<UnitTeam> {
 
     List<Long> selectTeamIdByParentIdIn(List<Long> parentIds);
