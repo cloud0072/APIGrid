@@ -1,3 +1,9 @@
+CREATE
+USER 'apigrid'@'%' IDENTIFIED BY 'apigrid';
+
+GRANT ALL PRIVILEGES ON *.* TO
+'apigrid'@'%'
+
 CREATE TABLE apigrid_user
 (
     `user_id`      BIGINT ( 20 ) NOT NULL,
