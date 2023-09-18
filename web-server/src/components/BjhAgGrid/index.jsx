@@ -11,7 +11,7 @@ import 'ag-grid-enterprise';
 import {LicenseManager} from 'ag-grid-enterprise';
 
 import './style.less';
-import {App, message, Spin} from "antd";
+import {Spin} from "antd";
 import {LayoutContext} from "@/layouts";
 
 LicenseManager.prototype.validateLicense = () => true
@@ -29,31 +29,25 @@ const indexCol = [{
 }];
 
 // let rowHeight = 34;
+export const voidFC = () => {
+};
 export const GridContext = createContext({
   checkAll: false,
-  setCheckAll: () => {
-  },
+  setCheckAll: voidFC,
   indeterminate: false,
-  setIndeterminate: () => {
-  },
+  setIndeterminate: voidFC,
   checkedList: [],
-  onSelectedRows: () => {
-  },
+  onSelectedRows: voidFC,
   rowHeight: 34,
-  setRowHeight: () => {
-  },
+  setRowHeight: voidFC,
   tableColumns: [],
-  setTableColumns: () => {
-  },
+  setTableColumns: voidFC,
   rowData: [],
-  setRowData: () => {
-  },
+  setRowData: voidFC,
   colDefsList: [],
-  setColDefsList: () => {
-  },
+  setColDefsList: voidFC,
   colGroupsList: [],
-  setColGroupsList: () => {
-  },
+  setColGroupsList: voidFC,
 });
 
 const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {

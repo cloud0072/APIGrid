@@ -2,43 +2,79 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {atom, useAtomValue, useSetAtom} from 'jotai';
 import {convertUserRoutesToMenus, getRouteSettingMap} from "@/utils";
 
-const userRoutes: any[] = [
-  {
-    name: 'home',
-    path: '/',
-    component: '',
-    meta: {title: '首页', icon: '', noCache: false},
-    hidden: true,
-    alwaysShow: false,
-    children: undefined
-  },
+const systemRoutes: any[] = [
   {
     name: 'user',
     path: '/system/user',
-    component: '',
-    meta: {title: '成员列表', icon: 'icon-user', noCache: false},
+    meta: {title: '成员列表', icon: 'icon-user', noCache: false, type: 'system'},
     hidden: false,
     alwaysShow: false,
-    children: undefined
   },
   {
     name: 'role',
     path: '/system/role',
-    component: '',
-    meta: {title: '角色列表', icon: 'icon-key', noCache: false},
+    meta: {title: '角色列表', icon: 'icon-key', noCache: false, type: 'system'},
     hidden: false,
     alwaysShow: false,
-    children: undefined
   },
+]
+
+const flowRoutes: any[] = [
+  {
+    name: 'flowItem',
+    path: '/flow/item',
+    meta: {title: '流程管理', icon: 'icon-branches', noCache: false, type: 'flow'},
+    hidden: false,
+    alwaysShow: false,
+  },
+  {
+    name: 'flowInstance',
+    path: '/flow/instance',
+    meta: {title: '流程实例', icon: 'icon-expand', noCache: false, type: 'flow'},
+    hidden: false,
+    alwaysShow: false,
+  },
+]
+
+const datasheetRoutes: any[] = [
   {
     name: 'datasheet',
     path: '/datasheet/:dstId',
-    component: '',
-    meta: {title: '表格列表', icon: 'icon-table', noCache: false},
-    hidden: false,
+    meta: {title: '表格列表', icon: 'icon-table', noCache: false, type: 'datasheet'},
+    hidden: true,
     alwaysShow: false,
-    children: undefined
   },
+  {
+    name: 'form',
+    path: '/form/:frmId',
+    meta: {title: '智能表单', icon: 'icon-layout', noCache: false, type: 'datasheet'},
+    hidden: true,
+    alwaysShow: false,
+  },
+]
+
+const dashboardRoutes: any[] = [
+  {
+    name: 'dashboard',
+    path: '/dashboard/:dsbId',
+    meta: {title: '表格列表', icon: 'icon-table', noCache: false, type: 'dashboard'},
+    hidden: true,
+    alwaysShow: false,
+  },
+]
+
+const userRoutes: any[] = [
+  {
+    name: 'home',
+    path: '/',
+    meta: {title: '首页', icon: '', noCache: false},
+    hidden: true,
+    alwaysShow: false,
+  },
+  ...datasheetRoutes,
+  ...dashboardRoutes,
+  ...systemRoutes,
+  ...flowRoutes
 ]
 
 const initialStateQueryKey = ['global', 'initialState'];

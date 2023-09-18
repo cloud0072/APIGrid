@@ -3,28 +3,30 @@ import {DashboardOutlined, NodeIndexOutlined, SettingOutlined, TableOutlined} fr
 import {useTheme} from "@/hooks/useTheme";
 import {Tooltip} from "antd";
 import styled from 'styled-components';
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {LayoutContext} from "@/layouts";
+import {useLocation} from "react-router-dom";
 
 const menuTypeOptions = [
   {
-    label: '仪表盘',
-    value: 'dashboard',
-    icon: <DashboardOutlined/>
-  }, {
     label: '表格',
     value: 'datasheet',
     icon: <TableOutlined/>
   }, {
+    label: '仪表盘',
+    value: 'dashboard',
+    icon: <DashboardOutlined/>
+  }, {
     label: '流程',
-    value: 'flowable',
+    value: 'flow',
     icon: <NodeIndexOutlined/>
   }, {
-    label: '设置',
-    value: 'setting',
+    label: '系统',
+    value: 'system',
     icon: <SettingOutlined/>
   },
 ]
+
 const MenuTypeWrapper: any = styled.div`
     display: flex;
     justify-content: center;
@@ -40,23 +42,30 @@ const MenuTypeWrapper: any = styled.div`
 const MenuHeader = () => {
   const {collapsed, menuType, setMenuType} = useContext(LayoutContext);
   const {themeColors} = useTheme();
-  //    background: ${menuType == props.typeItem.value ? themeColors.colorBgMenuItemSelected : themeColors.colorBgMenu},
 
-  return <Transition in={collapsed} timeout={300}>
-    {(state: string) => (
-      <div className={`bjh-menu-header`} style={{borderColor: themeColors.colorPrimary}}>
-        {menuTypeOptions.filter(typeItem => !collapsed || menuType == typeItem.value).map(typeItem => (
-          <Tooltip title={typeItem.label} key={typeItem.value}>
-            <MenuTypeWrapper
-              $bg={typeItem.value == menuType ? themeColors.colorBgMenuItemSelected : themeColors.colorBgMenu}
-              onClick={() => setMenuType(typeItem.value)}>
-              <span className={'bjh-menu-header-type-icon'}>{typeItem.icon}</span>
-            </MenuTypeWrapper>
-          </Tooltip>
-        ))}
-      </div>
-    )}
-  </Transition>
+  const {pathname} = useLocation();
+  useEffect(() => {
+    const opt = menuTypeOptions.find(opt => pathname.indexOf(`/${opt.value}/`) === 0);
+    setMenuType(opt ? opt.value : 'datasheet');
+  }, [pathname])
+
+  return (
+    <Transition in={collapsed} timeout={300}>
+      {(state: string) => (
+        <div className={`bjh-menu-header`} style={{borderColor: themeColors.colorPrimary}}>
+          {menuTypeOptions.filter(typeItem => !collapsed || menuType == typeItem.value).map(typeItem => (
+            <Tooltip title={typeItem.label} key={typeItem.value}>
+              <MenuTypeWrapper
+                $bg={typeItem.value == menuType ? themeColors.colorBgMenuItemSelected : themeColors.colorBgMenu}
+                onClick={() => setMenuType(typeItem.value)}>
+                <span className={'bjh-menu-header-type-icon'}>{typeItem.icon}</span>
+              </MenuTypeWrapper>
+            </Tooltip>
+          ))}
+        </div>
+      )}
+    </Transition>
+  )
 }
 
 export default MenuHeader;

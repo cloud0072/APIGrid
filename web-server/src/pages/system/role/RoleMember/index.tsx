@@ -52,7 +52,6 @@ const RoleMember = () => {
     }
     UnitRoleApi.getRoleMemberPage({roleId, pageInfo}).then(response => {
       const {records} = response.data;
-      console.log('getRoleMemberPage')
       setRoleMemberList(() => records);
       setSelectedUnitIds([]);
     })

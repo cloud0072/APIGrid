@@ -15,6 +15,7 @@ import {debounce} from "lodash-es";
 
 import './index.less';
 import MenuHeader from "@/layouts/components/MenuHeader";
+import DstNodeRender from "@/layouts/components/DstNodeRender";
 
 export type sizeType = {
   clientHeight: number,
@@ -74,8 +75,9 @@ const Layouts: FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [menuType, setMenuType] = useState('');
   const menuData = useMemo(() => {
-    return initialState?.menus ?? []
-  }, [menuType])
+    const menus = initialState?.menus ?? [];
+    return menus.filter(m => m.type === menuType);
+  }, [menuType, initialState])
 
   const [frameSize, setFrameSize] = useState<sizeType>({
     clientHeight: 0,
@@ -111,6 +113,7 @@ const Layouts: FC = () => {
         menuDataRender={() => menuData}
         menuHeaderRender={MenuHeader}
         menuItemRender={MenuItem}
+        menuExtraRender={DstNodeRender}
         headerTitleRender={HeaderTitle}
         headerContentRender={HeaderContent}
         token={layoutToken}

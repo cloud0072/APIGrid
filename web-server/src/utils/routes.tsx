@@ -1,31 +1,6 @@
 import type {MenuDataItem} from '@ant-design/pro-components';
 import IconFont from "@/components/IconFont";
 
-export const convertUserRoutesToMenus = (userRoutes: any[] = []): MenuDataItem[] => {
-  const menus: MenuDataItem[] = [];
-
-  userRoutes.forEach((item) => {
-    const {path, meta, hidden} = item;
-
-    let children: MenuDataItem[] = [];
-
-    if (item.children && item.children.length > 0) {
-      children = convertUserRoutesToMenus(item.children);
-    }
-
-    menus.push({
-      path: path,
-      name: meta?.title ?? path,
-      hideInMenu: hidden,
-      icon: <IconFont type={meta?.icon || '#'}/>,
-      link: meta?.link,
-      children,
-    });
-  });
-
-  return menus;
-};
-
 export interface RouteSetting {
   /**
    * @description: 路由名称，用做 tab 标签页的标题
@@ -44,6 +19,32 @@ export interface RouteSetting {
    */
   key: string;
 }
+
+export const convertUserRoutesToMenus = (userRoutes: any[] = []): MenuDataItem[] => {
+  const menus: MenuDataItem[] = [];
+
+  userRoutes.forEach((item) => {
+    const {path, meta, hidden} = item;
+
+    let children: MenuDataItem[] = [];
+
+    if (item.children && item.children.length > 0) {
+      children = convertUserRoutesToMenus(item.children);
+    }
+
+    menus.push({
+      path: path,
+      name: meta?.title ?? path,
+      type: meta?.type ?? 'datasheet',
+      hideInMenu: hidden,
+      icon: <IconFont type={meta?.icon || '#'}/>,
+      link: meta?.link,
+      children,
+    });
+  });
+
+  return menus;
+};
 
 export const getRouteSettingMap = (userMenus: any[] = []): Record<string, RouteSetting> => {
   const settingMap: Record<string, RouteSetting> = {};
