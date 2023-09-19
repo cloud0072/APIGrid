@@ -6,20 +6,18 @@ import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
 import {t} from "@/utils/i18n";
 import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
 import {TeamTreeContext} from "@/pages/system/user";
-import {UnitRoleApi} from "@/services/framework/UnitRole";
 import {UnitTeamApi} from "@/services/framework/UnitTeam";
 
-export interface ITeamTreeNode {
-  teamId: string;
-  teamName: string;
-  parentId: string;
-  parentTeamName: string;
-  hasChildren: boolean;
-  children?: ITeamTreeNode[];
+export interface ITreeNode {
+  title: string;
+  key: string;
+  value: string;
+  isLeaf: boolean;
+  children?: ITreeNode[];
 }
 
 const ConfigConstant = {
-  ROOT_TEAM_ID: '0'
+  ROOT_TEAM_ID: '1'
 }
 const TEAM_OPERATE = 'TEAM_OPERATE';
 const TEAM_ROOT_OPERATE = 'TEAM_ROOT_OPERATE';
@@ -72,16 +70,16 @@ const TeamTree = () => {
     return (
       <_ContextMenuTrigger
         ref={nodeRef}
-        id={node.parentId === ConfigConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
+        id={node.value === ConfigConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
         holdToDisplay={-1}
         collect={() => onCollect(node)}
       >
         <Tooltip title={node.title} placement="bottomLeft">
           <div style={nodeStyle}>{node.title}</div>
         </Tooltip>
-        {node.parentId === ConfigConstant.ROOT_TEAM_ID &&
+        {node.value === ConfigConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><PlusOutlined style={{visibility: 'visible'}}/></span>}
-        {node.parentId !== ConfigConstant.ROOT_TEAM_ID &&
+        {node.value !== ConfigConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><MoreOutlined/></span>}
       </_ContextMenuTrigger>
     )
