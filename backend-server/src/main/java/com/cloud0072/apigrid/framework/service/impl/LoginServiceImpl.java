@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,8 +49,8 @@ public class LoginServiceImpl implements LoginService {
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ServiceException("用户名或密码错误");
         } finally {
             AuthenticationContextHolder.clearContext();
         }

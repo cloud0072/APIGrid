@@ -6,9 +6,11 @@ import com.cloud0072.apigrid.framework.service.UnitRoleService;
 import com.cloud0072.apigrid.framework.service.UnitTeamService;
 import com.cloud0072.apigrid.framework.service.UnitUserService;
 import com.cloud0072.apigrid.framework.vo.UnitTeamUserVo;
+import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
@@ -28,18 +30,20 @@ class BackendServerApplicationTests {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    public static void main(String[] args) {
-//        var encoder = new BCryptPasswordEncoder();
-//        // $2a$10$qtpdn0XLBUh0sTMI0YEosOav/JODRTtJv.m.gLEmUXE666rGl6/z6
-//        System.out.println(encoder.encode("123456"));
-//    }
+    @Test
+    public void testPassword() {
+        var encoder = new BCryptPasswordEncoder();
+        // $2a$10$xYCMDmP260KGErC1JsvcUOIbbjDsR3fE7Z3mLftka2EUgHDimc3f.
+        System.out.println(encoder.encode("123456"));
+    }
 
     @Test
     void testAddUser() {
         UnitTeamUserVo user = UnitTeamUserVo.builder()
                 .userId(1L)
+                .nickName("管理员")
                 .username("admin")
-                .password("admin")
+                .password("123456")
                 .mobile("18638731263")
                 .email("352419394@qq.com")
                 .isAdmin(1)
