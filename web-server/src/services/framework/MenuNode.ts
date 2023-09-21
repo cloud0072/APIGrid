@@ -15,6 +15,25 @@ export const MenuNodeApi = {
       skipErrorHandler: false,
       ...options,
     }),
+  updateByNodeId: (data: any) =>
+    request<any>({
+      path: `/${prefix}/updateByNodeId`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+    }),
+  deleteByNodeIds: (id: any) => {
+    const ids = id instanceof Array ? id.join(',') : id;
+    return request<any>({
+      path: `/${prefix}/deleteByNodeIds/${ids}`,
+      method: 'DELETE',
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+    })
+  },
 }
 
 
