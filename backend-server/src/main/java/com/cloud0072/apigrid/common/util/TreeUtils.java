@@ -21,10 +21,10 @@ public class TreeUtils {
                     var children = buildTree(dataList, t.getKey(), cols);
                     var node = TreeNode.builder()
                             .key(t.getKey().toString())
-                            .value(t.getKey().toString())
+                            .parentKey(t.getParentId().toString())
                             .title(t.getTitle())
-                            .isLeaf(children.isEmpty())
                             .children(children)
+//                            .isLeaf(children.isEmpty())
                             .build();
                     if (cols != null && cols.length > 0) {
                         var meta = new JSONObject();

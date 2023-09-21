@@ -104,23 +104,23 @@ export const useSetAtomMenuNodes = () => useSetAtom(atomMenuNodes);
 export const useAtomValueMenuNodes = () => useAtomValue(atomMenuNodes);
 
 export const useQueryInitialState = () => {
-  const setAtomPermissions = useSetAtomPermissions();
-  const setAtomKeepAliveRoutes = useSetAtomKeepAliveRoutes();
-  const setAtomValueMenus = useSetAtomMenuNodes();
+  const setPermissions = useSetAtomPermissions();
+  const setKeepAliveRoutes = useSetAtomKeepAliveRoutes();
+  const setMenuNodes = useSetAtomMenuNodes();
 
   return useQuery(
     initialStateQueryKey,
     async () => {
       const [userNodes] = await Promise.all([MenuNodeApi.getNodeTree()])
       console.log('userNodes.data', userNodes.data)
-      setAtomValueMenus(userNodes.data);
+      setMenuNodes(userNodes.data);
 
       // const [userInfo, userRoutes] = await Promise.all([sysGetUserInfo(), sysLoginGetRouters()]);
       const userInfo = {nickName: 'cloud0072', permissions: []}
-      setAtomPermissions(new Set(userInfo.permissions));
+      setPermissions(new Set(userInfo.permissions));
 
       const routeSettingMap = getRouteSettingMap(userRoutes);
-      setAtomKeepAliveRoutes(Object.keys(routeSettingMap).filter((i) => routeSettingMap[i].isKeepAlive));
+      setKeepAliveRoutes(Object.keys(routeSettingMap).filter((i) => routeSettingMap[i].isKeepAlive));
 
       return {userInfo, routeSettingMap, menus: convertUserRoutesToMenus(userRoutes)};
     },

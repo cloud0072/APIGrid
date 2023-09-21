@@ -10,7 +10,7 @@ export const useActivated = (callback?: () => void, ignoreFirstRender = true) =>
 
   const {pathname} = useLocation();
 
-  const atomValueKeepAliveRoutes = useAtomValueKeepAliveRoutes();
+  const keepAliveRoutes = useAtomValueKeepAliveRoutes();
 
   useEffect(() => {
     if (ref.current.pattern && !matchPath(ref.current.pattern, pathname)) {
@@ -22,7 +22,7 @@ export const useActivated = (callback?: () => void, ignoreFirstRender = true) =>
       return;
     }
 
-    const currentPattern = atomValueKeepAliveRoutes.find((i) => matchPath(i, pathname));
+    const currentPattern = keepAliveRoutes.find((i) => matchPath(i, pathname));
 
     if (!currentPattern) {
       return;

@@ -92,7 +92,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
     @Override
     public List<TreeNode> getTeamTree(QueryWrapper<UnitTeam> wrapper) {
         var dataList = baseMapper.selectList(wrapper);
-        return TreeUtils.buildTree(dataList, 0L, "parentId");
+        return TreeUtils.buildTree(dataList, 0L);
     }
 
     @Override
