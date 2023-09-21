@@ -1,5 +1,6 @@
 package com.cloud0072.apigrid.common.domain;
 
+import cn.hutool.json.JSONObject;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,6 +17,8 @@ public class TreeNode {
     private String value;
 
     private Boolean isLeaf;
+
+    private JSONObject meta;
 
     private List<TreeNode> children;
 

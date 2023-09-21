@@ -1,19 +1,71 @@
-@import "~@/styles/lib_colors.less";
-@import "~@/styles/lib_mixins.less";
-@import "~@/styles/context_menu.less";
+@import "../../../styles/lib_colors.less";
+@import "../../../styles/context_menu.less";
 
-.panelTitle {
-  padding: 20px;
-  font-size: 16px;
+.menuLabel {
+  width: 200px;
+  line-height: 30px;
+
+  .menuLabelIcon {
+    margin-right: 4px;
+  }
 }
 
-.teamList {
+.menuTitle {
+  position: relative;
+  display: flex;
+  width: 100%;
+  color: hsla(0, 0%, 100%, .85);
+  z-index: 100;
+
+  .menuTitleText {
+    width: 100%;
+    color: inherit;
+  }
+
+  .menuTitleExtra {
+    display: flex;
+    flex-shrink: 0;
+    color: inherit;
+
+    span {
+      height: 40px;
+      width: 24px;
+      visibility: hidden;
+    }
+  }
+
+  &:hover .menuTitleExtra {
+    span {
+      visibility: visible;
+    }
+  }
+}
+
+.menuNodeWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  z-index: 10;
+
+  .menuTree {
+    flex-shrink: 0;
+  }
+
+  .menuBlank {
+    height: 100%;
+  }
 
   :global {
     .ant-tree {
+      border-radius: 0;
+      background: inherit;
+
       .ant-tree-treenode {
         padding: 0;
+        border-radius: 4px;
+        overflow: hidden;
+
       }
 
       &.ant-tree-directory .ant-tree-treenode::before {
@@ -27,7 +79,7 @@
         line-height: 40px;
 
         svg {
-          fill: var(--secondLevelText);
+          fill: hsla(0, 0%, 100%, .85);
           width: 16px;
           height: 16px;
           transform: rotate(90deg);
@@ -35,7 +87,7 @@
       }
 
       span.ant-tree-switcher {
-        margin-left: 12px;
+        margin-left: 8px;
       }
 
       .ant-tree-switcher-icon {
@@ -71,7 +123,8 @@
 
       .ant-tree-title {
         width: 100%;
-        color: var(--secondLevelText);
+        color: var(--fc1);
+        //color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
 
         .contextmenuTitle()
@@ -87,57 +140,13 @@
       }
 
       .ant-tree-node-selected {
-        //.ant-tree-iconEle {
-        //  svg {
-        //    fill: var(--primaryColor);
-        //  }
-        //}
-        //.ant-tree-title {
-        //  color: var(--primaryColor);
-        //}
       }
 
       &.ant-tree-directory .ant-tree-treenode:hover::before,
       .ant-tree-treenode-selected::before,
       .ant-tree-node-content-wrapper:hover::before {
-        background: var(--rowSelectedBg) !important;
+        //background: var(--rowSelectedBg) !important;
       }
     }
-  }
-}
-
-.memberTable {
-  height: 100%;
-
-  .memberTableBtn {
-    padding: 0 20px 0;
-
-    button {
-      height: 40px;
-    }
-
-    button + button {
-      margin-left: 8px;
-    }
-  }
-
-  .memberTableWrapper {
-    padding: 20px 20px 0;
-  }
-}
-
-.modalTitle {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 24px;
-}
-
-.memberAvatarUpload {
-  display: flex;
-  justify-content: center;
-
-  .memberAvatarUploadWrapper {
-    height: 100px;
-    width: 100px;
   }
 }

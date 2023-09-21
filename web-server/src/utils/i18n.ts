@@ -41,6 +41,15 @@ export const t = {
   role_modal_title_create: '创建角色',
   role_modal_title_update: '编辑角色',
   role_table_create: '添加成员/小组',
-  role_table_remove: '移除该角色'
+  role_table_remove: '移除该角色',
+  // menu
+  menu_node_dst_create: '新建表格',
+  menu_node_dsb_create: '新建仪表盘',
+  menu_node_fod_create: '新建文件夹',
+  menu_node_excel_create: '从Excel导入',
+  menu_node_export: '导出到Excel',
+  menu_node_rename: '重命名',
+  menu_node_permission: '设置权限',
+  menu_node_delete: '删除'
 
 }

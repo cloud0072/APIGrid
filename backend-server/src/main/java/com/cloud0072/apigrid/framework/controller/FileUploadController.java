@@ -2,7 +2,7 @@ package com.cloud0072.apigrid.framework.controller;
 
 import com.cloud0072.apigrid.common.constant.MinioProperties;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
-import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.exception.BackendException;
 import com.cloud0072.apigrid.common.util.FileUploadUtils;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
@@ -55,7 +55,7 @@ public class FileUploadController {
     @GetMapping("/getPreSignedPutUrl")
     public AjaxResult getPreSignedPutUrl(FileAsset data) {
         if (StringUtils.isEmpty(data.getFileName())) {
-            throw new ServiceException("fileName不能为空");
+            throw new BackendException("fileName不能为空");
         }
         var suffix = FileUploadUtils.getExtension(data.getFileName());
         var token = FileUploadUtils.getDatePathName() + (StringUtils.isEmpty(suffix) ? "" : "." + suffix);

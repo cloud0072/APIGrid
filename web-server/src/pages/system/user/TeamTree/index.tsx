@@ -1,4 +1,3 @@
-import styles from "@/pages/system/user/style.module.less";
 import React, {useContext, useState} from "react";
 import {CaretRightOutlined, DeleteOutlined, EditOutlined, MoreOutlined, PlusOutlined} from "@ant-design/icons";
 import {theme, Tooltip, Tree} from "antd";
@@ -7,6 +6,8 @@ import {t} from "@/utils/i18n";
 import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
 import {TeamTreeContext} from "@/pages/system/user";
 import {UnitTeamApi} from "@/services/framework/UnitTeam";
+
+import styles from "@/pages/system/user/style.module.less";
 
 export interface ITreeNode {
   title: string;

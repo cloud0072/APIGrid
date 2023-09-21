@@ -25,10 +25,10 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     private UnitUserService unitUserService;
 
     @GetMapping("/getTeamTree")
-    public AjaxResult getUnitTeamTree() {
+    public AjaxResult getTeamTree() {
         QueryWrapper<UnitTeam> wrapper = new QueryWrapper<>();
         wrapper.eq("is_deleted", 0);
-        List<TreeNode> teamTree = unitTeamService.getUnitTeamTree(wrapper);
+        List<TreeNode> teamTree = unitTeamService.getTeamTree(wrapper);
         return AjaxResult.success(teamTree);
     }
 

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.constant.ApigridConfig;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.domain.LoginUser;
-import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.exception.BackendException;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
 import com.cloud0072.apigrid.framework.domain.Unit;
@@ -100,11 +100,11 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
     @Override
     public AjaxResult updateUnitUser(UnitTeamUserVo vo) {
         if (vo.getMobile() == null || vo.getNickName() == null) {
-            throw new ServiceException("用户信息不完整");
+            throw new BackendException("用户信息不完整");
         }
         var unitUser = baseMapper.selectById(vo.getUserId());
         if (unitUser == null) {
-            throw new ServiceException("该账号不存在");
+            throw new BackendException("该账号不存在");
         }
         if (!unitUser.getMobile().equals(vo.getMobile())) {
             var unitUserList = baseMapper.selectList(new QueryWrapper<UnitUser>().eq("mobile", vo.getMobile()));
@@ -139,7 +139,7 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
     public AjaxResult updateUserAvatar(UnitTeamUserVo vo) {
         var unitUser = baseMapper.selectById(vo.getUserId());
         if (unitUser == null) {
-            throw new ServiceException("该账号不存在");
+            throw new BackendException("该账号不存在");
         }
         unitUser.setAvatar(vo.getAvatar());
         baseMapper.updateById(unitUser);
@@ -149,14 +149,14 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
     @Override
     public void resetPassword(UnitTeamUserVo vo) {
         if (StringUtils.isEmpty(vo.getNewPwd())) {
-            throw new ServiceException("请输入新密码");
+            throw new BackendException("请输入新密码");
         }
         var unitUser = baseMapper.selectById(vo.getUserId());
         if (unitUser == null) {
             return;
         }
         if (!passwordEncoder.matches(vo.getPassword(), unitUser.getPassword())) {
-            throw new ServiceException("原密码错误");
+            throw new BackendException("原密码错误");
         }
         unitUser.setPassword(passwordEncoder.encode(vo.getNewPwd()));
         baseMapper.updateById(unitUser);
@@ -206,13 +206,13 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
     public UserDetails loadUserByUsername(String username) {
         UnitUser unitUser = baseMapper.selectUserByUsername(username);
         if (StringUtils.isNull(unitUser)) {
-            throw new ServiceException("登录用户：" + username + " 不存在");
+            throw new BackendException("登录用户：" + username + " 不存在");
         }
         LoginUser loginUser = new LoginUser(unitUser);
         if (!loginUser.isAccountNonLocked()) {
-            throw new ServiceException("登录用户：" + username + " 该账号已被锁定");
+            throw new BackendException("登录用户：" + username + " 该账号已被锁定");
         } else if (!loginUser.isEnabled()) {
-            throw new ServiceException("登录用户：" + username + " 该账号已被禁用");
+            throw new BackendException("登录用户：" + username + " 该账号已被禁用");
         }
         return loginUser;
     }
@@ -222,23 +222,23 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
         if (StringUtils.isNotEmpty(mobile)) {
             UnitUser user1 = baseMapper.selectUserByMobile(mobile);
             if (StringUtils.isNotNull(user1)) {
-                throw new ServiceException("该手机号已被注册");
+                throw new BackendException("该手机号已被注册");
             }
         }
         String username = unitUser.getUsername();
         if (StringUtils.isNotEmpty(username)) {
             if (username.length() < 4 || username.length() >= 32) {
-                throw new ServiceException("用户名长度必须在4-32之间");
+                throw new BackendException("用户名长度必须在4-32之间");
             }
             UnitUser user1 = baseMapper.selectUserByUsername(username);
             if (StringUtils.isNotNull(user1)) {
-                throw new ServiceException("该用户名已被注册");
+                throw new BackendException("该用户名已被注册");
             }
         }
         String password = unitUser.getPassword();
         if (StringUtils.isNotEmpty(password)) {
             if (password.length() < 4 || password.length() >= 32) {
-                throw new ServiceException("密码长度必须在4-32之间");
+                throw new BackendException("密码长度必须在4-32之间");
             }
         }
     }

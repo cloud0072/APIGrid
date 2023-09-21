@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.common.util;
 
 import com.cloud0072.apigrid.common.domain.LoginUser;
-import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.exception.BackendException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +32,7 @@ public class SecurityUtils {
         try {
             return getUser().getUsername();
         } catch (Exception e) {
-            throw new ServiceException("获取用户账户异常", HttpStatus.UNAUTHORIZED.value());
+            throw new BackendException("获取用户账户异常", HttpStatus.UNAUTHORIZED.value());
         }
     }
 
@@ -43,7 +43,7 @@ public class SecurityUtils {
         try {
             return (LoginUser) getAuthentication().getPrincipal();
         } catch (Exception e) {
-            throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED.value());
+            throw new BackendException("获取用户信息异常", HttpStatus.UNAUTHORIZED.value());
         }
     }
 

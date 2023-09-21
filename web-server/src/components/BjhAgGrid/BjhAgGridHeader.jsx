@@ -18,6 +18,7 @@ const BjhAgGridHeader = (props) => {
   const onOpenChange = (open) => {
     setOpen(() => open)
   }
+
   const onCheckedChange = () => {
     setCheckAll(!checkAll)
     setIndeterminate(false);
@@ -27,13 +28,16 @@ const BjhAgGridHeader = (props) => {
       api.selectAll()
     }
   }
+
   const onFilterChange = (e) => {
     console.log('onFilterChange', e.target.value)
   }
+
   const onMouseOver = (e) => {
     setActive(true)
     // console.log('onMouseEnter', e)
   }
+
   const onMouseLeave = (e) => {
     setActive(false)
     // console.log('onMouseLeave', e)

@@ -27,13 +27,33 @@ export const routes: RouteObject[] = [
         ]
       },
       {
-        path: 'datasheet',
+        path: 'flow',
         children: [
           {
-            path: ':dstId?',
-            element: lazyLoad('datasheet/table'),
+            path: 'config',
+            element: lazyLoad('flow/config'),
+          },
+          {
+            path: 'instance',
+            element: lazyLoad('flow/instance'),
           },
         ]
+      },
+      {
+        path: 'datasheet/:nodeId',
+        element: lazyLoad('workspace/datasheet'),
+      },
+      {
+        path: 'dashboard/:nodeId',
+        element: lazyLoad('workspace/dashboard'),
+      },
+      {
+        path: 'form/:nodeId',
+        element: lazyLoad('workspace/form'),
+      },
+      {
+        path: 'folder/:nodeId',
+        element: lazyLoad('workspace/folder'),
       },
     ],
   },

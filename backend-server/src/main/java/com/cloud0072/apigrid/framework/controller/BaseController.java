@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
+import com.cloud0072.apigrid.common.domain.BaseEntity;
 import com.cloud0072.apigrid.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class BaseController<T> {
+public abstract class BaseController<T extends BaseEntity> {
 
     @Autowired
     protected IService<T> baseService;

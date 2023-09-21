@@ -1,7 +1,7 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
 import com.cloud0072.apigrid.common.domain.LoginUser;
-import com.cloud0072.apigrid.common.exception.ServiceException;
+import com.cloud0072.apigrid.common.exception.BackendException;
 import com.cloud0072.apigrid.framework.security.context.AuthenticationContextHolder;
 import com.cloud0072.apigrid.framework.service.LoginService;
 import com.cloud0072.apigrid.framework.service.TokenService;
@@ -50,7 +50,7 @@ public class LoginServiceImpl implements LoginService {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (AuthenticationException e) {
-            throw new ServiceException("用户名或密码错误");
+            throw new BackendException("用户名或密码错误");
         } finally {
             AuthenticationContextHolder.clearContext();
         }

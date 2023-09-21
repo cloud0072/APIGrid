@@ -10,7 +10,6 @@ const DatasheetPanel = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('location', location)
     setMenuType('datasheet')
   }, [])
 
@@ -79,6 +78,7 @@ const DatasheetPanel = () => {
     ]
     return Promise.resolve({tableInfo, tableColumns, viewList})
   }
+
   const loadData = () => UnitUserApi.getPage({pageSize: 10, pageNum: 1}).then(r => r.data.records)
 
   return (

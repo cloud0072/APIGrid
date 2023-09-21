@@ -16,7 +16,7 @@ public interface UnitTeamService extends IService<UnitTeam> {
 
     List<Long> getAllTeamIdsInTeamTree(List<Long> teamIds);
 
-    List<TreeNode> getUnitTeamTree(QueryWrapper<UnitTeam> wrapper);
+    List<TreeNode> getTeamTree(QueryWrapper<UnitTeam> wrapper);
 
     List<UnitTeamVo> listByTeamId(Long teamId);
 

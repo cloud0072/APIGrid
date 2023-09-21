@@ -1,5 +1,5 @@
 import {Avatar} from "antd";
-import {ApartmentOutlined, CloseOutlined, UserOutlined} from '@ant-design/icons';
+import {ApartmentOutlined, CloseOutlined} from '@ant-design/icons';
 import {layoutThemeList} from "@/utils/theme";
 import styles from './style.module.less';
 import classNames from "classnames";
@@ -18,7 +18,7 @@ export function getFirstWordFromString(str: string) {
   if (!word.length) return '';
   const codePoint = word.codePointAt(0);
   if (!codePoint) return '';
-  return String.fromCodePoint(codePoint).toUpperCase();
+  return (<div style={{height: 20, width: 20}}>{String.fromCodePoint(codePoint).toUpperCase()}</div>);
 }
 
 const UnitTag = (props: any) => {

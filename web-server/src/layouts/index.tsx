@@ -15,7 +15,7 @@ import {debounce} from "lodash-es";
 
 import './index.less';
 import MenuHeader from "@/layouts/components/MenuHeader";
-import DstNodeRender from "@/layouts/components/DstNodeRender";
+import MenuNodeRender from "@/layouts/components/MenuNodePanel/menu_node_render";
 
 export type sizeType = {
   clientHeight: number,
@@ -38,15 +38,15 @@ export const LayoutContext = createContext({
 } as any)
 
 const Layouts: FC = () => {
+  const {data: initialState, isLoading, isError} = useQueryInitialState();
+  if (isError) {
+    return <Navigate to="/login" replace/>;
+  }
   const {pathname} = useLocation();
   const element = useOutlet();
   // const navigate = useNavigate()
   const {layoutToken} = useTheme()
 
-  const {data: initialState, isLoading, isError} = useQueryInitialState();
-  if (isError) {
-    return <Navigate to="/login" replace/>;
-  }
   const routeSettingMap: Record<string, RouteSetting> = initialState?.routeSettingMap ?? {};
   const keepAliveElements = useRef<KeepAliveElements>({});
   const currRouteSettingsKey = Object.keys(routeSettingMap).find((key) => matchPath(key, pathname));
@@ -113,7 +113,7 @@ const Layouts: FC = () => {
         menuDataRender={() => menuData}
         menuHeaderRender={MenuHeader}
         menuItemRender={MenuItem}
-        menuExtraRender={DstNodeRender}
+        menuExtraRender={MenuNodeRender}
         headerTitleRender={HeaderTitle}
         headerContentRender={HeaderContent}
         token={layoutToken}

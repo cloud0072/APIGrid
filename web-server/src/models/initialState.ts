@@ -1,6 +1,7 @@
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {atom, useAtomValue, useSetAtom} from 'jotai';
 import {convertUserRoutesToMenus, getRouteSettingMap} from "@/utils";
+import {MenuNodeApi} from "@/services/framework/MenuNode";
 
 const systemRoutes: any[] = [
   {
@@ -21,8 +22,8 @@ const systemRoutes: any[] = [
 
 const flowRoutes: any[] = [
   {
-    name: 'flowItem',
-    path: '/flow/item',
+    name: 'flowConfig',
+    path: '/flow/config',
     meta: {title: '流程管理', icon: 'icon-branches', noCache: false, type: 'flow'},
     hidden: false,
     alwaysShow: false,
@@ -40,7 +41,7 @@ const datasheetRoutes: any[] = [
   {
     name: 'datasheet',
     path: '/datasheet/:dstId',
-    meta: {title: '表格列表', icon: 'icon-table', noCache: false, type: 'datasheet'},
+    meta: {title: '智能表格', icon: 'icon-table', noCache: false, type: 'datasheet'},
     hidden: true,
     alwaysShow: false,
   },
@@ -51,13 +52,17 @@ const datasheetRoutes: any[] = [
     hidden: true,
     alwaysShow: false,
   },
-]
-
-const dashboardRoutes: any[] = [
   {
     name: 'dashboard',
     path: '/dashboard/:dsbId',
-    meta: {title: '表格列表', icon: 'icon-table', noCache: false, type: 'dashboard'},
+    meta: {title: '仪表盘', icon: 'icon-dashboard', noCache: false, type: 'datasheet'},
+    hidden: true,
+    alwaysShow: false,
+  },
+  {
+    name: 'folder',
+    path: '/folder/:fodId',
+    meta: {title: '目录', icon: 'icon-folder', noCache: false, type: 'datasheet'},
     hidden: true,
     alwaysShow: false,
   },
@@ -72,10 +77,17 @@ const userRoutes: any[] = [
     alwaysShow: false,
   },
   ...datasheetRoutes,
-  ...dashboardRoutes,
   ...systemRoutes,
   ...flowRoutes
 ]
+
+export interface MenuNode {
+  key: string,
+  value: string,
+  title?: string,
+  meta?: any,
+  children?: MenuNode[],
+}
 
 const initialStateQueryKey = ['global', 'initialState'];
 
@@ -87,19 +99,29 @@ const atomKeepAliveRoutes = atom<string[]>([]);
 export const useSetAtomKeepAliveRoutes = () => useSetAtom(atomKeepAliveRoutes);
 export const useAtomValueKeepAliveRoutes = () => useAtomValue(atomKeepAliveRoutes);
 
+const atomMenuNodes = atom<MenuNode[]>([]);
+export const useSetAtomMenuNodes = () => useSetAtom(atomMenuNodes);
+export const useAtomValueMenuNodes = () => useAtomValue(atomMenuNodes);
+
 export const useQueryInitialState = () => {
   const setAtomPermissions = useSetAtomPermissions();
   const setAtomKeepAliveRoutes = useSetAtomKeepAliveRoutes();
+  const setAtomValueMenus = useSetAtomMenuNodes();
 
   return useQuery(
     initialStateQueryKey,
     async () => {
+      const [userNodes] = await Promise.all([MenuNodeApi.getNodeTree()])
+      console.log('userNodes.data', userNodes.data)
+      setAtomValueMenus(userNodes.data);
+
       // const [userInfo, userRoutes] = await Promise.all([sysGetUserInfo(), sysLoginGetRouters()]);
       const userInfo = {nickName: 'cloud0072', permissions: []}
       setAtomPermissions(new Set(userInfo.permissions));
 
       const routeSettingMap = getRouteSettingMap(userRoutes);
       setAtomKeepAliveRoutes(Object.keys(routeSettingMap).filter((i) => routeSettingMap[i].isKeepAlive));
+
       return {userInfo, routeSettingMap, menus: convertUserRoutesToMenus(userRoutes)};
     },
     {

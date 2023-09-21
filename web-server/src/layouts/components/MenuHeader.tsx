@@ -1,5 +1,5 @@
 import {Transition} from "react-transition-group";
-import {DashboardOutlined, NodeIndexOutlined, SettingOutlined, TableOutlined} from "@ant-design/icons";
+import {NodeIndexOutlined, SettingOutlined, TableOutlined} from "@ant-design/icons";
 import {useTheme} from "@/hooks/useTheme";
 import {Tooltip} from "antd";
 import styled from 'styled-components';
@@ -12,15 +12,18 @@ const menuTypeOptions = [
     label: '表格',
     value: 'datasheet',
     icon: <TableOutlined/>
-  }, {
-    label: '仪表盘',
-    value: 'dashboard',
-    icon: <DashboardOutlined/>
-  }, {
-    label: '流程',
+  },
+  // {
+  //   label: '仪表盘',
+  //   value: 'dashboard',
+  //   icon: <DashboardOutlined/>
+  // },
+  {
+    label: '审批',
     value: 'flow',
     icon: <NodeIndexOutlined/>
-  }, {
+  },
+  {
     label: '系统',
     value: 'system',
     icon: <SettingOutlined/>
@@ -33,7 +36,6 @@ const MenuTypeWrapper: any = styled.div`
     width: 100%;
     line-height: 40px;
     background: ${(props: any) => props.$bg};
-
     &:hover {
       background: hsla(0,0%,100%,.08);
     }
