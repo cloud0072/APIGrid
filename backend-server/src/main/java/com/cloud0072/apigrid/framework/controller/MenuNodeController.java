@@ -36,6 +36,12 @@ public class MenuNodeController extends BaseController<MenuNode> {
         return AjaxResult.success();
     }
 
+    @PutMapping("/updatePositionByNodeId")
+    public AjaxResult updatePositionByNodeId(@RequestBody MenuNode menuNode) {
+        menuNodeService.updatePositionByNodeId(menuNode);
+        return AjaxResult.success();
+    }
+
     @DeleteMapping("/deleteByNodeIds/{ids}")
     protected AjaxResult deleteEntity(@PathVariable("ids") String ids) {
         var query = Arrays.asList(ids.split(","));

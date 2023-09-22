@@ -9,8 +9,8 @@ import com.cloud0072.apigrid.framework.domain.MenuNode;
 import com.cloud0072.apigrid.framework.mapper.MenuNodeMapper;
 import com.cloud0072.apigrid.framework.service.MenuNodeService;
 import lombok.var;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +22,47 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
     @Override
     public List<TreeNode> getNodeTree(QueryWrapper<MenuNode> wrapper) {
         var dataList = baseMapper.selectList(wrapper);
-        return TreeUtils.buildTree(dataList, "-1", "nodeType", "icon");
+        var treeList = TreeUtils.buildTree(dataList, "-1", "nodeType", "icon", "preNodeId");
+        return TreeUtils.sortByPreNodeId(treeList);
+    }
+
+    /**
+     * @param params 包含了节点的NodeId 新位置的ParentId 新位置的PreNodeId
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updatePositionByNodeId(MenuNode params) {
+        // 自身节点
+        var iNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("node_id", params.getNodeId()));
+        // 旧位置后一个节点
+        var oldNextNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("pre_node_id", params.getNodeId()));
+        // 新位置后一个节点
+        var newNextNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("parent_id", params.getParentId())
+                .eq("pre_node_id", params.getPreNodeId()));
+
+        // 更新 [旧位置后一个节点] 的preNodeId 为 [自身节点] 的preNodeId (移除自身，并缝合原链表)
+        if (oldNextNode != null) {
+            oldNextNode.setPreNodeId(iNode.getPreNodeId());
+            baseMapper.updateById(oldNextNode);
+        }
+
+        // 更新 [新位置后一个节点] 的preNodeId 为 [自身节点] 的nodeId （插入新位置，并撑开原链表）
+        if (newNextNode != null) {
+            newNextNode.setPreNodeId(params.getNodeId());
+            baseMapper.updateById(newNextNode);
+        }
+
+        // 更新 [自身节点] 的preNodeId 和 parentId 为新的
+        if (iNode != null) {
+            iNode.setParentId(params.getParentId()).setPreNodeId(params.getPreNodeId());
+            baseMapper.updateById(iNode);
+        }
+
+        return 1;
     }
 
     @Override

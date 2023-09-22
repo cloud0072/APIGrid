@@ -24,6 +24,15 @@ export const MenuNodeApi = {
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
+  updatePositionByNodeId: (data: any) =>
+    request<any>({
+      path: `/${prefix}/updatePositionByNodeId`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+    }),
   deleteByNodeIds: (id: any) => {
     const ids = id instanceof Array ? id.join(',') : id;
     return request<any>({
@@ -33,7 +42,7 @@ export const MenuNodeApi = {
       type: ContentType.Json,
       skipErrorHandler: false,
     })
-  },
+  }
 }
 
 

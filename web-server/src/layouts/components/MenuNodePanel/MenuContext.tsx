@@ -5,6 +5,8 @@ import {t} from "@/utils/i18n";
 
 export const MenuRootId = '-1';
 
+export const FirstNodePreNodeId = '1'
+
 export const MenuActionKey = {
   // panel
   AddFolder: 'AddFolder',

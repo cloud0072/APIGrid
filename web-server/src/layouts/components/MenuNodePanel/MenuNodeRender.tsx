@@ -7,7 +7,10 @@ import {MenuNodeApi} from "@/services/framework/MenuNode";
 import {getNewId} from "@/utils/idUtils";
 import {useNavigate, useParams} from "react-router-dom";
 import {Dropdown, Input, Tree} from "antd";
+import {MacScrollbar} from 'mac-scrollbar';
+
 import {
+  FirstNodePreNodeId,
   getMenuItems,
   MenuActionKey,
   MenuRootId,
@@ -33,7 +36,12 @@ const TitleRender = ({node, editNodeKey, handleRename, handleClick}: any) => {
       {
         editNodeKey === node.key ?
           <div className={styles.menuTitleEdit}>
-            <Input defaultValue={node.title} autoFocus={true} ref={inputRef} onBlur={handleBlur}/>
+            <Input
+              ref={inputRef}
+              autoFocus={true}
+              defaultValue={node.title}
+              onBlur={handleBlur}
+            />
           </div> :
           <>
             <Dropdown
@@ -42,12 +50,15 @@ const TitleRender = ({node, editNodeKey, handleRename, handleClick}: any) => {
               <div className={styles.menuTitleText}>{node.title}</div>
             </Dropdown>
             <div className={styles.menuTitleExtra}>
-              <Dropdown
-                menu={{items: panelMenus, onClick: (e) => handleClick(e, node)}}
-                trigger={['contextMenu', 'click']}
-              >
-                <span><PlusOutlined/></span>
-              </Dropdown>
+              {
+                node.meta.nodeType === NODE_TYPE_MAP[NodeTypeKey.folder] &&
+                <Dropdown
+                  menu={{items: panelMenus, onClick: (e) => handleClick(e, node)}}
+                  trigger={['contextMenu', 'click']}
+                >
+                  <span><PlusOutlined/></span>
+                </Dropdown>
+              }
               <Dropdown
                 menu={{items: menuItems, onClick: (e) => handleClick(e, node)}}
                 trigger={['contextMenu', 'click']}
@@ -151,24 +162,27 @@ const MenuNodeRender = () => {
   }
 
   const handleRename = (node: any) => {
-    setEditNodeKey('');
-    MenuNodeApi
-      .updateByNodeId({nodeId: node.key, nodeName: node.nodeName})
-      .then(refreshInitialState)
+    if (node.nodeName) {
+      // 有名称则进行修改
+      setEditNodeKey('');
+      MenuNodeApi
+        .updateByNodeId({nodeId: node.key, nodeName: node.nodeName})
+        .then(refreshInitialState)
+    }
   }
 
-  const handleDragEnd = ({event, node}: any) => {
-    // console.log('handleDragEnd event', event)
-    // console.log('handleDragEnd node', node)
-  }
-
+  /**
+   * TODO：bug 无法拖动到目录下的第一个节点 后续修复吧
+   * @param info
+   */
   const handleDrop: any = (info: any) => {
-    console.log('dropInfo', info)
     const dragKey = info.dragNode.key;
     const dropKey = info.node.key;
     const dropPos = info.node.pos.split('-');
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
-    console.log('dropPosition', dropPosition)
+
+    // console.log('dropToGap', info.dropToGap)
+    // console.log('dropPosition', dropPosition)
 
     const loop = (
       data: any[],
@@ -185,56 +199,58 @@ const MenuNodeRender = () => {
       }
     };
     const data = JSON.parse(JSON.stringify(menuNodes));
-
-    //
-    let isValid = true
-    // Find dragObject
+    // 操作合法性
+    let isValid = true;
+    // 查找多拽对象
     let dragObj: any;
     loop(data, dragKey, (item, index, arr) => {
       arr.splice(index, 1);
       dragObj = item;
     });
-
     if (!info.dropToGap) {
-      // 拖入节点
+      // 拖入节点本身
       loop(data, dropKey, (item) => {
         // 如果拖入的不是目录则取消更新操作
         isValid = item.meta.nodeType == NODE_TYPE_MAP[NodeTypeKey.folder];
         item.children = item.children || [];
-        // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
-        item.children.unshift(dragObj);
-      });
-    } else if (
-      ((info.node as any).props.children || []).length > 0 && // Has children
-      (info.node as any).props.expanded && // Is expanded
-      dropPosition === 1 // On the bottom gap
-    ) {
-      console.log('========On the bottom gap========')
-      // 处理最后一个节点
-      loop(data, dropKey, (item) => {
-        item.children = item.children || [];
-        // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
-        item.children.unshift(dragObj);
-        // in previous version, we use item.children.push(dragObj) to insert the
-        // item to the tail of the children
+        // 前一个节点的Id，排序用
+        dragObj.preNodeId = item.children.length > 0 ?
+          item.children[item.children.length - 1].key :
+          FirstNodePreNodeId;
+        dragObj.parentKey = item.key;
+        // 放在末尾
+        item.children.push(dragObj);
       });
     } else {
       // 如果拖入了节点间的栅格则进行修改顺序
       let ar: any[] = [];
-      let i: number;
+      let i: number = 0;
+      let dropItem: any = {};
       loop(data, dropKey, (_item, index, arr) => {
+        dropItem = _item;
         ar = arr;
         i = index;
       });
       if (dropPosition === -1) {
+        // 插入节点前
+        dragObj.preNodeId = FirstNodePreNodeId;
+        dragObj.parentKey = dropItem.parentKey;
         ar.splice(i!, 0, dragObj!);
       } else {
+        // 插入节点后
+        dragObj.preNodeId = ar[i].key
+        dragObj.parentKey = dropItem.parentKey;
         ar.splice(i! + 1, 0, dragObj!);
       }
-      // 更新顺序和parentId
     }
     if (isValid) {
       setMenuNodes(data);
+      // 更新顺序和parentKey
+      MenuNodeApi.updatePositionByNodeId({
+        nodeId: dragObj.key,
+        parentId: dragObj.parentKey,
+        preNodeId: dragObj.preNodeId
+      }).then();
     }
   };
 
@@ -244,32 +260,31 @@ const MenuNodeRender = () => {
 
   return (
     <>{show &&
-    // <Scrollbars style={{height: (height - 64 - 40)}}>
-    <div
-      className={styles.menuNodeWrapper}
-      style={{height: (height - 64 - 40), background: themeColors.colorBgMenu}}
-    >
-      <div className={styles.menuTree}>
-        <DirectoryTree
-          switcherIcon={<div><CaretRightOutlined/></div>}
-          titleRender={node => <TitleRender {...{node, editNodeKey, handleRename, handleClick}} />}
-          treeData={menuNodes}
-          onSelect={onSelect}
-          onDragEnd={handleDragEnd}
-          onDrop={handleDrop}
-          blockNode
-          // allowDrop={({dropNode}) => dropNode.meta.nodeType == NODE_TYPE_MAP[NodeTypeKey.folder]}
-          showIcon={false}
-          autoExpandParent={true}
-          draggable={{icon: false}}
-          defaultSelectedKeys={[params.nodeId]}
-        />
+    <MacScrollbar style={{height: (height - 64 - 40)}}>
+      <div
+        className={styles.menuNodeWrapper}
+        style={{height: (height - 64 - 40), background: themeColors.colorBgMenu}}
+      >
+        <div className={styles.menuTree}>
+          <DirectoryTree
+            switcherIcon={<div><CaretRightOutlined/></div>}
+            titleRender={node => <TitleRender {...{node, editNodeKey, handleRename, handleClick}} />}
+            treeData={menuNodes}
+            onSelect={onSelect}
+            onDrop={handleDrop}
+            blockNode
+            // allowDrop={({dropNode}) => dropNode.meta.nodeType == NODE_TYPE_MAP[NodeTypeKey.folder]}
+            // autoExpandParent={true}
+            showIcon={false}
+            draggable={{icon: false}}
+            defaultSelectedKeys={[params.nodeId]}
+          />
+        </div>
+        <Dropdown menu={{items: panelMenus, onClick: handleClick}} trigger={['contextMenu']}>
+          <div className={styles.menuBlank}/>
+        </Dropdown>
       </div>
-      <Dropdown menu={{items: panelMenus, onClick: handleClick}} trigger={['contextMenu']}>
-        <div className={styles.menuBlank}/>
-      </Dropdown>
-    </div>
-      // </Scrollbars>
+    </MacScrollbar>
     }</>
   )
 };

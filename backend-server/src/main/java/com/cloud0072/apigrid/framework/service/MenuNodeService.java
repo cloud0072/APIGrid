@@ -11,4 +11,5 @@ public interface MenuNodeService extends IService<MenuNode> {
 
     List<TreeNode> getNodeTree(QueryWrapper<MenuNode> wrapper);
 
+    int updatePositionByNodeId(MenuNode menuNode);
 }

@@ -38,6 +38,15 @@ public class MenuNode extends BaseEntity implements TreeEntity {
     private String nodeName;
 
     /**
+     * 前一个节点的Id 排序使用
+     */
+    private String preNodeId;
+
+    private String cover;
+
+    private String icon;
+
+    /**
      * 节点类型
      * 0 root
      * 1 folder
@@ -47,10 +56,6 @@ public class MenuNode extends BaseEntity implements TreeEntity {
      * 5 mirror
      */
     private Integer nodeType;
-
-    private String cover;
-
-    private String icon;
 
     private Integer isDeleted;
 
