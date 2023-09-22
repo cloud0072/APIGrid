@@ -24,10 +24,10 @@ const BjhDragList = ({items, idKey = 'id', children, onDragEnd}) => {
         const oldIndex = (items.map(i => i[idKey])).indexOf(active.id);
         const newIndex = (items.map(i => i[idKey])).indexOf(over.id);
         const newList = arrayMove(items, oldIndex, newIndex);
-        console.log('handleDragEnd items', items)
-        console.log('handleDragEnd oldIndex', oldIndex)
-        console.log('handleDragEnd newIndex', newIndex)
-        console.log('handleDragEnd newList', newList)
+        // console.log('handleDragEnd items', items)
+        // console.log('handleDragEnd oldIndex', oldIndex)
+        // console.log('handleDragEnd newIndex', newIndex)
+        // console.log('handleDragEnd newList', newList)
         onDragEnd && onDragEnd(newList)
         return newList;
       });

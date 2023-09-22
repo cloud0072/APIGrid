@@ -1,24 +1,34 @@
 import BjhAgGrid from '@/components/BjhAgGrid';
 import {BasePageContainer} from "@/components";
 import {UnitUserApi} from "@/services/framework/UnitUser";
-import {useLocation} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {LayoutContext} from "@/layouts";
 
+/**
+ * 加载流程
+ * 1获取页面 dstId
+ * 2获取 dst 的 meta -> 列信息 隐藏列 排序 筛选 分组
+ * 3转化为 agGrid 的配置 初始化框架
+ * 4获取 dst 的 records
+ *
+ * @constructor
+ */
 const DatasheetPanel = () => {
   const {setMenuType} = useContext(LayoutContext);
-  const location = useLocation();
+  const params = useParams();
 
   useEffect(() => {
     setMenuType('datasheet')
+    console.log('init', params);
   }, [])
 
   const getTableInfo = () => {
     const tableColumns = [
       {
-        headerName: "userId",
-        field: "userId",
-        orderNum: 1,
+        headerName: "userId", //标题
+        field: "userId",      //key
+        orderNum: 1,          //排序
         editable: false,		//编辑单元格
         resizable: true,	//可调宽度
         sortable: true,		//排序
