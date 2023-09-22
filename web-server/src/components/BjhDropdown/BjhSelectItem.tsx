@@ -2,7 +2,7 @@ import {CheckOutlined} from "@ant-design/icons";
 import React, {useMemo} from "react";
 import {useTheme} from "@/hooks/useTheme";
 
-const BjhSelectItem = ({label, icon, active, onClick}) => {
+const BjhSelectItem = ({label, icon, active, onClick}: any) => {
   const {themeMode, themeColors} = useTheme()
   const itemStyle = useMemo(() => (
     {backgroundColor: active ? themeColors.primaryActiveColor : 'transparent'}

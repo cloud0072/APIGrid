@@ -1,15 +1,15 @@
 import {Dropdown, Radio, Select, Space, Switch, theme} from "antd";
-import IconFont from "@/components/IconFont";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import BjhButton from "@/components/BjhButton";
 import BjhDropdown from "@/components/BjhDropdown";
-import BjhSelect from "@/components/BjhDropdown/BjhSelect";
-import {GridContext} from "@/components/BjhAgGrid/index";
+import {MacScrollbar} from "mac-scrollbar";
 import BjhDragList from "@/components/BjhDragList";
 import BjhDragItem from "@/components/BjhDragItem";
-import {MacScrollbar} from 'mac-scrollbar';
-import {CheckOutlined} from "@ant-design/icons";
+import BjhButton from "@/components/BjhButton";
 import classNames from "classnames";
+import {CheckOutlined} from "@ant-design/icons";
+import BjhSelect from "@/components/BjhDropdown/BjhSelect";
+import IconFont from "@/components/IconFont";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {GridContext} from "@/components/BjhAgGrid";
 
 const items = [
   {
@@ -42,10 +42,7 @@ const groupSortItems = [
   {label: 'Z → A', value: 'desc'},
 ];
 
-const BjhAgGridToolBar = (props) => {
-  // useEffect(() => {
-  //   console.log('AgToolBar', props)
-  // }, [props])
+const GridToolbar = () => {
 
   const {useToken} = theme;
   const {token} = useToken()
@@ -56,35 +53,34 @@ const BjhAgGridToolBar = (props) => {
     // console.log('gridCtx.colDefsList', gridCtx?.colDefsList)
   }, [])
 
-  const isFieldInGroup = useCallback((field) => {
-    return !!gridCtx.colGroupsList.find(item => item.field === field)
+  const isFieldInGroup = useCallback((field: string) => {
+    return !!gridCtx.colGroupsList.find((item: any) => item.field === field)
   }, [gridCtx?.colGroupsList])
 
   const tableColumnsOptions = useMemo(() => {
-    return gridCtx?.tableColumns.map(col => ({
+    return gridCtx?.tableColumns.map((col: any) => ({
       label: col.headerName,
       value: col.field,
       disabled: isFieldInGroup(col.field)
     }))
   }, [gridCtx?.tableColumns, gridCtx?.colGroupsList])
 
-  const onMenuClick = (item) => {
+  const onMenuClick = (item: any) => {
     console.log('onMenuClick', item)
   }
 
-  const onDragColDefsEnd = (items) => {
-    // console.log('onDragColDefsEnd', items)
+  const onDragColDefsEnd = (items: any) => {
     gridCtx?.setColDefsList(() => items)
   }
 
-  const onDragColGroupEnd = (items) => {
+  const onDragColGroupEnd = (items: any) => {
     console.log('onDragColGroupEnd', items)
     gridCtx?.setColGroupsList(() => items)
   }
 
-  const onChangeColVisible = (col, checked) => {
-    gridCtx?.setColDefsList((colDefs) => {
-      return colDefs.map(item => {
+  const onChangeColVisible = (col: any, checked: any) => {
+    gridCtx?.setColDefsList((colDefs: any) => {
+      return colDefs.map((item: any) => {
         if (item.field === col.field) {
           return Object.assign(col, {hide: !checked})
         }
@@ -95,10 +91,10 @@ const BjhAgGridToolBar = (props) => {
 
   const [addGroupOpen, setAddGroupOpen] = useState(false)
 
-  const onAddGroupField = (field) => {
-    const temp = gridCtx?.colGroupsList?.find(item => item.field === field);
+  const onAddGroupField = (field: any) => {
+    const temp = gridCtx?.colGroupsList?.find((item: any) => item.field === field);
     if (gridCtx?.colGroupsList && !temp) {
-      gridCtx?.setColGroupsList((colGroups) => {
+      gridCtx?.setColGroupsList((colGroups: any) => {
         return colGroups.concat([{
           field,
           direction: 'desc'
@@ -108,15 +104,15 @@ const BjhAgGridToolBar = (props) => {
     }
   }
 
-  const onDelGroupField = (field) => {
-    gridCtx?.setColGroupsList((colGroups) => {
-      return colGroups.filter(col => col.field !== field)
+  const onDelGroupField = (field: any) => {
+    gridCtx?.setColGroupsList((colGroups: any) => {
+      return colGroups.filter((col: any) => col.field !== field)
     })
   }
 
-  const onChangeGroupField = (col, value) => {
-    gridCtx?.setColGroupsList((colGroups) => {
-      return colGroups.map(item => {
+  const onChangeGroupField = (col: any, value: any) => {
+    gridCtx?.setColGroupsList((colGroups: any) => {
+      return colGroups.map((item: any) => {
         if (item.field === col.field) {
           return Object.assign(item, {field: value})
         }
@@ -125,9 +121,9 @@ const BjhAgGridToolBar = (props) => {
     })
   }
 
-  const onChangeGroupSort = (col, value) => {
-    gridCtx?.setColGroupsList((colGroups) => {
-      return colGroups.map(item => {
+  const onChangeGroupSort = (col: any, value: any) => {
+    gridCtx?.setColGroupsList((colGroups: any) => {
+      return colGroups.map((item: any) => {
         if (item.field === col.field) {
           return Object.assign(item, {direction: value})
         }
@@ -153,7 +149,7 @@ const BjhAgGridToolBar = (props) => {
             )} dropdownRender={() => (
               <MacScrollbar style={{height: 200, padding: '0 8px'}}>
                 <BjhDragList onDragEnd={onDragColDefsEnd} items={gridCtx?.colDefsList} idKey={'field'}>
-                  {gridCtx?.colDefsList?.map(col => (
+                  {gridCtx?.colDefsList?.map((col: any) => (
                     <BjhDragItem key={col['field']} id={col['field']} handle={true} className={'bjh-col-drag-item'}>
                       <>
                         <div style={{width: '100%'}}>
@@ -185,7 +181,7 @@ const BjhAgGridToolBar = (props) => {
             )} dropdownRender={() => (
               <div style={{padding: '0 8px'}}>
                 <BjhDragList onDragEnd={onDragColGroupEnd} items={gridCtx?.colGroupsList} idKey={'field'}>
-                  {gridCtx?.colGroupsList?.map(col => (
+                  {gridCtx?.colGroupsList?.map((col: any) => (
                     <BjhDragItem key={col['field']} id={col['field']} handle={true} className={'bjh-group-drag-item'}>
                       <>
                         <Select
@@ -262,7 +258,7 @@ const BjhAgGridToolBar = (props) => {
               <BjhSelect
                 value={gridCtx?.rowHeight}
                 items={items}
-                onChange={(item) => gridCtx.setRowHeight(() => item.value)}
+                onChange={(item: any) => gridCtx.setRowHeight(() => item.value)}
               />
             )}>
               <BjhButton text="行高" icon="ant-colum-height"/>
@@ -288,4 +284,4 @@ const BjhAgGridToolBar = (props) => {
   )
 }
 
-export default BjhAgGridToolBar;
+export default GridToolbar;

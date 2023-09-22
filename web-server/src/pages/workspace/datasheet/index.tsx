@@ -82,7 +82,7 @@ const DatasheetPanel = () => {
         viewType: 'grid',
         lastOpen: true,
         btnList: [],
-        colDefsList: tableColumns.map(col => ({field: col.field, headerName: col.headerName, hide: false})),
+        colDefsList: tableColumns.map(col => ({...col, hide: false})),
         colGroupsList: []
       }
     ]

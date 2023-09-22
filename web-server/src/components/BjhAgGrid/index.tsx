@@ -1,12 +1,13 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import GridHeader from "@/components/BjhAgGrid/header";
+import GridToolBar from "@/components/BjhAgGrid/toolbar";
+import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
+import AddFieldCell from "@/components/BjhAgGrid/cell/AddFieldCell";
 import {AgGridReact} from "ag-grid-react";
-import BjhAgGridHeader from "@/components/BjhAgGrid/BjhAgGridHeader";
-import BjhAgGridToolBar from "@/components/BjhAgGrid/BjhAgGridToolBar";
-
-import IdCellRenderer from './CellRender/IdCellRenderer'
 
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+
 import 'ag-grid-enterprise';
 import {LicenseManager} from 'ag-grid-enterprise';
 
@@ -16,8 +17,24 @@ import {LayoutContext} from "@/layouts";
 
 LicenseManager.prototype.validateLicense = () => true
 
-const indexCol = [{
-  field: "index",
+type FieldConfig = {
+  field?: string,
+  width?: number,
+  editable?: boolean,
+  resizable?: boolean,
+  sortable?: boolean,
+  lockPinned?: boolean,
+  hide?: boolean,
+  suppressNavigable?: boolean,
+  headerName?: string,
+  cellClass?: string,
+  pinned?: ("left" | "right"),
+  lockPosition?: ("left" | "right"),
+  cellRenderer?: React.FC
+}
+
+const rowIndexCol: FieldConfig[] = [{
+  field: "row_index",
   width: 80,
   editable: false,
   resizable: false,
@@ -25,33 +42,53 @@ const indexCol = [{
   pinned: "left",
   suppressNavigable: true,
   cellClass: 'no-border',
-  cellRenderer: IdCellRenderer
+  cellRenderer: RowIndexCell
+}];
+
+const addFieldCol: FieldConfig[] = [{
+  field: "add_field",
+  width: 80,
+  editable: false,
+  resizable: false,
+  sortable: false,
+  lockPinned: true,
+  lockPosition: 'right',
+  suppressNavigable: true,
+  cellClass: 'no-border',
+  cellRenderer: AddFieldCell
 }];
 
 // let rowHeight = 34;
-export const voidFC = () => {
-};
+
 export const GridContext = createContext({
   checkAll: false,
-  setCheckAll: voidFC,
   indeterminate: false,
-  setIndeterminate: voidFC,
   checkedList: [],
-  onSelectedRows: voidFC,
   rowHeight: 34,
-  setRowHeight: voidFC,
   tableColumns: [],
-  setTableColumns: voidFC,
   rowData: [],
-  setRowData: voidFC,
   colDefsList: [],
-  setColDefsList: voidFC,
   colGroupsList: [],
-  setColGroupsList: voidFC,
-});
+  setCheckAll: (bol: boolean) => {
+  },
+  setIndeterminate: (bol: boolean) => {
+  },
+  onSelectedRows: () => {
+  },
+  setRowHeight: (height: number) => {
+  },
+  setTableColumns: (data: any[]) => {
+  },
+  setRowData: (data: any[]) => {
+  },
+  setColDefsList: (data: any[]) => {
+  },
+  setColGroupsList: (data: any[]) => {
+  },
+} as any);
 
-const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
-  const gridRef = useRef(null); // Optional - for accessing Grid's API
+const BjhAgGrid = ({getTableInfo, loadData, getRowId}: any) => {
+  const gridRef = useRef<any>(null); // Optional - for accessing Grid's API
 
   const [indeterminate, setIndeterminate] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
@@ -73,26 +110,26 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
     }
   }
 
-  const [rowData, setRowData] = useState([]);
-  const [tableInfo, setTableInfo] = useState([]);
-  const [tableColumns, setTableColumns] = useState([]);
-  const [spinning, setSpinning] = useState(false);
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [tableInfo, setTableInfo] = useState<any[]>([]);
+  const [tableColumns, setTableColumns] = useState<any[]>([]);
+  const [spinning, setSpinning] = useState<boolean>(false);
 
   const {height} = useContext(LayoutContext);
-  const gridStyle = useMemo(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
+  const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
   // const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
   // console.log('gridStyle', gridStyle)
 
-  const [colDefsList, setColDefsList] = useState([]);
-  const [colGroupsList, setColGroupsList] = useState([]);
-  const defaultColDef = useMemo(() => ({
+  const [colDefsList, setColDefsList] = useState<FieldConfig[]>([]);
+  const [colGroupsList, setColGroupsList] = useState<FieldConfig[]>([]);
+  const defaultColDef = useMemo<FieldConfig>(() => ({
     sortable: true,
     resizable: true,
     editable: true,
     lockPinned: true,
   }), []);
-  const localColDefs = useMemo(() => {
-    const local = indexCol.concat(colDefsList)
+  const localColDefs = useMemo<FieldConfig[]>(() => {
+    const local = colDefsList
       .filter(col => !col.hide)
       .map((col, index) => {
         const flag = !!colGroupsList.find(gi => gi.field === col.field);
@@ -101,11 +138,12 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
       })
       .sort((o1, o2) => o1.i - o2.i)
       .map(col => {
+        // @ts-ignore
         delete col.i
         return col;
       })
     // console.log('localColDefs', local)
-    return local;
+    return rowIndexCol.concat(local).concat(addFieldCol);
   }, [colDefsList, colGroupsList])
 
   const [rowHeight, setRowHeight] = useState(34)
@@ -118,16 +156,16 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
     return rowHeight;
   }, [rowHeight])
 
-  const getId = params => params.data.id;
+  const getId = (params: any) => params.data.id;
 
   // 页面加载
   // 1 获取tableInfo
   useEffect(() => {
-    getTableInfo().then(response => {
+    getTableInfo().then((response: any) => {
       setTableInfo((info) => response.tableInfo || info)
       setTableColumns(() => response.tableColumns || [])
 
-      const currentView = response.viewList.find(view => view.lastOpen || view.viewId === '1');
+      const currentView = response.viewList.find((view: any) => view.lastOpen || view.viewId === '1');
       setColDefsList(() => currentView?.colDefsList || [])
       setColGroupsList(() => currentView?.colGroupsList || [])
     })
@@ -136,7 +174,7 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
   const getRowData = () => {
     const start = Date.now()
     setSpinning(true)
-    loadData().then(response => {
+    loadData().then((response: any) => {
       setRowData(() => response)
     }).finally(() => {
       setSpinning(false)
@@ -158,8 +196,6 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
         setCheckAll,
         indeterminate,
         setIndeterminate,
-        checkedList,
-        onSelectedRows,
         rowHeight,
         setRowHeight,
         tableColumns,
@@ -170,8 +206,10 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
         setColDefsList,
         colGroupsList,
         setColGroupsList,
+        checkedList,
+        onSelectedRows,
       }}>
-        <BjhAgGridToolBar/>
+        <GridToolBar/>
 
         <Spin spinning={spinning}>
           <div className="ag-theme-alpine" style={gridStyle}>
@@ -185,9 +223,8 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}) => {
               rowSelection='multiple' // Options - allows click selection of rows
               groupDisplayType={'multipleColumns'}
               suppressRowClickSelection={true}
-              // suppressCellFocus={true}
               animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-              components={{agColumnHeader: BjhAgGridHeader}}
+              components={{agColumnHeader: GridHeader}}
             />
           </div>
         </Spin>

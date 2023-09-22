@@ -1,9 +1,9 @@
 import BjhSelectItem from "@/components/BjhDropdown/BjhSelectItem";
 
-const BjhSelect = ({items, value, onChange}) => {
+const BjhSelect = ({items, value, onChange}: any) => {
   return (
     <div className="bjh-dropdown-select">
-      {items.map((item) =>
+      {items.map((item: any) =>
         <BjhSelectItem
           key={item.value}
           label={item.label}

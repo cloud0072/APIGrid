@@ -23,6 +23,7 @@ public class TreeUtils {
                     var children = buildTree(dataList, t.getKey(), cols);
                     var node = TreeNode.builder()
                             .key(t.getKey().toString())
+                            .value(t.getKey().toString())
                             .parentKey(t.getParentId().toString())
                             .title(t.getTitle())
                             .children(children)

@@ -18,6 +18,8 @@ public class TreeNode {
 
     private String key;
 
+    private String value;
+
     private String parentKey;
 
     private Boolean isLeaf;

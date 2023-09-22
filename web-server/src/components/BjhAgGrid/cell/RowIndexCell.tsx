@@ -3,16 +3,15 @@ import {Checkbox, theme} from "antd";
 import {GridContext} from '../index';
 import IconFont from "@/components/IconFont";
 
-const IdCellRenderer = (props) => {
-  const {node} = props;
+const RowIndexCell = ({node}: any) => {
   const {useToken} = theme;
   const {token} = useToken();
 
   const [active, setActive] = useState(false)
-  const onMouseOver = (e) => {
+  const onMouseOver = () => {
     setActive(true)
   }
-  const onMouseLeave = (e) => {
+  const onMouseLeave = () => {
     setActive(false)
   }
 
@@ -30,7 +29,7 @@ const IdCellRenderer = (props) => {
   useEffect(() => {
     if (!indeterminate) {
       setChecked(() => {
-        // console.log('IdCellRenderer oldValue', oldValue)
+        // console.log('RowIndexCell oldValue', oldValue)
         node.setSelected(checkAll);
         return checkAll
       })
@@ -49,4 +48,4 @@ const IdCellRenderer = (props) => {
   )
 }
 
-export default IdCellRenderer;
+export default RowIndexCell;
