@@ -2,18 +2,11 @@ import {useContext, useEffect, useState} from "react";
 import {Checkbox, theme} from "antd";
 import {GridContext} from '../index';
 import IconFont from "@/components/IconFont";
+import styles from '../header/style.module.less';
 
 const RowIndexCell = ({node}: any) => {
   const {useToken} = theme;
   const {token} = useToken();
-
-  const [active, setActive] = useState(false)
-  const onMouseOver = () => {
-    setActive(true)
-  }
-  const onMouseLeave = () => {
-    setActive(false)
-  }
 
   const {checkAll, indeterminate, onSelectedRows} = useContext(GridContext);
   const [checked, setChecked] = useState(false)
@@ -37,13 +30,13 @@ const RowIndexCell = ({node}: any) => {
   }, [checkAll, indeterminate])
 
   return (
-    <div className="bjh-row-index" onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
-      <div className="bjh-row-index-checkbox">
+    <div className={styles.rowIndex}>
+      <div className={styles.rowIndexCheckbox}>
         <Checkbox onChange={onChange} checked={checked}/>
       </div>
-      {(active || checked) && <div className="bjh-row-index-icon">
+      <div className={`${styles.rowIndexIcon} ${checked ?? styles.checked}`}>
         <IconFont type="adms-fangda" style={{color: token.colorTextSecondary}}/>
-      </div>}
+      </div>
     </div>
   )
 }

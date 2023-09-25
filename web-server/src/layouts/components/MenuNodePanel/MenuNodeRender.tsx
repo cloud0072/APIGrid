@@ -90,7 +90,7 @@ const MenuNodeRender = () => {
 
   const show = useMemo(() => menuType == NodeTypeKey.datasheet, [menuType]);
 
-  const onSelect = (keys: any[]) => {
+  const handleSelect = (keys: any[]) => {
     const key = keys[0];
     handleNavigate(key)
   }
@@ -270,7 +270,7 @@ const MenuNodeRender = () => {
             switcherIcon={<div><CaretRightOutlined/></div>}
             titleRender={node => <TitleRender {...{node, editNodeKey, handleRename, handleClick}} />}
             treeData={menuNodes}
-            onSelect={onSelect}
+            onSelect={handleSelect}
             onDrop={handleDrop}
             blockNode
             // allowDrop={({dropNode}) => dropNode.meta.nodeType == NODE_TYPE_MAP[NodeTypeKey.folder]}

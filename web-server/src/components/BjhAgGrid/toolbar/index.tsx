@@ -8,7 +8,7 @@ import classNames from "classnames";
 import {CheckOutlined} from "@ant-design/icons";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import IconFont from "@/components/IconFont";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo} from "react";
 import {GridContext} from "@/components/BjhAgGrid";
 
 const items = [
@@ -89,18 +89,16 @@ const GridToolbar = () => {
     })
   }
 
-  const [addGroupOpen, setAddGroupOpen] = useState(false)
-
   const onAddGroupField = (field: any) => {
-    const temp = gridCtx?.colGroupsList?.find((item: any) => item.field === field);
-    if (gridCtx?.colGroupsList && !temp) {
+    const exists = gridCtx?.colGroupsList?.find((item: any) => item.field === field);
+    console.log('onAddGroupField has', exists)
+    if (gridCtx?.colGroupsList && !exists) {
       gridCtx?.setColGroupsList((colGroups: any) => {
         return colGroups.concat([{
           field,
           direction: 'desc'
         }])
       })
-      setAddGroupOpen(() => false)
     }
   }
 
@@ -147,7 +145,7 @@ const GridToolbar = () => {
                 </div>
               </div>
             )} dropdownRender={() => (
-              <MacScrollbar style={{height: 200, padding: '0 8px'}}>
+              <MacScrollbar style={{minHeight: 200, padding: '0 8px'}}>
                 <BjhDragList onDragEnd={onDragColDefsEnd} items={gridCtx?.colDefsList} idKey={'field'}>
                   {gridCtx?.colDefsList?.map((col: any) => (
                     <BjhDragItem key={col['field']} id={col['field']} handle={true} className={'bjh-col-drag-item'}>
@@ -207,38 +205,35 @@ const GridToolbar = () => {
                     </BjhDragItem>
                   ))}
                 </BjhDragList>
-                <BjhDropdown
-                  open={addGroupOpen}
-                  onClick={() => setAddGroupOpen((open) => !open)}
-                  dropdownRender={() => (
-                    <MacScrollbar style={{height: 200, padding: '0 8px'}}>
-                      <div className="bjh-dropdown-select">
-                        {tableColumnsOptions.map(option => (
-                          <div
-                            className={classNames({
-                              'bjh-dropdown-select-option': true,
-                              'bjh-selected': isFieldInGroup(option.value)
-                            })}
-                            key={option.value}
-                            onClick={() => onAddGroupField(option.value)}
-                          >
-                            <div className="bjh-dropdown-select-option-content">
-                              <div className="bjh-dropdown-select-option-content-title">
-                                {option.label}
-                              </div>
+                <BjhDropdown trigger={'click'} dropdownRender={() => (
+                  <MacScrollbar style={{minHeight: 200, padding: '0 8px'}}>
+                    <div className="bjh-dropdown-select">
+                      {tableColumnsOptions.map((option: any) => (
+                        <div
+                          className={classNames({
+                            'bjh-dropdown-select-option': true,
+                            'bjh-selected': isFieldInGroup(option.value)
+                          })}
+                          key={option.value}
+                          onClick={() => onAddGroupField(option.value)}
+                        >
+                          <div className="bjh-dropdown-select-option-content">
+                            <div className="bjh-dropdown-select-option-content-title">
+                              {option.label}
                             </div>
-                            {
-                              isFieldInGroup(option.value) &&
-                              <div className="bjh-dropdown-select-option-action">
-                                <CheckOutlined style={{color: token.colorPrimary}}/>
-                              </div>
-                            }
                           </div>
-                        ))}
-                      </div>
-                    </MacScrollbar>
-                  )}>
-                  <div style={{display: 'flex', marginTop: '8px'}}>
+                          {
+                            isFieldInGroup(option.value) &&
+                            <div className="bjh-dropdown-select-option-action">
+                              <CheckOutlined style={{color: token.colorPrimary}}/>
+                            </div>
+                          }
+                        </div>
+                      ))}
+                    </div>
+                  </MacScrollbar>
+                )}>
+                  <div style={{display: 'flex', margin: '8px 0'}}>
                     <BjhButton text={'添加字段'} icon={'ant-plus'}/>
                   </div>
                 </BjhDropdown>
