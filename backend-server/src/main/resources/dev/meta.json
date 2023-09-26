@@ -1,0 +1,342 @@
+{
+  "views": [
+    {
+      "id": "viw5HDZgyqHoq",
+      "name": "OKR structure",
+      "rows": [
+        {
+          "recordId": "reccLuYwqNsG4"
+        },
+        {
+          "recordId": "rec5mlMenADCM"
+        },
+        {
+          "recordId": "recjzNBdcmUy6"
+        },
+        {
+          "recordId": "recs4bH1zprXb"
+        },
+        {
+          "recordId": "recMqU7WEZ1aV"
+        },
+        {
+          "recordId": "recmdzAeL1Lgs"
+        },
+        {
+          "recordId": "recVA96aLJmKW"
+        },
+        {
+          "recordId": "recKUAt2wmli1"
+        },
+        {
+          "recordId": "recc7BILyU5oR"
+        }
+      ],
+      "type": 7,
+      "style": {
+        "horizontal": true,
+        "isCoverFit": false,
+        "linkFieldId": "fldTuqZv1jprt",
+        "isColNameVisible": true
+      },
+      "columns": [
+        {
+          "fieldId": "fldSdYrtoEqqe"
+        },
+        {
+          "hidden": true,
+          "fieldId": "fldTuqZv1jprt",
+          "hiddenInOrgChart": true
+        },
+        {
+          "hidden": true,
+          "fieldId": "fldTcsU9ZD5lF",
+          "hiddenInOrgChart": true
+        },
+        {
+          "hidden": true,
+          "fieldId": "fldGbDTzYvSuk",
+          "hiddenInOrgChart": true
+        },
+        {
+          "hidden": false,
+          "fieldId": "fldC3ednVaOkW",
+          "hiddenInOrgChart": false
+        },
+        {
+          "hidden": false,
+          "fieldId": "fldxg530ocPGk",
+          "hiddenInOrgChart": false
+        },
+        {
+          "hidden": true,
+          "fieldId": "fldz02Kjx5hEU",
+          "hiddenInOrgChart": true
+        }
+      ]
+    },
+    {
+      "id": "viwfv0LxrJERC",
+      "name": "Objectives of 2022Y",
+      "rows": [
+        {
+          "recordId": "reccLuYwqNsG4"
+        },
+        {
+          "recordId": "rec5mlMenADCM"
+        },
+        {
+          "recordId": "recjzNBdcmUy6"
+        },
+        {
+          "recordId": "recs4bH1zprXb"
+        },
+        {
+          "recordId": "recMqU7WEZ1aV"
+        },
+        {
+          "recordId": "recmdzAeL1Lgs"
+        },
+        {
+          "recordId": "recVA96aLJmKW"
+        },
+        {
+          "recordId": "recKUAt2wmli1"
+        },
+        {
+          "recordId": "recc7BILyU5oR"
+        }
+      ],
+      "type": 1,
+      "columns": [
+        {
+          "width": 229,
+          "fieldId": "fldSdYrtoEqqe",
+          "statType": 1
+        },
+        {
+          "width": 237,
+          "hidden": false,
+          "fieldId": "fldTuqZv1jprt"
+        },
+        {
+          "width": 110,
+          "fieldId": "fldxg530ocPGk"
+        },
+        {
+          "width": 175,
+          "hidden": false,
+          "fieldId": "fldTcsU9ZD5lF"
+        },
+        {
+          "hidden": false,
+          "fieldId": "fldGbDTzYvSuk"
+        },
+        {
+          "width": 128,
+          "fieldId": "fldC3ednVaOkW"
+        },
+        {
+          "fieldId": "fldz02Kjx5hEU"
+        }
+      ],
+      "autoSave": false,
+      "filterInfo": {
+        "conditions": [
+          {
+            "value": [
+              "optGBsbDYdRcq"
+            ],
+            "fieldId": "fldxg530ocPGk",
+            "operator": "is",
+            "fieldType": 4,
+            "conditionId": "cdtjY2e6CEjpU"
+          }
+        ],
+        "conjunction": "and"
+      },
+      "rowHeightLevel": 2,
+      "frozenColumnCount": 1
+    },
+    {
+      "id": "viwDEGcuCm1Bk",
+      "name": "Objectives of 2022Q2",
+      "rows": [
+        {
+          "recordId": "reccLuYwqNsG4"
+        },
+        {
+          "recordId": "rec5mlMenADCM"
+        },
+        {
+          "recordId": "recjzNBdcmUy6"
+        },
+        {
+          "recordId": "recs4bH1zprXb"
+        },
+        {
+          "recordId": "recMqU7WEZ1aV"
+        },
+        {
+          "recordId": "recmdzAeL1Lgs"
+        },
+        {
+          "recordId": "recVA96aLJmKW"
+        },
+        {
+          "recordId": "recKUAt2wmli1"
+        },
+        {
+          "recordId": "recc7BILyU5oR"
+        }
+      ],
+      "type": 1,
+      "columns": [
+        {
+          "width": 241,
+          "fieldId": "fldSdYrtoEqqe"
+        },
+        {
+          "width": 213,
+          "hidden": true,
+          "fieldId": "fldTuqZv1jprt"
+        },
+        {
+          "width": 243,
+          "fieldId": "fldTcsU9ZD5lF"
+        },
+        {
+          "width": 118,
+          "fieldId": "fldxg530ocPGk"
+        },
+        {
+          "width": 196,
+          "fieldId": "fldGbDTzYvSuk"
+        },
+        {
+          "width": 128,
+          "fieldId": "fldC3ednVaOkW"
+        },
+        {
+          "hidden": true,
+          "fieldId": "fldz02Kjx5hEU"
+        }
+      ],
+      "filterInfo": {
+        "conditions": [
+          {
+            "value": [
+              "optpnHZAapfIt"
+            ],
+            "fieldId": "fldxg530ocPGk",
+            "operator": "is",
+            "fieldType": 4,
+            "conditionId": "cdtlo7UBQ6RcE"
+          }
+        ],
+        "conjunction": "and"
+      },
+      "rowHeightLevel": 1,
+      "frozenColumnCount": 1
+    }
+  ],
+  "fieldMap": {
+    "fldC3ednVaOkW": {
+      "id": "fldC3ednVaOkW",
+      "name": "Lead",
+      "type": 13,
+      "property": {
+        "isMulti": false,
+        "unitIds": [
+          "1352533915663200258",
+          "1397839774629675010",
+          "1333608613015642113",
+          "1371691897148870657",
+          "1424542142864936961",
+          "1275766197272494081"
+        ],
+        "shouldSendMsg": false
+      }
+    },
+    "fldGbDTzYvSuk": {
+      "id": "fldGbDTzYvSuk",
+      "name": "Complete",
+      "type": 14,
+      "property": {
+        "formatting": {
+          "symbol": "¥",
+          "precision": 2,
+          "formatType": 18
+        },
+        "rollUpType": "AVERAGE",
+        "datasheetId": "dstV8QmHgwl8HpNq49",
+        "relatedLinkFieldId": "fldTcsU9ZD5lF",
+        "lookUpTargetFieldId": "fld78zQUiPkwS"
+      }
+    },
+    "fldSdYrtoEqqe": {
+      "id": "fldSdYrtoEqqe",
+      "name": "Objectives",
+      "type": 19,
+      "property": {
+        "defaultValue": ""
+      }
+    },
+    "fldTcsU9ZD5lF": {
+      "id": "fldTcsU9ZD5lF",
+      "name": "Associated KRs",
+      "type": 7,
+      "property": {
+        "brotherFieldId": "fldLP3LSDmbfp",
+        "foreignDatasheetId": "dstRS7YqZC1hPQmGww"
+      }
+    },
+    "fldTuqZv1jprt": {
+      "id": "fldTuqZv1jprt",
+      "name": "Associated objectives",
+      "type": 7,
+      "property": {
+        "foreignDatasheetId": "dstV8QmHgwl8HpNq49"
+      }
+    },
+    "fldxg530ocPGk": {
+      "id": "fldxg530ocPGk",
+      "name": "Period",
+      "type": 4,
+      "property": {
+        "options": [
+          {
+            "id": "opt47nbOrS9KA",
+            "name": "2022Q1",
+            "color": 14
+          },
+          {
+            "id": "optpnHZAapfIt",
+            "name": "2022Q2",
+            "color": 17
+          },
+          {
+            "id": "optZzRccIdPtR",
+            "name": "2022Q3",
+            "color": 15
+          },
+          {
+            "id": "optTh4AGJzviU",
+            "name": "2022Q4",
+            "color": 13
+          },
+          {
+            "id": "optGBsbDYdRcq",
+            "name": "2022",
+            "color": 9
+          }
+        ]
+      }
+    },
+    "fldz02Kjx5hEU": {
+      "id": "fldz02Kjx5hEU",
+      "name": "Level",
+      "type": 1
+    }
+  }
+}

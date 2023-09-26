@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.domain.TreeNode;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.TreeUtils;
+import com.cloud0072.apigrid.datasheet.service.DatasheetService;
 import com.cloud0072.apigrid.framework.domain.MenuNode;
 import com.cloud0072.apigrid.framework.mapper.MenuNodeMapper;
 import com.cloud0072.apigrid.framework.service.MenuNodeService;
 import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,14 +72,14 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
         var wrapper = new QueryWrapper<MenuNode>();
         wrapper.eq("parent_id", entity.getParentId());
         var list = baseMapper.selectList(wrapper);
-        var nodeName = createNodeName(entity.getNodeType(), list);
+        var nodeName = getNodeName(entity.getNodeType(), list);
         entity.setNodeName(nodeName);
         entity.setCreateBy(SecurityUtils.getUserId());
         entity.setCreateTime(new Date());
         return super.save(entity);
     }
 
-    private String createNodeName(Integer nodeType, List<MenuNode> menuNodes) {
+    private String getNodeName(Integer nodeType, List<MenuNode> menuNodes) {
         var name = "新建" + (nodeType == 1 ? "文件夹" : nodeType == 2 ? "空白表格" : nodeType == 4 ? "仪表盘" : "表单");
         if (menuNodes.stream().noneMatch(node -> node.getNodeName().equals(name))) {
             return name;

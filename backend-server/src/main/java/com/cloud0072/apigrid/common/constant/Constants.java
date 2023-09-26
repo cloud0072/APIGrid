@@ -146,4 +146,22 @@ public class Constants {
      */
     public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config"};
+
+    /********************* datasheet *******************/
+    public static final String ID = "id";
+    public static final String _ID = "_id";
+    public static final String IS_DELETED = "isDeleted";
+    public static final String CREATE_BY = "createBy";
+    public static final String CREATE_TIME = "createTime";
+    public static final String UPDATE_BY = "updateBy";
+    public static final String UPDATE_TIME = "updateTime";
+    public static final String NAME = "name";
+    public static final String TYPE = "type";
+    public static final String DST_ID = "dstId";
+    public static final String REC_ID = "recId";
+    public static final String FIELD_ID = "fieldId";
+    public static final String FIELD_NAME = "fieldName";
+    public static final String DST_PREFIX = "t_";
+    public static final String DEFAULT_VIEW_NAME = "全部数据";
+    public static final String DEFAULT_DST_NAME = "新建空白表格";
 }

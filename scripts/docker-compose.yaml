@@ -1,29 +1,6 @@
 version: "3.9"
 
 services:
-  # backend-server:
-  #   image: ${IMAGE_REGISTRY}/${IMAGE_BACKEND_SERVER}
-  #   pull_policy: ${IMAGE_PULL_POLICY:if_not_present}
-  #   container_name: apigrid-backend-server
-  #   restart: always
-  #   env_file:
-  #     - "${ENV_FILE:-.env}"
-  #   ports:
-  #     - "9001:9001"
-  #   environment:
-  #     - TZ=${TIMEZONE}
-  #   networks:
-  #     - apigrid
-  #   volumes:
-  #     - ~/docker/backend-server/bin:/app/bin
-  #     - ~/docker/backend-server/logs:/app/logs
-  #     - ~/docker/backend-server/uploads:/app/uploads
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "curl -sS 'http://localhost:9001' || exit 1"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     start_period: 30s
-  #     retries: 60
 
   mongo-server:
     image: ${IMAGE_REGISTRY}/${IMAGE_MONGODB_SERVER}
@@ -36,8 +13,8 @@ services:
       - "27017:27017"
     environment:
       - TZ=${TIMEZONE}
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=S2AbuXsMUDHCzMQM
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-apigrid}
     networks:
       - apigrid
     volumes:
@@ -52,9 +29,9 @@ services:
     ports:
       - "9021:8081"
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=S2AbuXsMUDHCzMQM
-      - ME_CONFIG_MONGODB_SERVER=192.168.4.198
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME:-admin}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD:-apigrid}
+      - ME_CONFIG_MONGODB_SERVER=${MONGO_HOST:-192.168.4.198}
 
 networks:
   apigrid:

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.domain.TreeNode;
+import com.cloud0072.apigrid.datasheet.service.DatasheetService;
 import com.cloud0072.apigrid.framework.domain.MenuNode;
 import com.cloud0072.apigrid.framework.service.MenuNodeService;
 import lombok.var;
@@ -19,6 +20,9 @@ public class MenuNodeController extends BaseController<MenuNode> {
 
     @Autowired
     private MenuNodeService menuNodeService;
+
+    @Autowired
+    private DatasheetService datasheetService;
 
     @GetMapping("/getNodeTree")
     public AjaxResult getNodeTree() {
@@ -42,14 +46,16 @@ public class MenuNodeController extends BaseController<MenuNode> {
         return AjaxResult.success();
     }
 
-    @DeleteMapping("/deleteByNodeIds/{ids}")
-    protected AjaxResult deleteEntity(@PathVariable("ids") String ids) {
-        var query = Arrays.asList(ids.split(","));
+    @DeleteMapping("/deleteByNodeIds/{nodeIds}")
+    protected AjaxResult deleteEntity(@PathVariable("nodeIds") String nodeIds) {
+        var ids = Arrays.asList(nodeIds.split(","));
         var wrapper = new UpdateWrapper<MenuNode>()
-                .in("node_id", query)
+                .in("node_id", ids)
                 .or()
-                .in("parent_id", query);
-        menuNodeService.remove(wrapper);
+                .in("parent_id", ids);
+        menuNodeService.update(MenuNode.builder().isDeleted(1).build(), wrapper);
+
+        ids.forEach(id -> datasheetService.deleteByDstId(id));
         return AjaxResult.success();
     }
 }

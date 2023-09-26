@@ -23,6 +23,7 @@ public class IdUtils {
     public static String DATASHEET = "dst";
     public static String FIELD = "fld";
     public static String RECORD = "rec";
+    public static String VIEW = "viw";
 
     /**
      * 获取随机UUID
@@ -73,4 +74,19 @@ public class IdUtils {
         return prefix + str;
     }
 
+    public static String getDatasheetId() {
+        return getNewId(DATASHEET, 10);
+    }
+
+    public static String getRecordId() {
+        return getNewId(RECORD, 8);
+    }
+
+    public static String getFieldId() {
+        return getNewId(FIELD, 8);
+    }
+
+    public static String getViewId() {
+        return getNewId(VIEW, 8);
+    }
 }
