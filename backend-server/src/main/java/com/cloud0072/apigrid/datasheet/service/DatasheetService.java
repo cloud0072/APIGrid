@@ -16,13 +16,11 @@ public interface DatasheetService {
 
     Datasheet findByDstId(String dstId);
 
-    Datasheet findById(Long id);
-
     Datasheet insert(Datasheet entity);
 
     Datasheet initDatasheet(MenuNode node);
 
-    Datasheet updateById(Datasheet entity);
+    Datasheet updateByDstId(Datasheet entity);
 
-    void deleteById(Long id);
+    void deleteByDstIds(List<String> dstIds);
 }

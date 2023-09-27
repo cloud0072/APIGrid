@@ -6,7 +6,6 @@ import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.framework.domain.UnitUser;
 import com.cloud0072.apigrid.framework.vo.UnitTeamUserVo;
 import com.cloud0072.apigrid.framework.vo.UnitUserVo;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 

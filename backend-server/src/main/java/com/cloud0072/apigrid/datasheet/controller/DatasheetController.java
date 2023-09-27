@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @RequestMapping("/datasheet")
 @RestController
@@ -43,9 +44,9 @@ public class DatasheetController {
         return AjaxResult.success(result);
     }
 
-    @GetMapping("/{id}")
-    public AjaxResult findById(@PathVariable("id") Long id) {
-        var result = datasheetService.findById(id);
+    @GetMapping("/{dstId}")
+    public AjaxResult findByDstId(@PathVariable("dstId") String dstId) {
+        var result = datasheetService.findByDstId(dstId);
         return AjaxResult.success(result);
     }
 
@@ -56,14 +57,15 @@ public class DatasheetController {
     }
 
     @PutMapping
-    public AjaxResult updateById(@RequestBody Datasheet datasheet) {
-        var result = datasheetService.updateById(datasheet);
+    public AjaxResult updateByDstId(@RequestBody Datasheet datasheet) {
+        var result = datasheetService.updateByDstId(datasheet);
         return AjaxResult.success(result);
     }
 
-    @DeleteMapping("/{id}")
-    public AjaxResult deleteById(@PathVariable("id") Long id) {
-        datasheetService.deleteById(id);
+    @DeleteMapping("/{dstIds}")
+    public AjaxResult deleteByDstIds(@PathVariable("dstIds") String dstIds) {
+        var ids = Arrays.asList(dstIds.split(","));
+        datasheetService.deleteByDstIds(ids);
         return AjaxResult.success();
     }
 

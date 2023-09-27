@@ -1,8 +1,8 @@
 package com.cloud0072.apigrid.framework.security.filter;
 
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

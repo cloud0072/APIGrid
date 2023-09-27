@@ -50,12 +50,9 @@ public class MenuNodeController extends BaseController<MenuNode> {
     protected AjaxResult deleteEntity(@PathVariable("nodeIds") String nodeIds) {
         var ids = Arrays.asList(nodeIds.split(","));
         var wrapper = new UpdateWrapper<MenuNode>()
-                .in("node_id", ids)
-                .or()
-                .in("parent_id", ids);
+                .in("node_id", ids).or().in("parent_id", ids);
         menuNodeService.update(MenuNode.builder().isDeleted(1).build(), wrapper);
-
-        ids.forEach(id -> datasheetService.deleteByDstId(id));
+        datasheetService.deleteByDstIds(ids);
         return AjaxResult.success();
     }
 }

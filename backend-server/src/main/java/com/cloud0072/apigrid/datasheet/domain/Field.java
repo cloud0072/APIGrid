@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Field implements JSONEntity {
 
     //    @Id
-    private String fieldId;
+    private String id;
     private String name;
     private Integer type;
     private JSONObject property;

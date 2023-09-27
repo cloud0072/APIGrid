@@ -20,6 +20,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class DatasheetTests {
@@ -62,11 +64,11 @@ class DatasheetTests {
                 new Field("fld28m4jebh", "学历", FieldType.TEXT.getType(), null).toJSONObject(),
                 new Field("fldjpyp9ct2", "入职日期", FieldType.DATETIME.getType(), null).toJSONObject()
         );
-        var fieldMap = new JSONObject();
-        fields.forEach(f -> fieldMap.set(f.getStr("id"), JSONUtil.parseObj(f)));
+        var fieldMap = new HashMap<String, JSONObject>();
+        fields.forEach(f -> fieldMap.put(f.getStr("id"), JSONUtil.parseObj(f)));
 
         datasheet.setFieldMap(fieldMap);
-        datasheetService.updateById(datasheet);
+        datasheetService.updateByDstId(datasheet);
     }
 
     @Test
@@ -78,11 +80,11 @@ class DatasheetTests {
                 new Field("fld28m4jebh", "学历", FieldType.TEXT.getType(), null).toJSONObject(),
                 new Field("fldjpyp9ct2", "入职日期", FieldType.DATETIME.getType(), null).toJSONObject()
         );
-        var fieldMap = new JSONObject();
-        fields.forEach(f -> fieldMap.set(f.getStr("id"), JSONUtil.parseObj(f)));
+        var fieldMap = new HashMap<String, JSONObject>();
+        fields.forEach(f -> fieldMap.put(f.getStr("id"), JSONUtil.parseObj(f)));
 
         datasheet.setFieldMap(fieldMap);
-        datasheetService.updateById(datasheet);
+        datasheetService.updateByDstId(datasheet);
     }
 
     @Test

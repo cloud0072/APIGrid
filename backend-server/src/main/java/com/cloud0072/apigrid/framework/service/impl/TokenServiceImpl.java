@@ -2,12 +2,12 @@ package com.cloud0072.apigrid.framework.service.impl;
 
 import com.cloud0072.apigrid.common.constant.CacheConstants;
 import com.cloud0072.apigrid.common.constant.Constants;
-import com.cloud0072.apigrid.framework.redis.RedisCache;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.common.util.IdUtils;
 import com.cloud0072.apigrid.common.util.IpUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.common.domain.LoginUser;
+import com.cloud0072.apigrid.framework.redis.RedisCache;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;

@@ -1,6 +1,5 @@
 package com.cloud0072.apigrid.datasheet.service.impl;
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.cloud0072.apigrid.common.constant.Constants;
@@ -21,12 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +31,9 @@ public class DatasheetServiceImpl implements DatasheetService {
 
     @Autowired
     private MongoPageHelper mongoPageHelper;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private DatasheetRepository datasheetRepository;
@@ -60,12 +60,6 @@ public class DatasheetServiceImpl implements DatasheetService {
     }
 
     @Override
-    public Datasheet findById(Long id) {
-        var example = Example.of(Datasheet.builder()._id(id).isDeleted(0).build());
-        return datasheetRepository.findOne(example).orElseThrow(() -> new BackendException("未找到该datasheet"));
-    }
-
-    @Override
     public Datasheet insert(Datasheet entity) {
         entity.setIsDeleted(0);
         entity.setCreateTime(new Date());
@@ -76,20 +70,24 @@ public class DatasheetServiceImpl implements DatasheetService {
     }
 
     @Override
-    public Datasheet updateById(Datasheet entity) {
+    public Datasheet updateByDstId(Datasheet entity) {
+        var dst = findByDstId(entity.getDstId());
+        entity.set_id(dst.get_id());
         entity.setUpdateTime(new Date());
         entity.setUpdateBy(SecurityUtils.getUserId());
         return datasheetRepository.save(entity);
     }
 
     @Override
-    public void deleteById(Long id) {
-        var dstOpt = datasheetRepository.findById(id);
-        if (dstOpt.isPresent()) {
-            var dst = dstOpt.get();
-            dst.setIsDeleted(1);
-            datasheetRepository.save(dst);
-        }
+    public void deleteByDstIds(List<String> dstIds) {
+        dstIds.forEach(dstId -> mongoTemplate.dropCollection(Constants.DST_PREFIX + dstId));
+
+        var query = new Query();
+        query.addCriteria(Criteria.where("dstId").in(dstIds));
+        var update = new Update().set("isDeleted", 1)
+                .set("updateTime", new Date())
+                .set("updateBy", SecurityUtils.getUserId());
+        mongoTemplate.upsert(query, update, Datasheet.class);
     }
 
     @Override
@@ -107,21 +105,21 @@ public class DatasheetServiceImpl implements DatasheetService {
                 new Field(IdUtils.getFieldId(), "选项", FieldType.SELECT.getType(), null).toJSONObject(),
                 new Field(IdUtils.getFieldId(), "附件", FieldType.FILE.getType(), null).toJSONObject()
         );
-        var fieldMap = new JSONObject();
-        fields.forEach(f -> fieldMap.set(f.getStr(Constants.FIELD_ID), JSONUtil.parseObj(f)));
+        var fieldMap = new HashMap<String, JSONObject>();
+        fields.forEach(f -> fieldMap.put(f.getStr(Constants.ID), JSONUtil.parseObj(f)));
 
         var columns = fields.stream()
-                .map(f -> new JSONObject().set(Constants.FIELD_ID, f.getStr(Constants.FIELD_ID)))
+                .map(f -> new JSONObject().set(Constants.FIELD_ID, f.getStr(Constants.ID)))
                 .collect(Collectors.toList());
         var view = View.builder()
-                .viewId(IdUtils.getViewId())
+                .id(IdUtils.getViewId())
                 .name(Constants.DEFAULT_VIEW_NAME)
                 .type(ViewType.Grid.getType())
                 .frozenColumnCount(1)
                 .rowHeightLevel(2)
                 .columns(JSONUtil.parseArray(columns))
                 .build().toJSONObject();
-        var views = new JSONArray(Collections.singletonList(view));
+        var views = Collections.singletonList(view);
         var dst = Datasheet.builder()
                 .dstId(dstId)
                 .dstName(node.getNodeName())
@@ -135,7 +133,7 @@ public class DatasheetServiceImpl implements DatasheetService {
                 new Record(dstId).toJSONObject().set("标题", "2"),
                 new Record(dstId).toJSONObject().set("标题", "3")
         );
-        recordService.insertByFieldName(dst, records);
+        recordService.batchInsert(dstId, records, Constants.FIELD_NAME);
         return dst;
     }
 }

@@ -1,10 +1,10 @@
 package com.cloud0072.apigrid.framework.security;
 
 import com.cloud0072.apigrid.common.domain.AjaxResult;
+import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.common.util.ServletUtils;
 import com.cloud0072.apigrid.common.util.StringUtils;
-import com.cloud0072.apigrid.common.domain.LoginUser;
 import com.cloud0072.apigrid.framework.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
