@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useRef, useState} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
 import GridToolBar, {RowHeightItems} from "@/components/BjhAgGrid/toolbar";
 import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
@@ -113,14 +113,13 @@ export const GridContext = createContext({
   },
   rowData: [],
   fieldMap: {},
-  createFieldMap: () => {
-  },
-  updateFieldMap: () => {
-  },
-  removeFieldMap: () => {
+  setFieldMap: (fieldMap: any) => {
   },
   view: {},
   setView: (view: View) => {
+  },
+  views: [],
+  setViews: (views: View[]) => {
   },
 } as any);
 // getTableInfo
@@ -152,18 +151,18 @@ const BjhAgGrid = () => {
   const {nodeId: dstId} = useParams();
   const {data: rowData, isLoading} = useQueryRecords(dstId!);
   const {data: datasheet} = useQueryDatasheet(dstId!);
-  const [viewId, setViewId] = useState<string>('');
-  const [views, setViews] = useState<View[]>([]);
-  const [fieldMap, setFieldMap] = useState<any>({});
   useEffect(() => {
     if (datasheet) {
-      console.log('on datasheet', datasheet)
+      console.log('init datasheet', datasheet)
       setViews(datasheet?.views);
       setViewId(datasheet?.views[0]?.id)
       setFieldMap(datasheet?.fieldMap)
     }
   }, [datasheet])
 
+  const [fieldMap, setFieldMap] = useState<any>({});
+  const [viewId, setViewId] = useState<string>('');
+  const [views, setViews] = useState<View[]>([]);
   const view = useMemo<View>(() => {
     return views?.find(v => v.id === viewId) ?? {} as any;
   }, [views, viewId]);
@@ -209,25 +208,6 @@ const BjhAgGrid = () => {
     gridRef?.current?.api && gridRef?.current?.api?.resetRowHeights();
   }, [rowHeight])
 
-  const createFieldMap = useCallback((fieldInfo: Field) => {
-    setFieldMap(Object.assign(fieldMap, fieldInfo))
-    setViews(views?.map(v => {
-      v.columns.push({fieldId: fieldInfo.id})
-      return v;
-    }))
-  }, [views, viewId, fieldMap])
-  const updateFieldMap = useCallback((fieldInfo: Field) => {
-    setFieldMap(Object.assign(fieldMap, fieldInfo))
-  }, [views, viewId])
-  const removeFieldMap = useCallback((fieldId: string) => {
-    delete fieldMap[fieldId]
-    setFieldMap(fieldMap)
-    setViews(views?.map(v => {
-      v.columns = v.columns.filter(f => f.fieldId != fieldId)
-      return v;
-    }))
-  }, [views, viewId])
-
   const getId = (params: any) => params.data.recId;
 
   return (
@@ -241,11 +221,11 @@ const BjhAgGrid = () => {
         onSelectedRows,
         rowData,
         fieldMap,
-        createFieldMap,
-        removeFieldMap,
-        updateFieldMap,
+        setFieldMap,
         view,
         setView,
+        views,
+        setViews,
       }}>
         <GridToolBar/>
 

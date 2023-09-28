@@ -53,15 +53,7 @@ const groupSortItems = [
 
 const GridToolbar = () => {
 
-  const {useToken} = theme;
-  const {token} = useToken()
-
-  const gridCtx = useContext(GridContext)
-  const {
-    view,
-    setView,
-    fieldMap,
-  } = gridCtx
+  const {view, setView, fieldMap} = useContext(GridContext)
 
   const isFieldInGroup = useCallback((fieldId: string) => {
     return !!view.groupInfo?.find((item: Column) => item.fieldId === fieldId)
@@ -181,6 +173,7 @@ const GridToolbar = () => {
             )}>
               <BjhButton text="字段" icon="ali-set"/>
             </BjhDropdown>
+
             <BjhDropdown trigger="click" width={540} titleRender={() => (
               <div className="bjh-dropdown-column-title">
                 <div className="bjh-dropdown-column-name">
@@ -227,6 +220,7 @@ const GridToolbar = () => {
             )}>
               <BjhButton text="分组" icon="ali-calculator"/>
             </BjhDropdown>
+
             <BjhDropdown trigger="click" titleRender={() => (
               <div className="bjh-dropdown-column-title">
                 <div className="bjh-dropdown-column-name">

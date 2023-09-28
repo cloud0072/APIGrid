@@ -32,6 +32,16 @@ public class MenuNodeController extends BaseController<MenuNode> {
         return AjaxResult.success(nodeTree);
     }
 
+    @PostMapping
+    protected AjaxResult insertEntity(@RequestBody MenuNode t) {
+        baseService.save(t);
+        // 创建表格
+        if (t.getNodeType() == 2) {
+            datasheetService.initDatasheet(t);
+        }
+        return AjaxResult.success(t);
+    }
+
     @PutMapping("/updateByNodeId")
     public AjaxResult updateByNodeId(@RequestBody MenuNode menuNode) {
         var wrapper = new UpdateWrapper<MenuNode>()
