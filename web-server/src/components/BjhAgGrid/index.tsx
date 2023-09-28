@@ -191,7 +191,7 @@ const BjhAgGrid = () => {
         rowGroup: flag,
         hide: hidden || flag,
         headerName: field.name,
-        orderNum: index + 1,
+        sortIndex: index + 1,
         ...defaultColDef
       }
     }) || [];
