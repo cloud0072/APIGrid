@@ -116,7 +116,7 @@ public class DatasheetServiceImpl implements DatasheetService {
                 .name(Constants.DEFAULT_VIEW_NAME)
                 .type(ViewType.Grid.getType())
                 .frozenColumnCount(1)
-                .rowHeightLevel(2)
+                .rowHeightLevel(1)
                 .columns(JSONUtil.parseArray(columns))
                 .build().toJSONObject();
         var views = Collections.singletonList(view);

@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
-import GridToolBar from "@/components/BjhAgGrid/toolbar";
+import GridToolBar, {RowHeightItems} from "@/components/BjhAgGrid/toolbar";
 import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
 import AddFieldCell from "@/components/BjhAgGrid/cell/AddFieldCell";
 import {AgGridReact} from "ag-grid-react";
@@ -14,10 +14,43 @@ import {LicenseManager} from 'ag-grid-enterprise';
 import './style.less';
 import {Spin} from "antd";
 import {LayoutContext} from "@/layouts";
+import {useQueryDatasheet} from "@/models/datasheetState";
+import {useParams} from "react-router-dom";
+import {useQueryRecords} from "@/models/recordState";
 
 LicenseManager.prototype.validateLicense = () => true
 
-type FieldConfig = {
+export type Column = {
+  fieldId: string,
+  statType?: number,
+  desc?: boolean,
+  hidden?: boolean,
+}
+
+export type Field = {
+  id: string,
+  name: string,
+  type: number,
+  property?: {
+    defaultValue?: string,
+    precision?: number,
+    symbolAlign?: number,
+    options?: any[]
+  }
+}
+
+export type View = {
+  id: string,
+  name: string,
+  rowHeightLevel: number,
+  frozenColumnCount: number,
+  sortInfo?: Column[],
+  groupInfo?: Column[],
+  filterInfo?: Column[],
+  columns: Column[],
+}
+
+export type ColDef = {
   field?: string,
   width?: number,
   editable?: boolean,
@@ -33,7 +66,7 @@ type FieldConfig = {
   cellRenderer?: React.FC
 }
 
-const rowIndexCol: FieldConfig[] = [{
+const rowIndexCol: ColDef[] = [{
   field: "row_index",
   width: 80,
   editable: false,
@@ -45,7 +78,7 @@ const rowIndexCol: FieldConfig[] = [{
   cellRenderer: RowIndexCell
 }];
 
-const addFieldCol: FieldConfig[] = [{
+const addFieldCol: ColDef[] = [{
   field: "add_field",
   width: 80,
   editable: false,
@@ -58,36 +91,42 @@ const addFieldCol: FieldConfig[] = [{
   cellRenderer: AddFieldCell
 }];
 
-// let rowHeight = 34;
+const defaultColDef = {
+  sortable: true,
+  resizable: true,
+  editable: true,
+  lockPinned: true,
+};
 
 export const GridContext = createContext({
   checkAll: false,
-  indeterminate: false,
-  checkedList: [],
-  rowHeight: 34,
-  tableColumns: [],
-  rowData: [],
-  colDefsList: [],
-  colGroupsList: [],
   setCheckAll: (bol: boolean) => {
   },
+  indeterminate: false,
   setIndeterminate: (bol: boolean) => {
   },
+  checkedList: [],
   onSelectedRows: () => {
   },
-  setRowHeight: (height: number) => {
+  rowHeightLevel: 1,
+  setRowHeightLevel: (height: number) => {
   },
-  setTableColumns: (data: any[]) => {
+  rowData: [],
+  fieldMap: {},
+  createFieldMap: () => {
   },
-  setRowData: (data: any[]) => {
+  updateFieldMap: () => {
   },
-  setColDefsList: (data: any[]) => {
+  removeFieldMap: () => {
   },
-  setColGroupsList: (data: any[]) => {
+  view: {},
+  setView: (view: View) => {
   },
 } as any);
+// getTableInfo
+const BjhAgGrid = () => {
 
-const BjhAgGrid = ({getTableInfo, loadData, getRowId}: any) => {
+
   const gridRef = useRef<any>(null); // Optional - for accessing Grid's API
 
   const [indeterminate, setIndeterminate] = useState(false);
@@ -110,84 +149,86 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}: any) => {
     }
   }
 
-  const [rowData, setRowData] = useState<any[]>([]);
-  const [tableInfo, setTableInfo] = useState<any[]>([]);
-  const [tableColumns, setTableColumns] = useState<any[]>([]);
-  const [spinning, setSpinning] = useState<boolean>(false);
-
-  const {height} = useContext(LayoutContext);
-  const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
-  // const gridStyle = useMemo(() => ({height: '100%', width: '100%'}), [])
-  // console.log('gridStyle', gridStyle)
-
-  const [colDefsList, setColDefsList] = useState<FieldConfig[]>([]);
-  const [colGroupsList, setColGroupsList] = useState<FieldConfig[]>([]);
-  const defaultColDef = useMemo<FieldConfig>(() => ({
-    sortable: true,
-    resizable: true,
-    editable: true,
-    lockPinned: true,
-  }), []);
-  const localColDefs = useMemo<FieldConfig[]>(() => {
-    const local = colDefsList
-      .filter(col => !col.hide)
-      .map((col, index) => {
-        const flag = !!colGroupsList.find(gi => gi.field === col.field);
-        const i = colGroupsList.findIndex(gi => gi.field === col.field);
-        return Object.assign(col, {rowGroup: flag, hide: flag, i: (i - colGroupsList.length || index)})
-      })
-      .sort((o1, o2) => o1.i - o2.i)
-      .map(col => {
-        // @ts-ignore
-        delete col.i
-        return col;
-      })
-    // console.log('localColDefs', local)
-    return rowIndexCol.concat(local).concat(addFieldCol);
-  }, [colDefsList, colGroupsList])
-
-  const [rowHeight, setRowHeight] = useState(34)
+  const {nodeId: dstId} = useParams();
+  const {data: rowData, isLoading} = useQueryRecords(dstId!);
+  const {data: datasheet} = useQueryDatasheet(dstId!);
+  const [viewId, setViewId] = useState<string>('');
+  const [views, setViews] = useState<View[]>([]);
+  const [fieldMap, setFieldMap] = useState<any>({});
   useEffect(() => {
-    // console.log(`rowHeight:${rowHeight}`)
-    gridRef.current.api && gridRef.current.api.resetRowHeights();
-  }, [rowHeight])
+    if (datasheet) {
+      console.log('on datasheet', datasheet)
+      setViews(datasheet?.views);
+      setViewId(datasheet?.views[0]?.id)
+      setFieldMap(datasheet?.fieldMap)
+    }
+  }, [datasheet])
 
-  const getRowHeight = useCallback(() => {
-    return rowHeight;
-  }, [rowHeight])
-
-  const getId = (params: any) => params.data.id;
-
-  // 页面加载
-  // 1 获取tableInfo
-  useEffect(() => {
-    getTableInfo().then((response: any) => {
-      setTableInfo((info) => response.tableInfo || info)
-      setTableColumns(() => response.tableColumns || [])
-
-      const currentView = response.viewList.find((view: any) => view.lastOpen || view.viewId === '1');
-      setColDefsList(() => currentView?.colDefsList || [])
-      setColGroupsList(() => currentView?.colGroupsList || [])
-    })
-  }, [])
-
-  const getRowData = () => {
-    const start = Date.now()
-    setSpinning(true)
-    loadData().then((response: any) => {
-      setRowData(() => response)
-    }).finally(() => {
-      setSpinning(false)
-      const msg = `请求加载完毕,耗时:${Date.now() - start}毫秒`;
-      console.log(msg);
+  const view = useMemo<View>(() => {
+    return views?.find(v => v.id === viewId) ?? {} as any;
+  }, [views, viewId]);
+  const {
+    rowHeightLevel,
+    columns,
+    groupInfo
+  } = view;
+  const setView = (view: View) => {
+    console.log('setView', view)
+    setViews((views: View[]) => {
+      return views.map(v => v.id === view.id ? view : v)
     })
   }
 
+  const {height} = useContext(LayoutContext);
+  const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
+
+  const localColDefs = useMemo<ColDef[]>(() => {
+    const local = columns?.map(({fieldId, hidden}, index) => {
+      const flag = !!groupInfo?.find(col => col.fieldId === fieldId);
+      const field = fieldMap[fieldId] as Field;
+      return {
+        field: fieldId,
+        rowGroup: flag,
+        hide: hidden || flag,
+        headerName: field.name,
+        orderNum: index + 1,
+        ...defaultColDef
+      }
+    }) || [];
+    return rowIndexCol.concat(local).concat(addFieldCol);
+  }, [fieldMap, views])
+
+  const rowHeight = useMemo(() => {
+    const i = rowHeightLevel >= 0 ? rowHeightLevel : 0;
+    // console.log('rowHeight', RowHeightItems[i].height);
+    return RowHeightItems[i].height;
+  }, [rowHeightLevel])
+
   useEffect(() => {
-    if (gridRef && loadData) {
-      getRowData();
-    }
-  }, [gridRef])
+    // console.log(`rowHeight:${rowHeight}`)
+    gridRef?.current?.api && gridRef?.current?.api?.resetRowHeights();
+  }, [rowHeight])
+
+  const createFieldMap = useCallback((fieldInfo: Field) => {
+    setFieldMap(Object.assign(fieldMap, fieldInfo))
+    setViews(views?.map(v => {
+      v.columns.push({fieldId: fieldInfo.id})
+      return v;
+    }))
+  }, [views, viewId, fieldMap])
+  const updateFieldMap = useCallback((fieldInfo: Field) => {
+    setFieldMap(Object.assign(fieldMap, fieldInfo))
+  }, [views, viewId])
+  const removeFieldMap = useCallback((fieldId: string) => {
+    delete fieldMap[fieldId]
+    setFieldMap(fieldMap)
+    setViews(views?.map(v => {
+      v.columns = v.columns.filter(f => f.fieldId != fieldId)
+      return v;
+    }))
+  }, [views, viewId])
+
+  const getId = (params: any) => params.data.recId;
 
   return (
     <div className="bjh-grid-body">
@@ -196,36 +237,33 @@ const BjhAgGrid = ({getTableInfo, loadData, getRowId}: any) => {
         setCheckAll,
         indeterminate,
         setIndeterminate,
-        rowHeight,
-        setRowHeight,
-        tableColumns,
-        setTableColumns,
-        rowData,
-        setRowData,
-        colDefsList,
-        setColDefsList,
-        colGroupsList,
-        setColGroupsList,
         checkedList,
         onSelectedRows,
+        rowData,
+        fieldMap,
+        createFieldMap,
+        removeFieldMap,
+        updateFieldMap,
+        view,
+        setView,
       }}>
         <GridToolBar/>
 
-        <Spin spinning={spinning}>
+        <Spin spinning={isLoading}>
           <div className="ag-theme-alpine" style={gridStyle}>
-            <AgGridReact
+            {datasheet ? <AgGridReact
               ref={gridRef} // Ref for accessing Grid's API
               rowData={rowData} // Row Data for Rows
               columnDefs={localColDefs} // Column Defs for Columns
               defaultColDef={defaultColDef} // Default Column Properties
-              getRowHeight={getRowHeight}
-              getRowId={getRowId || getId}
+              getRowHeight={() => rowHeight}
+              getRowId={getId}
               rowSelection='multiple' // Options - allows click selection of rows
               groupDisplayType={'multipleColumns'}
               suppressRowClickSelection={true}
               animateRows={true} // Optional - set to 'true' to have rows animate when sorted
               components={{agColumnHeader: GridHeader}}
-            />
+            /> : null}
           </div>
         </Spin>
       </GridContext.Provider>

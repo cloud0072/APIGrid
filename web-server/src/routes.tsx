@@ -2,6 +2,8 @@ import {RouteError} from '@/components';
 import Layouts from '@/layouts';
 import {lazyLoad} from '@/utils';
 import type {RouteObject} from 'react-router-dom';
+import {useQueryDatasheet} from "@/models/datasheetState";
+import {DatasheetApi} from "@/services/datasheet/Datasheet";
 
 export const routes: RouteObject[] = [
   {
@@ -42,6 +44,12 @@ export const routes: RouteObject[] = [
       {
         path: 'datasheet/:nodeId',
         element: lazyLoad('workspace/datasheet'),
+        // loader: async ({params}) => {
+        //   if (!params.nodeId) {
+        //     return;
+        //   }
+        //   return DatasheetApi.getByDstId(params.nodeId)
+        // }
       },
       {
         path: 'dashboard/:nodeId',

@@ -1,342 +1,149 @@
 {
   "views": [
     {
-      "id": "viw5HDZgyqHoq",
-      "name": "OKR structure",
+      "id": "viwZTVL30ME3y",
+      "name": "智慧互联视图",
       "rows": [
         {
-          "recordId": "reccLuYwqNsG4"
+          "recordId": "recCl4nVN7mBu"
         },
         {
-          "recordId": "rec5mlMenADCM"
+          "recordId": "recjCKFgxfPmM"
         },
         {
-          "recordId": "recjzNBdcmUy6"
-        },
-        {
-          "recordId": "recs4bH1zprXb"
-        },
-        {
-          "recordId": "recMqU7WEZ1aV"
-        },
-        {
-          "recordId": "recmdzAeL1Lgs"
-        },
-        {
-          "recordId": "recVA96aLJmKW"
-        },
-        {
-          "recordId": "recKUAt2wmli1"
-        },
-        {
-          "recordId": "recc7BILyU5oR"
-        }
-      ],
-      "type": 7,
-      "style": {
-        "horizontal": true,
-        "isCoverFit": false,
-        "linkFieldId": "fldTuqZv1jprt",
-        "isColNameVisible": true
-      },
-      "columns": [
-        {
-          "fieldId": "fldSdYrtoEqqe"
-        },
-        {
-          "hidden": true,
-          "fieldId": "fldTuqZv1jprt",
-          "hiddenInOrgChart": true
-        },
-        {
-          "hidden": true,
-          "fieldId": "fldTcsU9ZD5lF",
-          "hiddenInOrgChart": true
-        },
-        {
-          "hidden": true,
-          "fieldId": "fldGbDTzYvSuk",
-          "hiddenInOrgChart": true
-        },
-        {
-          "hidden": false,
-          "fieldId": "fldC3ednVaOkW",
-          "hiddenInOrgChart": false
-        },
-        {
-          "hidden": false,
-          "fieldId": "fldxg530ocPGk",
-          "hiddenInOrgChart": false
-        },
-        {
-          "hidden": true,
-          "fieldId": "fldz02Kjx5hEU",
-          "hiddenInOrgChart": true
-        }
-      ]
-    },
-    {
-      "id": "viwfv0LxrJERC",
-      "name": "Objectives of 2022Y",
-      "rows": [
-        {
-          "recordId": "reccLuYwqNsG4"
-        },
-        {
-          "recordId": "rec5mlMenADCM"
-        },
-        {
-          "recordId": "recjzNBdcmUy6"
-        },
-        {
-          "recordId": "recs4bH1zprXb"
-        },
-        {
-          "recordId": "recMqU7WEZ1aV"
-        },
-        {
-          "recordId": "recmdzAeL1Lgs"
-        },
-        {
-          "recordId": "recVA96aLJmKW"
-        },
-        {
-          "recordId": "recKUAt2wmli1"
-        },
-        {
-          "recordId": "recc7BILyU5oR"
+          "recordId": "recvb3GaAZSre"
         }
       ],
       "type": 1,
       "columns": [
         {
-          "width": 229,
-          "fieldId": "fldSdYrtoEqqe",
+          "fieldId": "fldaPpRhAbMyL",
           "statType": 1
         },
         {
-          "width": 237,
-          "hidden": false,
-          "fieldId": "fldTuqZv1jprt"
+          "fieldId": "fldhyCK8JrR9Z"
         },
         {
-          "width": 110,
-          "fieldId": "fldxg530ocPGk"
-        },
-        {
-          "width": 175,
-          "hidden": false,
-          "fieldId": "fldTcsU9ZD5lF"
+          "hidden": true,
+          "fieldId": "fldSWJ97ahwVP"
         },
         {
           "hidden": false,
-          "fieldId": "fldGbDTzYvSuk"
-        },
-        {
-          "width": 128,
-          "fieldId": "fldC3ednVaOkW"
-        },
-        {
-          "fieldId": "fldz02Kjx5hEU"
+          "fieldId": "fldfi6nYNygQr",
+          "statType": 8
         }
       ],
       "autoSave": false,
-      "filterInfo": {
-        "conditions": [
+      "sortInfo": {
+        "rules": [
           {
-            "value": [
-              "optGBsbDYdRcq"
-            ],
-            "fieldId": "fldxg530ocPGk",
-            "operator": "is",
-            "fieldType": 4,
-            "conditionId": "cdtjY2e6CEjpU"
+            "desc": false,
+            "fieldId": "fldfi6nYNygQr"
           }
         ],
-        "conjunction": "and"
+        "keepSort": true
       },
-      "rowHeightLevel": 2,
-      "frozenColumnCount": 1
-    },
-    {
-      "id": "viwDEGcuCm1Bk",
-      "name": "Objectives of 2022Q2",
-      "rows": [
+      "groupInfo": [
         {
-          "recordId": "reccLuYwqNsG4"
-        },
-        {
-          "recordId": "rec5mlMenADCM"
-        },
-        {
-          "recordId": "recjzNBdcmUy6"
-        },
-        {
-          "recordId": "recs4bH1zprXb"
-        },
-        {
-          "recordId": "recMqU7WEZ1aV"
-        },
-        {
-          "recordId": "recmdzAeL1Lgs"
-        },
-        {
-          "recordId": "recVA96aLJmKW"
-        },
-        {
-          "recordId": "recKUAt2wmli1"
-        },
-        {
-          "recordId": "recc7BILyU5oR"
-        }
-      ],
-      "type": 1,
-      "columns": [
-        {
-          "width": 241,
-          "fieldId": "fldSdYrtoEqqe"
-        },
-        {
-          "width": 213,
-          "hidden": true,
-          "fieldId": "fldTuqZv1jprt"
-        },
-        {
-          "width": 243,
-          "fieldId": "fldTcsU9ZD5lF"
-        },
-        {
-          "width": 118,
-          "fieldId": "fldxg530ocPGk"
-        },
-        {
-          "width": 196,
-          "fieldId": "fldGbDTzYvSuk"
-        },
-        {
-          "width": 128,
-          "fieldId": "fldC3ednVaOkW"
-        },
-        {
-          "hidden": true,
-          "fieldId": "fldz02Kjx5hEU"
+          "desc": false,
+          "fieldId": "fldhyCK8JrR9Z"
         }
       ],
       "filterInfo": {
         "conditions": [
           {
             "value": [
-              "optpnHZAapfIt"
+              "optnngeHgeWPi"
             ],
-            "fieldId": "fldxg530ocPGk",
+            "fieldId": "fldhyCK8JrR9Z",
             "operator": "is",
             "fieldType": 4,
-            "conditionId": "cdtlo7UBQ6RcE"
+            "conditionId": "cdt9cjPk9QIoy"
           }
         ],
         "conjunction": "and"
       },
       "rowHeightLevel": 1,
-      "frozenColumnCount": 1
+      "frozenColumnCount": 1,
+      "displayHiddenColumnWithinMirror": false
+    },
+    {
+      "id": "viwVK7tNx43IC",
+      "name": "视图2",
+      "rows": [
+        {
+          "recordId": "recCl4nVN7mBu"
+        },
+        {
+          "recordId": "recjCKFgxfPmM"
+        },
+        {
+          "recordId": "recvb3GaAZSre"
+        }
+      ],
+      "type": 1,
+      "columns": [
+        {
+          "fieldId": "fldaPpRhAbMyL",
+          "statType": 1
+        },
+        {
+          "fieldId": "fldhyCK8JrR9Z"
+        },
+        {
+          "fieldId": "fldSWJ97ahwVP"
+        },
+        {
+          "fieldId": "fldfi6nYNygQr",
+          "statType": 8
+        }
+      ],
+      "rowHeightLevel": 1,
+      "frozenColumnCount": 1,
+      "displayHiddenColumnWithinMirror": false
     }
   ],
   "fieldMap": {
-    "fldC3ednVaOkW": {
-      "id": "fldC3ednVaOkW",
-      "name": "Lead",
-      "type": 13,
-      "property": {
-        "isMulti": false,
-        "unitIds": [
-          "1352533915663200258",
-          "1397839774629675010",
-          "1333608613015642113",
-          "1371691897148870657",
-          "1424542142864936961",
-          "1275766197272494081"
-        ],
-        "shouldSendMsg": false
-      }
+    "fldSWJ97ahwVP": {
+      "id": "fldSWJ97ahwVP",
+      "name": "附件",
+      "type": 6
     },
-    "fldGbDTzYvSuk": {
-      "id": "fldGbDTzYvSuk",
-      "name": "Complete",
-      "type": 14,
-      "property": {
-        "formatting": {
-          "symbol": "¥",
-          "precision": 2,
-          "formatType": 18
-        },
-        "rollUpType": "AVERAGE",
-        "datasheetId": "dstV8QmHgwl8HpNq49",
-        "relatedLinkFieldId": "fldTcsU9ZD5lF",
-        "lookUpTargetFieldId": "fld78zQUiPkwS"
-      }
-    },
-    "fldSdYrtoEqqe": {
-      "id": "fldSdYrtoEqqe",
-      "name": "Objectives",
+    "fldaPpRhAbMyL": {
+      "id": "fldaPpRhAbMyL",
+      "name": "标题",
       "type": 19,
       "property": {
         "defaultValue": ""
       }
     },
-    "fldTcsU9ZD5lF": {
-      "id": "fldTcsU9ZD5lF",
-      "name": "Associated KRs",
-      "type": 7,
+    "fldfi6nYNygQr": {
+      "id": "fldfi6nYNygQr",
+      "name": "数字",
+      "type": 2,
       "property": {
-        "brotherFieldId": "fldLP3LSDmbfp",
-        "foreignDatasheetId": "dstRS7YqZC1hPQmGww"
+        "precision": 0,
+        "symbolAlign": 2
       }
     },
-    "fldTuqZv1jprt": {
-      "id": "fldTuqZv1jprt",
-      "name": "Associated objectives",
-      "type": 7,
-      "property": {
-        "foreignDatasheetId": "dstV8QmHgwl8HpNq49"
-      }
-    },
-    "fldxg530ocPGk": {
-      "id": "fldxg530ocPGk",
-      "name": "Period",
+    "fldhyCK8JrR9Z": {
+      "id": "fldhyCK8JrR9Z",
+      "name": "选项",
       "type": 4,
       "property": {
         "options": [
           {
-            "id": "opt47nbOrS9KA",
-            "name": "2022Q1",
-            "color": 14
+            "id": "optnngeHgeWPi",
+            "name": "1",
+            "color": 0
           },
           {
-            "id": "optpnHZAapfIt",
-            "name": "2022Q2",
-            "color": 17
-          },
-          {
-            "id": "optZzRccIdPtR",
-            "name": "2022Q3",
-            "color": 15
-          },
-          {
-            "id": "optTh4AGJzviU",
-            "name": "2022Q4",
-            "color": 13
-          },
-          {
-            "id": "optGBsbDYdRcq",
-            "name": "2022",
-            "color": 9
+            "id": "optJl3sg8FqFt",
+            "name": "2",
+            "color": 1
           }
         ]
       }
-    },
-    "fldz02Kjx5hEU": {
-      "id": "fldz02Kjx5hEU",
-      "name": "Level",
-      "type": 1
     }
   }
 }

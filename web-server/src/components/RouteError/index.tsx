@@ -4,6 +4,7 @@ import {useRouteError} from 'react-router-dom';
 
 export const RouteError: FC = () => {
   const e = useRouteError() as { status?: number; statusText?: string };
+  console.error(e);
 
   if (e?.status === 404) {
     return <NotExist/>;

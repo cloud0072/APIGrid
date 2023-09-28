@@ -9,22 +9,31 @@ import {CheckOutlined} from "@ant-design/icons";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import IconFont from "@/components/IconFont";
 import React, {useCallback, useContext, useEffect, useMemo} from "react";
-import {GridContext} from "@/components/BjhAgGrid";
+import {Column, Field, GridContext, View} from "@/components/BjhAgGrid";
 
-const items = [
+export const RowHeightItems = [
   {
     label: '紧凑',
-    value: 34,
+    value: 0,
+    height: 5 * 6,
+    icon: <IconFont type="ali-rightalignment"/>,
+  },
+  {
+    label: '标准',
+    value: 1,
+    height: 5 * 8,
     icon: <IconFont type="ali-rightalignment"/>,
   },
   {
     label: '宽松',
-    value: 50,
+    value: 2,
+    height: 5 * 12,
     icon: <IconFont type="ali-rightalignment"/>,
   },
   {
     label: '超大',
-    value: 66,
+    value: 3,
+    height: 5 * 16,
     icon: <IconFont type="ali-rightalignment"/>,
   },
 ]
@@ -48,86 +57,90 @@ const GridToolbar = () => {
   const {token} = useToken()
 
   const gridCtx = useContext(GridContext)
-  useEffect(() => {
-    // console.log('gridCtx.tableColumns', gridCtx?.tableColumns)
-    // console.log('gridCtx.colDefsList', gridCtx?.colDefsList)
-  }, [])
+  const {
+    view,
+    setView,
+    fieldMap,
+  } = gridCtx
 
-  const isFieldInGroup = useCallback((field: string) => {
-    return !!gridCtx.colGroupsList.find((item: any) => item.field === field)
-  }, [gridCtx?.colGroupsList])
+  const isFieldInGroup = useCallback((fieldId: string) => {
+    return !!view.groupInfo?.find((item: Column) => item.fieldId === fieldId)
+  }, [view])
 
-  const tableColumnsOptions = useMemo(() => {
-    return gridCtx?.tableColumns.map((col: any) => ({
-      label: col.headerName,
-      value: col.field,
-      disabled: isFieldInGroup(col.field)
+  const getFieldName = useCallback((fieldId: string) => {
+    const f = fieldMap?.[fieldId] as Field;
+    return f?.name;
+  }, [fieldMap])
+
+  const tableColumns = useMemo(() => {
+    return view?.columns?.map((col: Column) => ({
+      label: getFieldName(col.fieldId),
+      value: col.fieldId,
+      disabled: isFieldInGroup(col.fieldId)
     }))
-  }, [gridCtx?.tableColumns, gridCtx?.colGroupsList])
+  }, [view, fieldMap])
 
   const onMenuClick = (item: any) => {
     console.log('onMenuClick', item)
   }
 
-  const onDragColDefsEnd = (items: any) => {
-    gridCtx?.setColDefsList(() => items)
+  const onDragColumnsEnd = (columns: any) => {
+    view.columns = columns
+    setView(view)
   }
 
-  const onDragColGroupEnd = (items: any) => {
-    console.log('onDragColGroupEnd', items)
-    gridCtx?.setColGroupsList(() => items)
+  const onDragGroupInfoEnd = (groupInfo: any) => {
+    view.groupInfo = groupInfo
+    setView(view)
   }
 
   const onChangeColVisible = (col: any, checked: any) => {
-    gridCtx?.setColDefsList((colDefs: any) => {
-      return colDefs.map((item: any) => {
-        if (item.field === col.field) {
-          return Object.assign(col, {hide: !checked})
-        }
-        return item
-      })
+    view.columns = view.columns.map((c: Column) => {
+      if (col.fieldId === c.fieldId) {
+        return Object.assign(col, {hidden: !checked})
+      }
+      return c
     })
+    setView(view);
   }
 
-  const onAddGroupField = (field: any) => {
-    const exists = gridCtx?.colGroupsList?.find((item: any) => item.field === field);
-    console.log('onAddGroupField has', exists)
-    if (gridCtx?.colGroupsList && !exists) {
-      gridCtx?.setColGroupsList((colGroups: any) => {
-        return colGroups.concat([{
-          field,
-          direction: 'desc'
-        }])
+  const onClickGroupInfo = (fieldId?: any) => {
+    const exists = view?.groupInfo?.find((item: Column) => item.fieldId === fieldId);
+    if (!exists) {
+      view.groupInfo = view.groupInfo ? view.groupInfo : []
+      view.groupInfo.push({
+        fieldId,
+        desc: true
       })
+    } else {
+      view.groupInfo = view.groupInfo.filter((col: Column) => col.fieldId !== fieldId)
     }
-  }
-
-  const onDelGroupField = (field: any) => {
-    gridCtx?.setColGroupsList((colGroups: any) => {
-      return colGroups.filter((col: any) => col.field !== field)
-    })
+    setView(view);
   }
 
   const onChangeGroupField = (col: any, value: any) => {
-    gridCtx?.setColGroupsList((colGroups: any) => {
-      return colGroups.map((item: any) => {
-        if (item.field === col.field) {
-          return Object.assign(item, {field: value})
-        }
-        return item
-      })
+    view.groupInfo = view?.groupInfo.map((item: any) => {
+      if (item.fieldId === col.fieldId) {
+        return Object.assign(item, {fieldId: value})
+      }
+      return item
     })
+    setView(view);
   }
 
   const onChangeGroupSort = (col: any, value: any) => {
-    gridCtx?.setColGroupsList((colGroups: any) => {
-      return colGroups.map((item: any) => {
-        if (item.field === col.field) {
-          return Object.assign(item, {direction: value})
-        }
-        return item
-      })
+    view.groupInfo = view?.groupInfo.map((item: any) => {
+      if (item.fieldId === col.fieldId) {
+        return Object.assign(item, {desc: value})
+      }
+      return item
     })
+    setView(view);
+  }
+
+  const setRowHeightLevel = (rowHeightLevel: number) => {
+    view.rowHeightLevel = rowHeightLevel;
+    setView(view);
   }
 
   return (
@@ -146,17 +159,17 @@ const GridToolbar = () => {
               </div>
             )} dropdownRender={() => (
               <MacScrollbar style={{minHeight: 200, padding: '0 8px'}}>
-                <BjhDragList onDragEnd={onDragColDefsEnd} items={gridCtx?.colDefsList} idKey={'field'}>
-                  {gridCtx?.colDefsList?.map((col: any) => (
-                    <BjhDragItem key={col['field']} id={col['field']} handle={true} className={'bjh-col-drag-item'}>
+                <BjhDragList onDragEnd={onDragColumnsEnd} items={view?.columns} idKey={'fieldId'}>
+                  {view?.columns?.map((col: any) => (
+                    <BjhDragItem key={col['fieldId']} id={col['fieldId']} handle={true} className={'bjh-col-drag-item'}>
                       <>
                         <div style={{width: '100%'}}>
-                          {col?.headerName}
+                          {getFieldName(col?.fieldId)}
                         </div>
                         <div style={{flexShrink: 0, marginRight: '4px'}}>
                           <Switch
                             size={"small"}
-                            checked={!col.hide}
+                            checked={!col.hidden}
                             onChange={(checked) => onChangeColVisible(col, checked)}
                           />
                         </div>
@@ -178,20 +191,22 @@ const GridToolbar = () => {
               </div>
             )} dropdownRender={() => (
               <div style={{padding: '0 8px'}}>
-                <BjhDragList onDragEnd={onDragColGroupEnd} items={gridCtx?.colGroupsList} idKey={'field'}>
-                  {gridCtx?.colGroupsList?.map((col: any) => (
-                    <BjhDragItem key={col['field']} id={col['field']} handle={true} className={'bjh-group-drag-item'}>
+                <BjhDragList onDragEnd={onDragGroupInfoEnd} items={view?.groupInfo || []} idKey={'fieldId'}>
+                  {view?.groupInfo?.map((col: Column) => (
+                    <BjhDragItem key={col['fieldId']} id={col['fieldId']} handle={true}
+                                 className={'bjh-group-drag-item'}>
                       <>
                         <Select
                           style={{width: '232px'}}
-                          options={tableColumnsOptions}
-                          value={col.field}
+                          options={tableColumns}
+                          value={col.fieldId}
+                          placeholder={'请选择要分组的列'}
                           onChange={(value) => onChangeGroupField(col, value)}
                         />
                         <Radio.Group
                           optionType={'button'}
                           buttonStyle={'solid'}
-                          value={col.direction}
+                          value={col.desc}
                           onChange={({target: {value}}) => onChangeGroupSort(col, value)}
                         >
                           {groupSortItems.map(item => (
@@ -200,43 +215,14 @@ const GridToolbar = () => {
                             </Radio.Button>
                           ))}
                         </Radio.Group>
-                        <BjhButton icon={'ant-close'} size={'small'} onClick={() => onDelGroupField(col.field)}/>
+                        <BjhButton icon={'ant-close'} size={'small'} onClick={() => onClickGroupInfo(col.fieldId)}/>
                       </>
                     </BjhDragItem>
                   ))}
                 </BjhDragList>
-                <BjhDropdown trigger={'click'} dropdownRender={() => (
-                  <MacScrollbar style={{minHeight: 200, padding: '0 8px'}}>
-                    <div className="bjh-dropdown-select">
-                      {tableColumnsOptions.map((option: any) => (
-                        <div
-                          className={classNames({
-                            'bjh-dropdown-select-option': true,
-                            'bjh-selected': isFieldInGroup(option.value)
-                          })}
-                          key={option.value}
-                          onClick={() => onAddGroupField(option.value)}
-                        >
-                          <div className="bjh-dropdown-select-option-content">
-                            <div className="bjh-dropdown-select-option-content-title">
-                              {option.label}
-                            </div>
-                          </div>
-                          {
-                            isFieldInGroup(option.value) &&
-                            <div className="bjh-dropdown-select-option-action">
-                              <CheckOutlined style={{color: token.colorPrimary}}/>
-                            </div>
-                          }
-                        </div>
-                      ))}
-                    </div>
-                  </MacScrollbar>
-                )}>
-                  <div style={{display: 'flex', margin: '8px 0'}}>
-                    <BjhButton text={'添加字段'} icon={'ant-plus'}/>
-                  </div>
-                </BjhDropdown>
+                <div style={{display: 'flex', margin: '8px 0'}}>
+                  <BjhButton text={'添加字段'} icon={'ant-plus'} onClick={() => onClickGroupInfo()}/>
+                </div>
               </div>
             )}>
               <BjhButton text="分组" icon="ali-calculator"/>
@@ -251,9 +237,9 @@ const GridToolbar = () => {
               </div>
             )} dropdownRender={() => (
               <BjhSelect
-                value={gridCtx?.rowHeight}
-                items={items}
-                onChange={(item: any) => gridCtx.setRowHeight(() => item.value)}
+                value={view.rowHeightLevel}
+                items={RowHeightItems}
+                onChange={(item: any) => setRowHeightLevel(item.value)}
               />
             )}>
               <BjhButton text="行高" icon="ant-colum-height"/>
