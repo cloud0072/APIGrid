@@ -31,7 +31,7 @@ spring:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     url: jdbc:p6spy:mysql://${MYSQL_HOST:192.168.4.198}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:apigrid}?characterEncoding=utf8&useUnicode=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_PASSWORD:apigrid}
+    password: ${MYSQL_PASSWORD:apigrid!com}
 
   # redis 配置
   redis:
@@ -42,7 +42,7 @@ spring:
     # 数据库索引
     database: ${REDIS_DB:0}
     # 密码
-    password: ${REDIS_PASSWORD:apigrid}
+    password: ${REDIS_PASSWORD:apigrid!com}
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -59,7 +59,12 @@ spring:
   # mongodb
   data:
     mongodb:
-      uri: mongodb://root:apigrid@192.168.4.198:27017/apigrid
+      #      uri: mongodb://root:apigrid@192.168.4.198:27017/apigrid
+      username: ${MONGO_USERNAME:root}
+      password: ${MONGO_PASSWORD:apigrid!com}
+      host: ${MONGO_HOST:192.168.4.198}
+      port: ${MONGO_PORT:27017}
+      database: ${MONGO_DATABASE:apigrid}
 
 # token配置
 token:
@@ -80,5 +85,5 @@ auth:
 minio:
   endpoint: ${MINIO_ENDPOINT:http://192.168.4.198:9000}
   accessKey: ${MINIO_ACCESS_KEY:root}
-  secretKey: ${MINIO_SECRET_KEY:apigrid}
+  secretKey: ${MINIO_SECRET_KEY:apigrid!com}
   bucketName: ${OSS_BUCKET_NAME:assets}

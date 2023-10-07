@@ -1,9 +1,3 @@
-CREATE
-USER 'root'@'%' IDENTIFIED BY 'apigrid';
-
-GRANT ALL PRIVILEGES ON *.* TO
-'root'@'%'
-
 CREATE TABLE apigrid_unit
 (
     `id`          BIGINT ( 20 ) NOT NULL,
@@ -140,3 +134,7 @@ CREATE TABLE apigrid_menu_node_rel
     PRIMARY KEY (`id`)
 );
 
+INSERT INTO `apigrid_unit_user`
+VALUES (1, 'admin', '$2a$10$tYymtpfjyNbkh9BiYtE0r.uwh7/rAtU2Xq/p//IkYBbCj42kz/dFq', '18612345678', '352419394@qq.com',
+        'http://192.168.4.198:9000/assets/assist/2023/0731/d8b86059cb2b4e2da1550cd596318601.jpg', 10, '管理员', 1, 0, 0, 1,
+        '2023-06-10 17:17:58', 1, '2023-08-15 11:52:44');

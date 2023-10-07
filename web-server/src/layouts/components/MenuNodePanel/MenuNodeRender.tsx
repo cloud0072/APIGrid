@@ -117,7 +117,7 @@ const MenuNodeRender = () => {
   }
 
   const handleClick = (event: any, node?: any) => {
-    console.log('handleClick', node)
+    console.log('handleClick node', node)
     let dstId = ''
     switch (event.key) {
       case MenuActionKey.AddDatasheet:
@@ -143,7 +143,7 @@ const MenuNodeRender = () => {
             nodeId: dstId,
             nodeType: NODE_TYPE_MAP[NodeTypeKey.folder],
             parentId: node?.key || MenuRootId,
-            isDeleted: 0
+            isDeleted: 0,
           })
           .then(refreshInitialState)
         break;
@@ -154,7 +154,7 @@ const MenuNodeRender = () => {
         break;
       case MenuActionKey.Delete:
         MenuNodeApi
-          .deleteByNodeIds(node.key)
+          .deleteByNodeId(node.key)
           .then(refreshInitialState)
         break;
       default:

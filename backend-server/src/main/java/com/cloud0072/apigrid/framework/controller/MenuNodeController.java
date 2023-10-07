@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RequestMapping("/menuNode")
@@ -34,7 +35,7 @@ public class MenuNodeController extends BaseController<MenuNode> {
 
     @PostMapping
     protected AjaxResult insertEntity(@RequestBody MenuNode t) {
-        baseService.save(t);
+        menuNodeService.insertEntity(t);
         // 创建表格
         if (t.getNodeType() == 2) {
             datasheetService.initDatasheet(t);
@@ -56,13 +57,10 @@ public class MenuNodeController extends BaseController<MenuNode> {
         return AjaxResult.success();
     }
 
-    @DeleteMapping("/deleteByNodeIds/{nodeIds}")
-    protected AjaxResult deleteEntity(@PathVariable("nodeIds") String nodeIds) {
-        var ids = Arrays.asList(nodeIds.split(","));
-        var wrapper = new UpdateWrapper<MenuNode>()
-                .in("node_id", ids).or().in("parent_id", ids);
-        menuNodeService.update(MenuNode.builder().isDeleted(1).build(), wrapper);
-        datasheetService.deleteByDstIds(ids);
+    @DeleteMapping("/deleteByNodeId/{nodeId}")
+    protected AjaxResult deleteEntity(@PathVariable("nodeId") String nodeId) {
+        menuNodeService.deleteByNodeId(nodeId); //update(MenuNode.builder().isDeleted(1).build(), wrapper)
+        datasheetService.deleteByDstIds(Collections.singletonList(nodeId));
         return AjaxResult.success();
     }
 }

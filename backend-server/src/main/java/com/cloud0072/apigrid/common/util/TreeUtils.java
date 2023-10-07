@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class TreeUtils {
 
-    private static final String FirstNodePreNodeId = "1";
+    public static final String FirstNodePreNodeId = "1";
 
     public static <T extends TreeEntity> List<TreeNode> buildTree(List<T> dataList, Serializable parentId, String... cols) {
         return dataList.stream()

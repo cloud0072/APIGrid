@@ -1,8 +1,10 @@
 package com.cloud0072.apigrid.framework.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cloud0072.apigrid.common.domain.TreeNode;
+import com.cloud0072.apigrid.common.exception.BackendException;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.common.util.TreeUtils;
 import com.cloud0072.apigrid.framework.domain.MenuNode;
@@ -26,6 +28,26 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
         return TreeUtils.sortByPreNodeId(treeList);
     }
 
+    @Override
+    public MenuNode insertEntity(MenuNode entity) {
+        var wrapper = new QueryWrapper<MenuNode>();
+        wrapper.eq("parent_id", entity.getParentId()).eq("is_deleted", 0);
+        var list = baseMapper.selectList(wrapper);
+        if (list.size() > 0) {
+            var latest = list.get(list.size() - 1);
+            entity.setPreNodeId(latest.getNodeId());
+        } else {
+            entity.setPreNodeId("1");
+        }
+
+        var nodeName = getNodeName(entity.getNodeType(), list);
+        entity.setNodeName(nodeName);
+        entity.setCreateBy(SecurityUtils.getUserId());
+        entity.setCreateTime(new Date());
+        baseMapper.insert(entity);
+        return entity;
+    }
+
     /**
      * @param params 包含了节点的NodeId 新位置的ParentId 新位置的PreNodeId
      * @return
@@ -35,12 +57,15 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
     public int updatePositionByNodeId(MenuNode params) {
         // 自身节点
         var iNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("is_deleted", 0)
                 .eq("node_id", params.getNodeId()));
         // 旧位置后一个节点
         var oldNextNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("is_deleted", 0)
                 .eq("pre_node_id", params.getNodeId()));
         // 新位置后一个节点
         var newNextNode = baseMapper.selectOne(new QueryWrapper<MenuNode>()
+                .eq("is_deleted", 0)
                 .eq("parent_id", params.getParentId())
                 .eq("pre_node_id", params.getPreNodeId()));
 
@@ -66,15 +91,26 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
     }
 
     @Override
-    public boolean save(MenuNode entity) {
-        var wrapper = new QueryWrapper<MenuNode>();
-        wrapper.eq("parent_id", entity.getParentId());
-        var list = baseMapper.selectList(wrapper);
-        var nodeName = getNodeName(entity.getNodeType(), list);
-        entity.setNodeName(nodeName);
-        entity.setCreateBy(SecurityUtils.getUserId());
-        entity.setCreateTime(new Date());
-        return super.save(entity);
+    public void deleteByNodeId(String nodeId) {
+        var node = baseMapper.selectOne(new QueryWrapper<MenuNode>().eq("node_id", nodeId).eq("is_deleted", 0));
+        if (node == null) {
+            return;
+        }
+
+        var childrenCount = baseMapper.selectCount(new QueryWrapper<MenuNode>().eq("parent_id", nodeId).eq("is_deleted", 0));
+        if (childrenCount > 0) {
+            throw new BackendException("请先删除子节点后重试");
+        }
+
+        node.setIsDeleted(1);
+        baseMapper.updateById(node);
+
+        var nextNode = baseMapper.selectOne(new QueryWrapper<MenuNode>().eq("pre_node_id", nodeId).eq("is_deleted", 0));
+        if (nextNode != null) {
+            nextNode.setPreNodeId(node.getPreNodeId());
+            baseMapper.updateById(nextNode);
+        }
+
     }
 
     private String getNodeName(Integer nodeType, List<MenuNode> menuNodes) {

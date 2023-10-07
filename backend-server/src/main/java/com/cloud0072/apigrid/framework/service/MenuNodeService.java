@@ -11,5 +11,9 @@ public interface MenuNodeService extends IService<MenuNode> {
 
     List<TreeNode> getNodeTree(QueryWrapper<MenuNode> wrapper);
 
+    MenuNode insertEntity(MenuNode t);
+
     int updatePositionByNodeId(MenuNode menuNode);
+
+    void deleteByNodeId(String nodeId);
 }

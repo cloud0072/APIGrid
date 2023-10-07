@@ -33,10 +33,10 @@ export const MenuNodeApi = {
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  deleteByNodeIds: (id: any) => {
-    const ids = id instanceof Array ? id.join(',') : id;
+  deleteByNodeId: (nodeId: string) => {
+    // const ids = id instanceof Array ? id.join(',') : id;
     return request<any>({
-      path: `/${prefix}/deleteByNodeIds/${ids}`,
+      path: `/${prefix}/deleteByNodeId/${nodeId}`,
       method: 'DELETE',
       secure: true,
       type: ContentType.Json,
