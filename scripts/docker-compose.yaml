@@ -56,7 +56,7 @@ services:
     volumes:
       - ${DATA_PATH}/.data/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - TZ=${TIMEZONE}
     command: --default-authentication-plugin=mysql_native_password
