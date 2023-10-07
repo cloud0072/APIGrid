@@ -75,7 +75,7 @@ public class IdUtils {
     }
 
     public static String getDatasheetId() {
-        return getNewId(DATASHEET, 10);
+        return getNewId(DATASHEET, 8);
     }
 
     public static String getRecordId() {
