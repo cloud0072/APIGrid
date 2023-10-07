@@ -1,8 +1,8 @@
 CREATE
-USER 'apigrid'@'%' IDENTIFIED BY 'apigrid';
+USER 'root'@'%' IDENTIFIED BY 'apigrid';
 
 GRANT ALL PRIVILEGES ON *.* TO
-'apigrid'@'%'
+'root'@'%'
 
 CREATE TABLE apigrid_unit
 (
