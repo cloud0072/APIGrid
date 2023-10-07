@@ -5,7 +5,7 @@ services:
   minio:
     container_name: minio
     image: ${IMAGE_MINIO}
-    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    pull_policy: ${IMAGE_PULL_POLICY}
     restart: always
     command: server --console-address ":9001" /data
     ports:
@@ -29,7 +29,7 @@ services:
   redis:
     container_name: redis
     image: ${IMAGE_REDIS}
-    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    pull_policy: ${IMAGE_PULL_POLICY}
     restart: always
     command:
       [
@@ -49,7 +49,7 @@ services:
   mysql:
     container_name: mysql
     image: ${IMAGE_MYSQL}
-    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    pull_policy: ${IMAGE_PULL_POLICY}
     restart: always
     volumes:
       - ${DATA_PATH}/.data/mysql:/var/lib/mysql
@@ -72,8 +72,8 @@ services:
       retries: 60
 
   mongodb:
-    image: ${IMAGE_MONGODB_SERVER}
-    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    image: ${IMAGE_MONGODB}
+    pull_policy: ${IMAGE_PULL_POLICY}
     container_name: mongodb
     restart: always
     env_file:
@@ -82,8 +82,8 @@ services:
       - "27017:27017"
     environment:
       - TZ=${TIMEZONE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-admin}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-apigrid}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     networks:
       - apigrid
     volumes:
@@ -92,15 +92,15 @@ services:
 
   mongo-express:
     image: ${IMAGE_MONGO_EXPRESS_SERVER}
-    pull_policy: ${IMAGE_PULL_POLICY:-if_not_present}
+    pull_policy: ${IMAGE_PULL_POLICY}
     container_name: mongo-express
     restart: always
     ports:
       - "9021:8081"
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME:-admin}
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD:-apigrid}
-      - ME_CONFIG_MONGODB_SERVER=${MONGO_HOST:-192.168.4.198}
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=${MONGO_HOST}
 
 networks:
   apigrid:
