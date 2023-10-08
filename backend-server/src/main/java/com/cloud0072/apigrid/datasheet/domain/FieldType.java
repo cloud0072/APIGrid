@@ -10,7 +10,7 @@ public enum FieldType {
     NUMBER(2),      //数字
     DATETIME(3),    //日期
     SELECT(4),      //选项
-    FILE(5),        //文件
+    FILE(5),        //附件
     MEMBER(6),      //成员
     //    LINK(7),      //神奇关联
 //    LOOKUP(8),    //神奇引用

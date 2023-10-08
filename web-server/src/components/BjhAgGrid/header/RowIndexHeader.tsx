@@ -1,20 +1,20 @@
 import {Checkbox} from "antd";
-import React, {useContext} from "react";
-import {GridContext} from "@/components/BjhAgGrid";
+import React from "react";
 import styles from '../header/style.module.less';
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 
-const RowIndexHeader = ({api}: any) => {
-
-  const {indeterminate, setIndeterminate, checkAll, setCheckAll} = useContext(GridContext);
+const RowIndexHeader = (params: any) => {
+  const {api} = params;
+  const {indeterminate, setIndeterminate, checkAll, setCheckAll} = useGrid();
 
   const onCheckedChange = () => {
-    setCheckAll(!checkAll)
-    setIndeterminate(false);
     if (checkAll) {
       api.deselectAll()
     } else {
       api.selectAll()
     }
+    setCheckAll(!checkAll)
+    setIndeterminate(false);
   }
 
   return (

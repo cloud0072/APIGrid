@@ -96,9 +96,9 @@ const MenuNodeRender = () => {
     setExpandedKeys(keys);
   }
 
-  useEffect(() => {
-    console.log('expandedKeys', expandedKeys)
-  }, [expandedKeys])
+  // useEffect(() => {
+  //   console.log('expandedKeys', expandedKeys)
+  // }, [expandedKeys])
 
   const handleNavigate = (nodeId: string) => {
     const prefix = nodeId.substring(0, 3);
@@ -259,9 +259,9 @@ const MenuNodeRender = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('menuNodes', menuNodes)
-  }, [menuNodes])
+  // useEffect(() => {
+  //   console.log('menuNodes', menuNodes)
+  // }, [menuNodes])
 
   return (
     <>{show &&

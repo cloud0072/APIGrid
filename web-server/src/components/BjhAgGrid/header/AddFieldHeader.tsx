@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useState} from "react";
 import {PlusOutlined} from "@ant-design/icons";
 import {Field, GridContext, View} from "@/components/BjhAgGrid";
 import styles from "@/components/BjhAgGrid/header/style.module.less";
-import AddFieldPopover from "@/components/BjhAgGrid/header/AddFieldPopover";
+import EditFieldPopover from "@/components/BjhAgGrid/header/EditFieldPopover";
 
 const AddFieldHeader = () => {
   const {views, setViews, fieldMap, setFieldMap} = useContext(GridContext)
@@ -33,11 +33,11 @@ const AddFieldHeader = () => {
 
   return (
     <div style={{width: '100%', textAlign: 'center'}}>
-      <AddFieldPopover open={open} onChange={(e: any) => setOpen(e)}>
+      <EditFieldPopover open={open} onChange={(e: any) => setOpen(e)}>
         <div className={styles.fieldHeader} onClick={() => setOpen(!open)}>
           <PlusOutlined/>
         </div>
-      </AddFieldPopover>
+      </EditFieldPopover>
     </div>
   )
 }

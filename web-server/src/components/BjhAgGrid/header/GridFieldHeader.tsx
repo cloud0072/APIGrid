@@ -5,7 +5,7 @@ import styles from './style.module.less';
 import {DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PushpinOutlined} from "@ant-design/icons";
 import {t} from "@/utils/i18n";
 import {MenuActionKey, MenuLabel} from "@/layouts/components/MenuNodePanel/MenuContext";
-import AddFieldPopover from "@/components/BjhAgGrid/header/AddFieldPopover";
+import EditFieldPopover from "@/components/BjhAgGrid/header/EditFieldPopover";
 
 const items = [
   {
@@ -42,7 +42,7 @@ const GridFieldHeader = ({api, column, displayName}: any) => {
 
   return (
     <div style={{width: '100%'}}>
-      <AddFieldPopover open={open} onChange={(e: any) => setOpen(e)} column={column}>
+      <EditFieldPopover open={open} onChange={(e: any) => setOpen(e)} column={column}>
         <Dropdown trigger={['contextMenu']} menu={{items, onClick}}>
           <div className={styles.fieldHeader}>
             <div className={styles.fieldHeaderTitle}>
@@ -53,7 +53,7 @@ const GridFieldHeader = ({api, column, displayName}: any) => {
             </div>
           </div>
         </Dropdown>
-      </AddFieldPopover>
+      </EditFieldPopover>
     </div>
   )
 }

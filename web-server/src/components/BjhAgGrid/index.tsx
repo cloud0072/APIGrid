@@ -14,9 +14,10 @@ import {LicenseManager} from 'ag-grid-enterprise';
 import './style.less';
 import {Spin} from "antd";
 import {LayoutContext} from "@/layouts";
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
+import {useQueryRecords} from "@/models/recordState";
 import {useQueryDatasheet} from "@/models/datasheetState";
 import {useParams} from "react-router-dom";
-import {useQueryRecords} from "@/models/recordState";
 
 LicenseManager.prototype.validateLicense = () => true
 
@@ -51,6 +52,7 @@ export type View = {
 }
 
 export type ColDef = {
+  sortIndex?: number,
   field?: string,
   width?: number,
   editable?: boolean,
@@ -63,7 +65,7 @@ export type ColDef = {
   cellClass?: string,
   pinned?: ("left" | "right"),
   lockPosition?: ("left" | "right"),
-  cellRenderer?: React.FC
+  cellRenderer?: any
 }
 
 const rowIndexCol: ColDef[] = [{
@@ -99,18 +101,6 @@ const defaultColDef = {
 };
 
 export const GridContext = createContext({
-  checkAll: false,
-  setCheckAll: (bol: boolean) => {
-  },
-  indeterminate: false,
-  setIndeterminate: (bol: boolean) => {
-  },
-  checkedList: [],
-  onSelectedRows: () => {
-  },
-  rowHeightLevel: 1,
-  setRowHeightLevel: (height: number) => {
-  },
   rowData: [],
   fieldMap: {},
   setFieldMap: (fieldMap: any) => {
@@ -122,55 +112,30 @@ export const GridContext = createContext({
   setViews: (views: View[]) => {
   },
 } as any);
-// getTableInfo
+
 const BjhAgGrid = () => {
 
-
   const gridRef = useRef<any>(null); // Optional - for accessing Grid's API
+  const {nodeId} = useParams() as any;
+  const {
+    dstId, setDstId,
+    viewId, setViewId,
+    checkAll, setCheckAll,
+    checkedList, setCheckedList,
+    setRowData, setDatasheet,
+    setIndeterminate
+  } = useGrid();
 
-  const [indeterminate, setIndeterminate] = useState(false);
-  const [checkAll, setCheckAll] = useState(false);
-  const [checkedList, setCheckedList] = useState([]);
-  const onSelectedRows = () => {
-    const api = gridRef.current?.api;
-    const selectedRows = api?.getSelectedRows();
-    const pageSize = api?.paginationGetPageSize();
-    setCheckedList(() => selectedRows);
-    if (selectedRows.length === 0) {
-      setCheckAll(false)
-      setIndeterminate(false)
-    } else if (selectedRows.length < pageSize) {
-      setCheckAll(false)
-      setIndeterminate(true)
-    } else if (selectedRows.length === pageSize) {
-      setCheckAll(true)
-      setIndeterminate(false)
-    }
-  }
+  const {data: rowData, isLoading} = useQueryRecords(nodeId!);
+  const {data: datasheet} = useQueryDatasheet(nodeId!);
 
-  const {nodeId: dstId} = useParams();
-  const {data: rowData, isLoading} = useQueryRecords(dstId!);
-  const {data: datasheet} = useQueryDatasheet(dstId!);
-  useEffect(() => {
-    if (datasheet) {
-      console.log('init datasheet', datasheet)
-      setViews(datasheet?.views);
-      setViewId(datasheet?.views[0]?.id)
-      setFieldMap(datasheet?.fieldMap)
-    }
-  }, [datasheet])
+  const {height} = useContext(LayoutContext);
+  const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
 
   const [fieldMap, setFieldMap] = useState<any>({});
-  const [viewId, setViewId] = useState<string>('');
   const [views, setViews] = useState<View[]>([]);
-  const view = useMemo<View>(() => {
-    return views?.find(v => v.id === viewId) ?? {} as any;
-  }, [views, viewId]);
-  const {
-    rowHeightLevel,
-    columns,
-    groupInfo
-  } = view;
+  const view = useMemo<View>(() => views?.find(v => v.id === viewId) ?? {} as any, [views, viewId]);
+
   const setView = (view: View) => {
     console.log('setView', view)
     setViews((views: View[]) => {
@@ -178,47 +143,80 @@ const BjhAgGrid = () => {
     })
   }
 
-  const {height} = useContext(LayoutContext);
-  const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
-
   const localColDefs = useMemo<ColDef[]>(() => {
-    const local = columns?.map(({fieldId, hidden}, index) => {
-      const flag = !!groupInfo?.find(col => col.fieldId === fieldId);
+    const local = view?.columns?.map(({fieldId, hidden}, index) => {
+      const flag = view?.groupInfo?.find(col => col.fieldId === fieldId);
       const field = fieldMap[fieldId] as Field;
       return {
+        ...defaultColDef,
         field: fieldId,
-        rowGroup: flag,
         hide: hidden || flag,
         headerName: field.name,
-        sortIndex: index + 1,
-        ...defaultColDef
-      }
+        rowGroup: flag,
+        sortIndex: index + 1
+      } as ColDef
     }) || [];
     return rowIndexCol.concat(local).concat(addFieldCol);
   }, [fieldMap, views])
 
   const rowHeight = useMemo(() => {
-    const i = rowHeightLevel >= 0 ? rowHeightLevel : 0;
-    // console.log('rowHeight', RowHeightItems[i].height);
+    const i = view ? view.rowHeightLevel : 0;
     return RowHeightItems[i].height;
-  }, [rowHeightLevel])
+  }, [view?.rowHeightLevel])
+
+  const getId = (params: any) => params.data.recId;
 
   useEffect(() => {
-    // console.log(`rowHeight:${rowHeight}`)
+    if (datasheet) {
+      console.log('init datasheet', datasheet)
+      const {views, fieldMap} = datasheet;
+      setDatasheet(datasheet)
+      setViews(views);
+      setViewId(views?.[0]?.id)
+      setFieldMap(fieldMap)
+    }
+  }, [datasheet])
+
+  useEffect(() => {
+    setRowData(rowData)
+  }, [rowData])
+
+  useEffect(() => {
     gridRef?.current?.api && gridRef?.current?.api?.resetRowHeights();
   }, [rowHeight])
 
-  const getId = (params: any) => params.data.recId;
+  useEffect(() => {
+    if (nodeId != dstId) {
+      setDstId(nodeId)
+    }
+  }, [nodeId])
+
+  useEffect(() => {
+    setCheckAll(false)
+  }, [dstId])
+
+  useEffect(() => {
+    setCheckedList(checkAll ? rowData : [])
+  }, [checkAll])
+
+  useEffect(() => {
+    if (rowData?.length > 0) {
+      if (checkedList.length === 0) {
+        setCheckAll(false)
+        setIndeterminate(false)
+      } else if (checkedList.length < rowData.length) {
+        setCheckAll(false)
+        setIndeterminate(true)
+      } else if (checkedList.length === rowData.length) {
+        setCheckAll(true)
+        setIndeterminate(false)
+      }
+    }
+  }, [checkedList, rowData?.length])
 
   return (
     <div className="bjh-grid-body">
       <GridContext.Provider value={{
-        checkAll,
-        setCheckAll,
-        indeterminate,
-        setIndeterminate,
-        checkedList,
-        onSelectedRows,
         rowData,
         fieldMap,
         setFieldMap,
@@ -231,7 +229,7 @@ const BjhAgGrid = () => {
 
         <Spin spinning={isLoading}>
           <div className="ag-theme-alpine" style={gridStyle}>
-            {datasheet ? <AgGridReact
+            <AgGridReact
               ref={gridRef} // Ref for accessing Grid's API
               rowData={rowData} // Row Data for Rows
               columnDefs={localColDefs} // Column Defs for Columns
@@ -243,7 +241,7 @@ const BjhAgGrid = () => {
               suppressRowClickSelection={true}
               animateRows={true} // Optional - set to 'true' to have rows animate when sorted
               components={{agColumnHeader: GridHeader}}
-            /> : null}
+            />
           </div>
         </Spin>
       </GridContext.Provider>

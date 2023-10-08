@@ -112,7 +112,7 @@ export const useQueryInitialState = () => {
     initialStateQueryKey,
     async () => {
       const [userNodes] = await Promise.all([MenuNodeApi.getNodeTree()])
-      console.log('userNodes.data', userNodes.data)
+      // console.log('userNodes.data', userNodes.data)
       setMenuNodes(userNodes.data);
 
       // const [userInfo, userRoutes] = await Promise.all([sysGetUserInfo(), sysLoginGetRouters()]);
