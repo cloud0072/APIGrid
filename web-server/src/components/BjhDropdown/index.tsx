@@ -2,9 +2,10 @@ import {Dropdown} from "antd";
 import React from "react";
 import styles from './style.module.less'
 
-const BjhDropdown = ({titleRender, dropdownRender, trigger, open, onClick, width, children}: any) => {
+const BjhDropdown = (props: any) => {
+  const {titleRender, dropdownRender, onClick, width, children, ...rest} = props;
   return (
-    <Dropdown trigger={trigger || 'click'} open={open} dropdownRender={() => (
+    <Dropdown dropdownRender={() => (
       <div className={styles.bjhDropdown} style={{width: width || '208px'}}>
         {titleRender && (
           <div className={styles.bjhDropdownHead}>
@@ -15,10 +16,10 @@ const BjhDropdown = ({titleRender, dropdownRender, trigger, open, onClick, width
           {dropdownRender && dropdownRender()}
         </div>
       </div>
-    )}>
-      <div onClick={onClick}>
-        {children}
-      </div>
+    )}
+              {...rest}
+    >
+      <div onClick={onClick}>{children}</div>
     </Dropdown>
   )
 }

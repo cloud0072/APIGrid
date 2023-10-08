@@ -50,6 +50,12 @@ export const t = {
   menu_node_export: '导出到Excel',
   menu_node_rename: '重命名',
   menu_node_permission: '设置权限',
-  menu_node_delete: '删除'
+  menu_node_delete: '删除',
+  // field
+  field_add: '新建列',
+  field_edit: '编辑列名称/类型',
+  field_frozen: '冻结至此列',
+  field_hide: '隐藏列',
+  field_delete: '删除列'
 
 }

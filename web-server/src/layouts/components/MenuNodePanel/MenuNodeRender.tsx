@@ -82,11 +82,8 @@ const MenuNodeRender = () => {
   const navigate = useNavigate();
   const params: any = useParams();
 
-  // useEffect(() => {
-  //   console.log('params', params)
-  // }, [params])
-
   const [editNodeKey, setEditNodeKey] = useState('');
+  const [expandedKeys, setExpandedKeys] = useState<any>([]);
 
   const show = useMemo(() => menuType == NodeTypeKey.datasheet, [menuType]);
 
@@ -94,6 +91,14 @@ const MenuNodeRender = () => {
     const key = keys[0];
     handleNavigate(key)
   }
+
+  const handleExpand = (keys: any[]) => {
+    setExpandedKeys(keys);
+  }
+
+  useEffect(() => {
+    console.log('expandedKeys', expandedKeys)
+  }, [expandedKeys])
 
   const handleNavigate = (nodeId: string) => {
     const prefix = nodeId.substring(0, 3);
@@ -117,7 +122,7 @@ const MenuNodeRender = () => {
   }
 
   const handleClick = (event: any, node?: any) => {
-    console.log('handleClick node', node)
+    console.log('handleClick event', event)
     let dstId = ''
     switch (event.key) {
       case MenuActionKey.AddDatasheet:
@@ -270,14 +275,15 @@ const MenuNodeRender = () => {
             switcherIcon={<div><CaretRightOutlined/></div>}
             titleRender={node => <TitleRender {...{node, editNodeKey, handleRename, handleClick}} />}
             treeData={menuNodes}
+            expandedKeys={expandedKeys}
             onSelect={handleSelect}
+            onExpand={handleExpand}
             onDrop={handleDrop}
             blockNode
-            // allowDrop={({dropNode}) => dropNode.meta.nodeType == NODE_TYPE_MAP[NodeTypeKey.folder]}
-            // autoExpandParent={true}
             showIcon={false}
+            expandAction={false}
             draggable={{icon: false}}
-            defaultSelectedKeys={[params.nodeId]}
+            defaultExpandedKeys={[params.nodeId]}
           />
         </div>
         <Dropdown menu={{items: panelMenus, onClick: handleClick}} trigger={['contextMenu']}>

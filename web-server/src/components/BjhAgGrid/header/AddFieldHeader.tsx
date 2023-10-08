@@ -1,6 +1,8 @@
-import React, {useCallback, useContext} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import {PlusOutlined} from "@ant-design/icons";
 import {Field, GridContext, View} from "@/components/BjhAgGrid";
+import styles from "@/components/BjhAgGrid/header/style.module.less";
+import AddFieldPopover from "@/components/BjhAgGrid/header/AddFieldPopover";
 
 const AddFieldHeader = () => {
   const {views, setViews, fieldMap, setFieldMap} = useContext(GridContext)
@@ -24,9 +26,18 @@ const AddFieldHeader = () => {
     }))
   }, [views, fieldMap])
 
+  const [open, setOpen] = useState(false);
+  const handleChange = (e: any) => {
+    setOpen(e)
+  }
+
   return (
     <div style={{width: '100%', textAlign: 'center'}}>
-      <PlusOutlined/>
+      <AddFieldPopover open={open} onChange={(e: any) => setOpen(e)}>
+        <div className={styles.fieldHeader} onClick={() => setOpen(!open)}>
+          <PlusOutlined/>
+        </div>
+      </AddFieldPopover>
     </div>
   )
 }

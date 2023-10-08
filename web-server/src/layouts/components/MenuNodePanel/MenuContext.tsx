@@ -1,6 +1,12 @@
 import styles from './style.module.less';
 import React from "react";
-import {DashboardOutlined, FileExcelOutlined, FolderAddOutlined, TableOutlined} from "@ant-design/icons";
+import {
+  DashboardOutlined,
+  DeleteOutlined, EditOutlined,
+  FileExcelOutlined,
+  FolderAddOutlined, KeyOutlined,
+  TableOutlined
+} from "@ant-design/icons";
 import {t} from "@/utils/i18n";
 
 export const MenuRootId = '-1';
@@ -18,6 +24,11 @@ export const MenuActionKey = {
   Rename: 'Rename',
   Permission: 'Permission',
   Delete: 'Delete',
+  // field
+  EditField: 'EditField',
+  DeleteField: 'DeleteField',
+  FrozenField: 'FrozenField',
+  HideField: 'HideField',
 }
 
 export const NodeTypeKey = {
@@ -86,15 +97,15 @@ export const getMenuItems = (node: any) => {
         },
         {
           key: MenuActionKey.Rename,
-          label: <MenuLabel icon={<DashboardOutlined/>} title={t.menu_node_rename}/>,
+          label: <MenuLabel icon={<EditOutlined/>} title={t.menu_node_rename}/>,
         },
         {
           key: MenuActionKey.Permission,
-          label: <MenuLabel icon={<FileExcelOutlined/>} title={t.menu_node_permission}/>,
+          label: <MenuLabel icon={<KeyOutlined/>} title={t.menu_node_permission}/>,
         },
         {
           key: MenuActionKey.Delete,
-          label: <MenuLabel icon={<FileExcelOutlined/>} title={t.menu_node_delete}/>,
+          label: <MenuLabel icon={<DeleteOutlined/>} title={t.menu_node_delete}/>,
         },
       ]
     case NODE_TYPE_MAP.dashboard:
@@ -103,15 +114,15 @@ export const getMenuItems = (node: any) => {
       return [
         {
           key: MenuActionKey.Rename,
-          label: <MenuLabel icon={<DashboardOutlined/>} title={t.menu_node_rename}/>,
+          label: <MenuLabel icon={<EditOutlined/>} title={t.menu_node_rename}/>,
         },
         {
           key: MenuActionKey.Permission,
-          label: <MenuLabel icon={<FileExcelOutlined/>} title={t.menu_node_permission}/>,
+          label: <MenuLabel icon={<KeyOutlined/>} title={t.menu_node_permission}/>,
         },
         {
           key: MenuActionKey.Delete,
-          label: <MenuLabel icon={<FileExcelOutlined/>} title={t.menu_node_delete}/>,
+          label: <MenuLabel icon={<DeleteOutlined/>} title={t.menu_node_delete}/>,
         },
       ]
     default:
