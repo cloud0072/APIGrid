@@ -24,9 +24,10 @@ LicenseManager.prototype.isDisplayWatermark = () => false
 
 export type Column = {
   fieldId: string,
-  statType?: number,
   desc?: boolean,
   hidden?: boolean,
+  statType?: number,
+  width?: number,
 }
 
 export type Field = {
@@ -117,7 +118,8 @@ const BjhAgGrid = () => {
     datasheet, setDatasheet,
     setIndeterminate,
     rowHeight,
-    setFieldVisible
+    setFieldVisible,
+    setFieldWidth
   } = useGrid();
 
   const {data: rowList, isLoading} = useQueryRecords(nodeId!);
@@ -126,12 +128,13 @@ const BjhAgGrid = () => {
   const {height} = useContext(LayoutContext);
   const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
   const colDefs = useMemo<ColDef[]>(() => {
-    const local = view?.columns?.map(({fieldId, hidden}, index) => {
+    const local = view?.columns?.map(({fieldId, hidden, width}, index) => {
       const flag = !!view?.groupInfo?.find(col => col.fieldId === fieldId);
       const field = fieldMap[fieldId] as Field;
       return {
         ...defaultColDef,
         field: fieldId,
+        width: width || 160,
         hide: hidden || flag,
         headerName: field.name,
         sortIndex: index + 1,
@@ -157,6 +160,13 @@ const BjhAgGrid = () => {
     const {visible, column} = e
     if (column) {
       setFieldVisible(column.colId, !visible)
+    }
+  }
+
+  const handleColumnResized = (e: any) => {
+    const {finished, column} = e
+    if (column && finished) {
+      setFieldWidth(column.colId, column.actualWidth)
     }
   }
 
@@ -222,6 +232,7 @@ const BjhAgGrid = () => {
             getRowId={(params: any) => params.data.recId}
             onColumnMoved={handleColumnMoved}
             onColumnVisible={handleColumnVisible}
+            onColumnResized={handleColumnResized}
             rowSelection='multiple' // Options - allows click selection of rows
             groupDisplayType={'multipleColumns'}
             suppressRowClickSelection={true}

@@ -70,15 +70,11 @@ export const useGrid = () => {
     setView(Object.assign({}, view, {columns}));
   }
 
-  const removeFieldMap = (fieldId: string) => {
-    if (fieldId) {
-      delete fieldMap[fieldId]
-      setFieldMap(fieldMap)
-      setViews(views?.map((v: View) => {
-        v.columns = v.columns?.filter(f => f.fieldId != fieldId)
-        return v;
-      }))
-    }
+  const setFieldWidth = (fieldId: string, width: number) => {
+    const columns = view?.columns?.map((col: Column) => {
+      return fieldId === col.fieldId ? Object.assign(col, {width}) : col
+    })
+    setView(Object.assign({}, view, {columns}));
   }
 
   return {
@@ -94,6 +90,6 @@ export const useGrid = () => {
     view, setView,
     rowHeight,
     setFieldVisible,
-    removeFieldMap,
+    setFieldWidth,
   }
 }

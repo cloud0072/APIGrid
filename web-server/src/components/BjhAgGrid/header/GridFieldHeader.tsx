@@ -7,6 +7,7 @@ import {t} from "@/utils/i18n";
 import {MenuActionKey, MenuLabel} from "@/layouts/components/MenuNodePanel/MenuContext";
 import EditFieldPopover from "@/components/BjhAgGrid/header/EditFieldPopover";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
+import {View} from "@/components/BjhAgGrid";
 
 const items = [
   {
@@ -31,7 +32,17 @@ const GridFieldHeader = ({api, column, displayName}: any) => {
   const {useToken} = theme;
   const {token} = useToken();
 
-  const {setFieldVisible, removeFieldMap} = useGrid();
+  const {setFieldVisible, setDatasheet, fieldMap, views} = useGrid();
+  const removeFieldMap = (fieldId: string) => {
+    if (fieldId) {
+      delete fieldMap[fieldId]
+      const nViews = views?.map((v: View) => {
+        v.columns = v.columns?.filter(f => f.fieldId != fieldId)
+        return v;
+      });
+      setDatasheet((prev: any) => Object.assign({}, prev, {fieldMap, views: nViews}))
+    }
+  }
 
   const onClick = ({key}: any) => {
     console.log(`onClick key`, key)
