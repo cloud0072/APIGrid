@@ -6,6 +6,7 @@ import {DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PushpinOutlined} fro
 import {t} from "@/utils/i18n";
 import {MenuActionKey, MenuLabel} from "@/layouts/components/MenuNodePanel/MenuContext";
 import EditFieldPopover from "@/components/BjhAgGrid/header/EditFieldPopover";
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 
 const items = [
   {
@@ -30,18 +31,29 @@ const GridFieldHeader = ({api, column, displayName}: any) => {
   const {useToken} = theme;
   const {token} = useToken();
 
+  const {setFieldVisible, removeFieldMap} = useGrid();
+
   const onClick = ({key}: any) => {
     console.log(`onClick key`, key)
+    const fieldId = column?.colDef?.field;
     switch (key) {
       case MenuActionKey.EditField:
         setOpen(true);
+        break;
+      case MenuActionKey.HideField:
+        setFieldVisible(fieldId, true)
+        break;
+      case MenuActionKey.DeleteField:
+        removeFieldMap(fieldId);
+        break;
+      default:
     }
   }
 
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{width: '100%'}}>
+    <div style={{width: '100%', height: '100%'}}>
       <EditFieldPopover open={open} onChange={(e: any) => setOpen(e)} column={column}>
         <Dropdown trigger={['contextMenu']} menu={{items, onClick}}>
           <div className={styles.fieldHeader}>

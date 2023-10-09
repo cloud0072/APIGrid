@@ -16,6 +16,7 @@ import {debounce} from "lodash-es";
 import './index.less';
 import MenuHeader from "@/layouts/components/MenuHeader";
 import MenuNodeRender from "@/layouts/components/MenuNodePanel/MenuNodeRender";
+import TabsHeader from "@/layouts/components/TabsHeader";
 
 export type sizeType = {
   clientHeight: number,

@@ -1,15 +1,17 @@
-import {Dropdown, Radio, Select, Space, Switch, theme} from "antd";
+import {Button, Dropdown, message, Radio, Select, Space, Switch, theme, Tooltip} from "antd";
 import BjhDropdown from "@/components/BjhDropdown";
 import {MacScrollbar} from "mac-scrollbar";
 import BjhDragList from "@/components/BjhDragList";
 import BjhDragItem from "@/components/BjhDragItem";
 import BjhButton from "@/components/BjhButton";
-import classNames from "classnames";
-import {CheckOutlined} from "@ant-design/icons";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import IconFont from "@/components/IconFont";
-import React, {useCallback, useContext, useEffect, useMemo} from "react";
-import {Column, Field, GridContext, View} from "@/components/BjhAgGrid";
+import React, {useCallback, useMemo} from "react";
+import {Column, Field} from "@/components/BjhAgGrid";
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
+import {DatasheetApi} from "@/services/datasheet/Datasheet";
+import {SaveOutlined} from "@ant-design/icons";
+import {throttle} from "lodash-es";
 
 export const RowHeightItems = [
   {
@@ -53,7 +55,11 @@ const groupSortItems = [
 
 const GridToolbar = () => {
 
-  const {view, setView, fieldMap} = useContext(GridContext)
+  const {useToken} = theme;
+  const {token} = useToken();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const {datasheet, view, setView, fieldMap} = useGrid()
 
   const isFieldInGroup = useCallback((fieldId: string) => {
     return !!view.groupInfo?.find((item: Column) => item.fieldId === fieldId)
@@ -87,7 +93,7 @@ const GridToolbar = () => {
   }
 
   const onChangeColVisible = (col: any, checked: any) => {
-    view.columns = view.columns.map((c: Column) => {
+    view.columns = view?.columns?.map((c: Column) => {
       if (col.fieldId === c.fieldId) {
         return Object.assign(col, {hidden: !checked})
       }
@@ -105,13 +111,13 @@ const GridToolbar = () => {
         desc: true
       })
     } else {
-      view.groupInfo = view.groupInfo.filter((col: Column) => col.fieldId !== fieldId)
+      view.groupInfo = view.groupInfo?.filter((col: Column) => col.fieldId !== fieldId)
     }
     setView(view);
   }
 
   const onChangeGroupField = (col: any, value: any) => {
-    view.groupInfo = view?.groupInfo.map((item: any) => {
+    view.groupInfo = view.groupInfo?.map((item: any) => {
       if (item.fieldId === col.fieldId) {
         return Object.assign(item, {fieldId: value})
       }
@@ -121,7 +127,7 @@ const GridToolbar = () => {
   }
 
   const onChangeGroupSort = (col: any, value: any) => {
-    view.groupInfo = view?.groupInfo.map((item: any) => {
+    view.groupInfo = view.groupInfo?.map((item: any) => {
       if (item.fieldId === col.fieldId) {
         return Object.assign(item, {desc: value})
       }
@@ -135,8 +141,17 @@ const GridToolbar = () => {
     setView(view);
   }
 
+  const handleSaveDst = throttle(function () {
+    if (datasheet.dstId) {
+      DatasheetApi.updateByDstId(datasheet).then((response: any) => {
+        return response.code == 200 ? messageApi.success('保存成功!') : messageApi.error('保存失败');
+      })
+    }
+  }, 2000, {trailing: false})
+
   return (
     <div className="bjh-grid-option">
+      {contextHolder}
       <div className="bjh-grid-option-left">
         <div className="prefix"/>
         <div className="content">
@@ -244,16 +259,25 @@ const GridToolbar = () => {
       </div>
       <div className="bjh-grid-option-blank"/>
       <div className="bjh-grid-option-right">
-        <Dropdown.Button
-          type="primary"
-          icon={(<IconFont type="ant-down"/>)}
-          menu={{
-            items: createMenuItems,
-            onClick: onMenuClick,
-          }}
-        >
-          创建
-        </Dropdown.Button>
+        <Space>
+          <Tooltip title={'保存设置'}>
+            <Button
+              type="text"
+              onClick={handleSaveDst}
+              icon={<SaveOutlined style={{color: token.colorPrimary}}/>}
+            />
+          </Tooltip>
+          <Dropdown.Button
+            type="primary"
+            icon={(<IconFont type="ant-down"/>)}
+            menu={{
+              items: createMenuItems,
+              onClick: onMenuClick,
+            }}
+          >
+            创建
+          </Dropdown.Button>
+        </Space>
       </div>
     </div>
   )

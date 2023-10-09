@@ -23,6 +23,7 @@ import {useTheme} from "@/hooks/useTheme";
 const {DirectoryTree} = Tree;
 
 const TitleRender = ({node, editNodeKey, handleRename, handleClick}: any) => {
+  const {collapsed} = useContext(LayoutContext);
   const menuItems = getMenuItems(node);
   const inputRef = React.createRef<any>()
   const handleBlur = () => {
@@ -34,7 +35,7 @@ const TitleRender = ({node, editNodeKey, handleRename, handleClick}: any) => {
   return (
     <div className={styles.menuTitle}>
       {
-        editNodeKey === node.key ?
+        editNodeKey === node.key && !collapsed ?
           <div className={styles.menuTitleEdit}>
             <Input
               ref={inputRef}
@@ -47,7 +48,11 @@ const TitleRender = ({node, editNodeKey, handleRename, handleClick}: any) => {
             <Dropdown
               menu={{items: menuItems, onClick: (e) => handleClick(e, node)}}
               trigger={['contextMenu']}>
-              <div className={styles.menuTitleText}>{node.title}</div>
+              {
+                collapsed ?
+                  <div className={styles.menuTitleTextCollapsed}>{node.title}</div> :
+                  <div className={styles.menuTitleText}>{node.title}</div>
+              }
             </Dropdown>
             <div className={styles.menuTitleExtra}>
               {

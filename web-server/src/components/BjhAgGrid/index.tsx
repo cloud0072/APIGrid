@@ -1,6 +1,6 @@
-import {createContext, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {useContext, useEffect, useMemo, useRef} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
-import GridToolBar, {RowHeightItems} from "@/components/BjhAgGrid/toolbar";
+import GridToolBar from "@/components/BjhAgGrid/toolbar";
 import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
 import AddFieldCell from "@/components/BjhAgGrid/cell/AddFieldCell";
 import {AgGridReact} from "ag-grid-react";
@@ -20,6 +20,7 @@ import {useQueryDatasheet} from "@/models/datasheetState";
 import {useParams} from "react-router-dom";
 
 LicenseManager.prototype.validateLicense = () => true
+LicenseManager.prototype.isDisplayWatermark = () => false
 
 export type Column = {
   fieldId: string,
@@ -60,6 +61,7 @@ export type ColDef = {
   sortable?: boolean,
   lockPinned?: boolean,
   hide?: boolean,
+  rowGroup?: boolean,
   suppressNavigable?: boolean,
   headerName?: string,
   cellClass?: string,
@@ -67,6 +69,13 @@ export type ColDef = {
   lockPosition?: ("left" | "right"),
   cellRenderer?: any
 }
+
+export const defaultColDef = {
+  sortable: true,
+  resizable: true,
+  editable: true,
+  lockPinned: true,
+};
 
 const rowIndexCol: ColDef[] = [{
   field: "row_index",
@@ -93,26 +102,6 @@ const addFieldCol: ColDef[] = [{
   cellRenderer: AddFieldCell
 }];
 
-const defaultColDef = {
-  sortable: true,
-  resizable: true,
-  editable: true,
-  lockPinned: true,
-};
-
-export const GridContext = createContext({
-  rowData: [],
-  fieldMap: {},
-  setFieldMap: (fieldMap: any) => {
-  },
-  view: {},
-  setView: (view: View) => {
-  },
-  views: [],
-  setViews: (views: View[]) => {
-  },
-} as any);
-
 const BjhAgGrid = () => {
 
   const gridRef = useRef<any>(null); // Optional - for accessing Grid's API
@@ -122,64 +111,67 @@ const BjhAgGrid = () => {
     viewId, setViewId,
     checkAll, setCheckAll,
     checkedList, setCheckedList,
-    setRowData, setDatasheet,
-    setIndeterminate
+    rowData, setRowData,
+    view, setView,
+    fieldMap,
+    datasheet, setDatasheet,
+    setIndeterminate,
+    rowHeight,
+    setFieldVisible
   } = useGrid();
 
-  const {data: rowData, isLoading} = useQueryRecords(nodeId!);
-  const {data: datasheet} = useQueryDatasheet(nodeId!);
+  const {data: rowList, isLoading} = useQueryRecords(nodeId!);
+  const {data: dstMeta} = useQueryDatasheet(nodeId!);
 
   const {height} = useContext(LayoutContext);
   const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
-
-  const [fieldMap, setFieldMap] = useState<any>({});
-  const [views, setViews] = useState<View[]>([]);
-  const view = useMemo<View>(() => views?.find(v => v.id === viewId) ?? {} as any, [views, viewId]);
-
-  const setView = (view: View) => {
-    console.log('setView', view)
-    setViews((views: View[]) => {
-      return views.map(v => v.id === view.id ? view : v)
-    })
-  }
-
-  const localColDefs = useMemo<ColDef[]>(() => {
+  const colDefs = useMemo<ColDef[]>(() => {
     const local = view?.columns?.map(({fieldId, hidden}, index) => {
-      const flag = view?.groupInfo?.find(col => col.fieldId === fieldId);
+      const flag = !!view?.groupInfo?.find(col => col.fieldId === fieldId);
       const field = fieldMap[fieldId] as Field;
       return {
         ...defaultColDef,
         field: fieldId,
         hide: hidden || flag,
         headerName: field.name,
+        sortIndex: index + 1,
         rowGroup: flag,
-        sortIndex: index + 1
       } as ColDef
     }) || [];
     return rowIndexCol.concat(local).concat(addFieldCol);
-  }, [fieldMap, views])
-
-  const rowHeight = useMemo(() => {
-    const i = view ? view.rowHeightLevel : 0;
-    return RowHeightItems[i].height;
-  }, [view?.rowHeightLevel])
-
-  const getId = (params: any) => params.data.recId;
-
-  useEffect(() => {
-    if (datasheet) {
-      console.log('init datasheet', datasheet)
-      const {views, fieldMap} = datasheet;
-      setDatasheet(datasheet)
-      setViews(views);
-      setViewId(views?.[0]?.id)
-      setFieldMap(fieldMap)
-    }
   }, [datasheet])
 
+  const handleColumnMoved = (e: any) => {
+    const {finished, toIndex, column} = e
+    if (column && finished) {
+      const columns = JSON.parse(JSON.stringify(view.columns)) as Column[]
+      const index = columns.findIndex(col => col.fieldId === column.colId);
+      const col = columns[index];
+      columns.splice(index, 1);
+      columns.splice(toIndex - 1, 0, col);
+      setView(Object.assign({}, view, {columns}))
+    }
+  }
+
+  const handleColumnVisible = (e: any) => {
+    const {visible, column} = e
+    if (column) {
+      setFieldVisible(column.colId, !visible)
+    }
+  }
+
   useEffect(() => {
-    setRowData(rowData)
-  }, [rowData])
+    if (dstMeta) {
+      console.log('init datasheet', dstMeta)
+      const {views} = dstMeta;
+      setDatasheet(dstMeta)
+      setViewId(views?.[0]?.id)
+    }
+  }, [dstMeta])
+
+  useEffect(() => {
+    setRowData(rowList)
+  }, [rowList])
 
   useEffect(() => {
     gridRef?.current?.api && gridRef?.current?.api?.resetRowHeights();
@@ -216,35 +208,28 @@ const BjhAgGrid = () => {
 
   return (
     <div className="bjh-grid-body">
-      <GridContext.Provider value={{
-        rowData,
-        fieldMap,
-        setFieldMap,
-        view,
-        setView,
-        views,
-        setViews,
-      }}>
-        <GridToolBar/>
 
-        <Spin spinning={isLoading}>
-          <div className="ag-theme-alpine" style={gridStyle}>
-            <AgGridReact
-              ref={gridRef} // Ref for accessing Grid's API
-              rowData={rowData} // Row Data for Rows
-              columnDefs={localColDefs} // Column Defs for Columns
-              defaultColDef={defaultColDef} // Default Column Properties
-              getRowHeight={() => rowHeight}
-              getRowId={getId}
-              rowSelection='multiple' // Options - allows click selection of rows
-              groupDisplayType={'multipleColumns'}
-              suppressRowClickSelection={true}
-              animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-              components={{agColumnHeader: GridHeader}}
-            />
-          </div>
-        </Spin>
-      </GridContext.Provider>
+      <GridToolBar/>
+
+      <Spin spinning={isLoading}>
+        <div className="ag-theme-alpine" style={gridStyle}>
+          <AgGridReact
+            ref={gridRef} // Ref for accessing Grid's API
+            rowData={rowData} // Row Data for Rows
+            columnDefs={colDefs} // Column Defs for Columns
+            defaultColDef={defaultColDef} // Default Column Properties
+            getRowHeight={() => rowHeight}
+            getRowId={(params: any) => params.data.recId}
+            onColumnMoved={handleColumnMoved}
+            onColumnVisible={handleColumnVisible}
+            rowSelection='multiple' // Options - allows click selection of rows
+            groupDisplayType={'multipleColumns'}
+            suppressRowClickSelection={true}
+            animateRows={true} // Optional - set to 'true' to have rows animate when sorted
+            components={{agColumnHeader: GridHeader}}
+          />
+        </div>
+      </Spin>
     </div>
   );
 };
