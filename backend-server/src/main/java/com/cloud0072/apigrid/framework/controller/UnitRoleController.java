@@ -23,22 +23,22 @@ public class UnitRoleController extends BaseController<UnitRole> {
      * @param roleId
      * @return
      */
-    @GetMapping("/{roleId}/members")
+    @GetMapping("/{roleId}/users")
     public AjaxResult pageRoleUser(@PathVariable("roleId") Long roleId, HttpServletRequest request) {
         var page = getPageInfo(request, UnitRoleUser.class);
-        var roleMemberPage = unitRoleUserService.pageRoleUser(page, roleId);
-        return AjaxResult.success(roleMemberPage);
+        var roleUserPage = unitRoleUserService.pageRoleUser(page, roleId);
+        return AjaxResult.success(roleUserPage);
     }
 
-    @PostMapping("/{roleId}/members")
-    public AjaxResult insertRoleUser(@PathVariable("roleId") Long roleId, @RequestBody List<UnitRoleUser> roleMemberList) {
+    @PostMapping("/{roleId}/users")
+    public AjaxResult insertRoleUser(@PathVariable("roleId") Long roleId, @RequestBody List<UnitRoleUser> roleUserList) {
         var result = AjaxResult.success();
-        var ids = unitRoleUserService.insertRoleUser(roleId, roleMemberList);
+        var ids = unitRoleUserService.insertRoleUser(roleId, roleUserList);
         result.put("ids", ids);
         return result;
     }
 
-    @DeleteMapping("/{roleId}/members")
+    @DeleteMapping("/{roleId}/users")
     public AjaxResult removeRoleUser(@PathVariable("roleId") Long roleId, @RequestBody List<Long> unitIds) {
         var result = AjaxResult.success();
         if (unitIds.size() > 0) {

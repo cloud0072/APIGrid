@@ -4,26 +4,15 @@ import {theme, Tooltip, Tree} from "antd";
 import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
 import {t} from "@/utils/i18n";
 import EditTeamModal from "@/pages/system/user/modal/EditTeamModal";
-import {TeamTreeContext} from "@/pages/system/user";
+import {TeamConstant, TeamTreeContext} from "@/pages/system/user";
 import {UnitTeamApi} from "@/services/framework/UnitTeam";
 
 import styles from "@/pages/system/user/style.module.less";
 
-export interface ITreeNode {
-  title: string;
-  key: string;
-  value: string;
-  isLeaf: boolean;
-  children?: ITreeNode[];
-}
-
-const ConfigConstant = {
-  ROOT_TEAM_ID: '1'
-}
 const TEAM_OPERATE = 'TEAM_OPERATE';
 const TEAM_ROOT_OPERATE = 'TEAM_ROOT_OPERATE';
 
-const {DirectoryTree, TreeNode} = Tree;
+const {DirectoryTree} = Tree;
 const _ContextMenu: any = ContextMenu;
 const _MenuItem: any = MenuItem;
 const _ContextMenuTrigger: any = ContextMenuTrigger;
@@ -71,16 +60,16 @@ const TeamTree = () => {
     return (
       <_ContextMenuTrigger
         ref={nodeRef}
-        id={node.value === ConfigConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
+        id={node.value === TeamConstant.ROOT_TEAM_ID ? TEAM_ROOT_OPERATE : TEAM_OPERATE}
         holdToDisplay={-1}
         collect={() => onCollect(node)}
       >
         <Tooltip title={node.title} placement="bottomLeft">
           <div style={nodeStyle}>{node.title}</div>
         </Tooltip>
-        {node.value === ConfigConstant.ROOT_TEAM_ID &&
+        {node.value === TeamConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><PlusOutlined style={{visibility: 'visible'}}/></span>}
-        {node.value !== ConfigConstant.ROOT_TEAM_ID &&
+        {node.value !== TeamConstant.ROOT_TEAM_ID &&
         <span onClick={e => moreClick(e, nodeRef)}><MoreOutlined/></span>}
       </_ContextMenuTrigger>
     )

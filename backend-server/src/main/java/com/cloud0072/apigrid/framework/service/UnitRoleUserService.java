@@ -12,7 +12,7 @@ public interface UnitRoleUserService extends IService<UnitRoleUser> {
 
     IPage<UnitRoleUserVo> pageRoleUser(Page<UnitRoleUser> page, Long roleId);
 
-    List<Long> insertRoleUser(Long roleId, List<UnitRoleUser> roleMemberList);
+    List<Long> insertRoleUser(Long roleId, List<UnitRoleUser> roleUserList);
 
     int removeRoleUser(Long roleId, List<Long> unitIds);
 }

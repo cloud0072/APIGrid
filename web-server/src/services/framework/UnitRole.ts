@@ -5,27 +5,27 @@ const prefix = 'unitRole'
 
 export const UnitRoleApi = {
   ...getBaseApi(prefix),
-  getRoleMemberPage: ({roleId, pageInfo}: any) =>
+  getRoleUserPage: ({roleId, pageInfo}: any) =>
     request<any>({
-      path: `/${prefix}/${roleId}/members`,
+      path: `/${prefix}/${roleId}/users`,
       method: 'GET',
       query: pageInfo,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  insertRoleUser: ({roleId, roleMembers}: any) =>
+  insertRoleUser: ({roleId, roleUsers}: any) =>
     request<any>({
-      path: `/${prefix}/${roleId}/members`,
+      path: `/${prefix}/${roleId}/users`,
       method: 'POST',
-      body: roleMembers,
+      body: roleUsers,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
   deleteByUnitIds: ({roleId, unitIds}: any) => {
     return request<any>({
-      path: `/${prefix}/${roleId}/members`,
+      path: `/${prefix}/${roleId}/users`,
       method: 'DELETE',
       body: unitIds,
       secure: true,

@@ -117,7 +117,7 @@ public class UnitTeamServiceImpl extends ServiceImpl<UnitTeamMapper, UnitTeam> i
                 unitTeamVo.setHasChildren(true);
                 unitTeamVo.setHasChildrenTeam(true);
             } else {
-                // query whether the department has members
+                // query whether the department has users
                 unitTeamVo.setHasChildren(userCount > 0);
                 unitTeamVo.setHasChildrenTeam(false);
             }

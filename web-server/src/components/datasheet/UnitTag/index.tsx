@@ -10,7 +10,7 @@ const getAvatarColor = (avatarColor: number = 10) => {
 
 export const AvatarType: any = {
   Team: 'square',
-  Member: 'circle'
+  User: 'circle'
 }
 
 export function getFirstWordFromString(str: string) {
@@ -41,7 +41,7 @@ const UnitTag = (props: any) => {
     shape: AvatarType.Team
   } : avatar ? {
     src: avatar,
-    shape: AvatarType.Member
+    shape: AvatarType.User
   } : {
     style: {
       backgroundColor: getAvatarColor(avatarColor),

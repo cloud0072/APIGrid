@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import {t} from "@/utils/i18n";
 
-export const MenuRootId = '-1';
+export const MenuRootId = '0';
 
 export const FirstNodePreNodeId = '1'
 

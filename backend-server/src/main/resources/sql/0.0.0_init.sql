@@ -50,7 +50,7 @@ CREATE TABLE apigrid_unit_team_user
 (
     `id`          BIGINT ( 20 ) NOT NULL,
     `team_id`     BIGINT ( 20 ),
-    `member_id`   BIGINT ( 20 ),
+    `user_id`     BIGINT ( 20 ),
     `update_by`   BIGINT(20),
     `update_time` datetime ( 0 ),
     PRIMARY KEY (`id`)
@@ -114,18 +114,6 @@ CREATE TABLE apigrid_menu_node
     `cover`       VARCHAR(32),
     `icon`        VARCHAR(32),
     `node_type`   INT ( 1 ),
-    `is_deleted`  INT ( 1 ),
-    `create_by`   BIGINT(20),
-    `create_time` datetime ( 0 ),
-    `update_by`   BIGINT(20),
-    `update_time` datetime ( 0 ),
-    PRIMARY KEY (`id`)
-);
-CREATE TABLE apigrid_menu_node_rel
-(
-    `id`          BIGINT ( 20 ) NOT NULL,
-    `node_id`     VARCHAR(32),
-    `rel_node_id` VARCHAR(32),
     `is_deleted`  INT ( 1 ),
     `create_by`   BIGINT(20),
     `create_time` datetime ( 0 ),

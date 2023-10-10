@@ -14,7 +14,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [teamList, setTeamList] = useState<any>([])
-  const [memberList, setMemberList] = useState<any>([])
+  const [userList, setUserList] = useState<any>([])
   // const [clickedTeamId, setClickedTeamId] = useState<string>();
   const [checkedList, setCheckedList] = useState<any[]>([]);
 
@@ -32,9 +32,9 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
   const listSubUnit = useCallback((teamId: any) => {
     setLoading(true)
     UnitTeamApi.getSubUnitList({teamId}).then(response => {
-      const {teams, members} = response;
+      const {teams, users} = response;
       setTeamList(() => teams);
-      setMemberList(() => members);
+      setUserList(() => users);
     }).finally(() => {
       setLoading(false)
     })
@@ -155,7 +155,7 @@ const SelectMemberModal = ({source, onSelect, setModalOpen}: any) => {
                 )
               }
               {
-                memberList.map((unit: any) =>
+                userList.map((unit: any) =>
                   <div className={styles.checkItem} key={unit.unitId}>
                     <Checkbox value={unit.unitId} onClick={() => onChangeChecked(unit)}>
                       <div className={styles.memberItem}>

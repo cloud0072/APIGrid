@@ -14,5 +14,5 @@ public interface UnitTeamUserMapper extends BaseMapper<UnitTeamUser> {
 
     int countByTeamId(List<Long> teamIds);
 
-    List<Long> selectMemberIdsByTeamId(@Param("teamId") Long teamId);
+    List<Long> selectUserIdsByTeamId(@Param("teamId") Long teamId);
 }

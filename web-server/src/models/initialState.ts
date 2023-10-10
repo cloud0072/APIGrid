@@ -2,6 +2,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {atom, useAtomValue, useSetAtom} from 'jotai';
 import {convertUserRoutesToMenus, getRouteSettingMap} from "@/utils";
 import {MenuNodeApi} from "@/services/framework/MenuNode";
+import {sysGetUserInfo} from "@/services/framework/Login";
 
 const systemRoutes: any[] = [
   {
@@ -111,18 +112,15 @@ export const useQueryInitialState = () => {
   return useQuery(
     initialStateQueryKey,
     async () => {
-      const [userNodes] = await Promise.all([MenuNodeApi.getNodeTree()])
-      // console.log('userNodes.data', userNodes.data)
-      setMenuNodes(userNodes.data);
+      const [userInfo, userNodes] = await Promise.all([sysGetUserInfo(), MenuNodeApi.getNodeTree()])
+      setPermissions(new Set(userInfo?.data?.permissions));
 
-      // const [userInfo, userRoutes] = await Promise.all([sysGetUserInfo(), sysLoginGetRouters()]);
-      const userInfo = {nickName: 'cloud0072', permissions: []}
-      setPermissions(new Set(userInfo.permissions));
+      setMenuNodes(userNodes.data);
 
       const routeSettingMap = getRouteSettingMap(userRoutes);
       setKeepAliveRoutes(Object.keys(routeSettingMap).filter((i) => routeSettingMap[i].isKeepAlive));
 
-      return {userInfo, routeSettingMap, menus: convertUserRoutesToMenus(userRoutes)};
+      return {userInfo: userInfo.data, routeSettingMap, menus: convertUserRoutesToMenus(userRoutes)};
     },
     {
       cacheTime: Infinity,

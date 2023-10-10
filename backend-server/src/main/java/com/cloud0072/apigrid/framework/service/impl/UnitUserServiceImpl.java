@@ -56,7 +56,7 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
             var defaultPwd = apigridConfig.getDefaultPassword();
             vo.setPassword(defaultPwd);
         }
-        checkMember(vo);
+        checkUserInfo(vo);
 
         var unitUser = UnitUser.builder()
                 .id(vo.getUserId())
@@ -179,7 +179,7 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
 
     @Override
     public List<UnitUserVo> listByTeamId(Long teamId) {
-        // getting a member list
+        // getting a user list
         if (teamId != null && teamId != 0) {
             List<Long> unitUserIds = teamUserService.getUserIdsByTeamId(teamId);
             if (CollUtil.isNotEmpty(unitUserIds)) {
@@ -217,7 +217,7 @@ public class UnitUserServiceImpl extends ServiceImpl<UnitUserMapper, UnitUser>
         return loginUser;
     }
 
-    private void checkMember(UnitTeamUserVo unitUser) {
+    private void checkUserInfo(UnitTeamUserVo unitUser) {
         String mobile = unitUser.getMobile();
         if (StringUtils.isNotEmpty(mobile)) {
             UnitUser user1 = baseMapper.selectUserByMobile(mobile);

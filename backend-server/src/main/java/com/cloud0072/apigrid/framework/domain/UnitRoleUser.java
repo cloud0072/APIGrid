@@ -35,7 +35,7 @@ public class UnitRoleUser extends BaseEntity {
     private Long unitRefId;
 
     /**
-     * 1: Department；3: Member
+     * 1: Department；3: User
      */
     private Integer unitType;
 

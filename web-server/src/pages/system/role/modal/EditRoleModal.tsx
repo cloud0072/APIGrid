@@ -2,14 +2,12 @@ import {Form, Input, Modal} from "antd";
 import {t} from "@/utils/i18n";
 import React, {useContext, useState} from "react";
 import styles from '../style.module.less';
-import {UnitTeamApi} from "@/services/framework/UnitTeam";
-import {TeamTreeContext} from "@/pages/system/user";
-import {RoleMemberContext} from "@/pages/system/role";
+import {RoleUserContext} from "@/pages/system/role";
 import {UnitRoleApi} from "@/services/framework/UnitRole";
 
 const EditRoleModal = ({setEditRoleModalOpen, current}: any) => {
 
-  const {listUnitRole} = useContext(RoleMemberContext);
+  const {listUnitRole} = useContext(RoleUserContext);
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState<any>('vertical');
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,7 +40,7 @@ const EditRoleModal = ({setEditRoleModalOpen, current}: any) => {
 
   return (<Modal
     title={<TitleRender/>}
-    width={800}
+    width={600}
     open={true}
     onOk={handleOk}
     onCancel={handleCancel}

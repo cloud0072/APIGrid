@@ -3,7 +3,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from "reac
 import {Button, Table} from "antd";
 import {t} from "@/utils/i18n";
 import SelectMemberModal from "@/pages/system/user/modal/SelectMemberModal";
-import {RoleMemberContext, UnitType} from "@/pages/system/role";
+import {RoleUserContext, UnitType} from "@/pages/system/role";
 import {UnitRoleApi} from "@/services/framework/UnitRole";
 import {Constants} from "@/utils/constants";
 import UnitItem from "@/pages/system/role/UnitItem";
@@ -40,19 +40,19 @@ const initPageInfo = {pageNum: 0, pageSize: 10}
 
 const RoleMember = () => {
 
-  const {roleId, roleList} = useContext(RoleMemberContext);
+  const {roleId, roleList} = useContext(RoleUserContext);
   const [pageInfo, setPageInfo] = useState({...initPageInfo});
-  const [roleMemberList, setRoleMemberList] = useState<any>([]);
+  const [roleUserList, setRoleUserList] = useState<any>([]);
   const [selectedUnitIds, setSelectedUnitIds] = useState<any>([]);
   const [selectMemberModalOpen, setSelectMemberModalOpen] = useState<any>(false);
 
   const listRoleMember = useCallback(() => {
-    if (roleId === 0) {
+    if (!roleId) {
       return
     }
-    UnitRoleApi.getRoleMemberPage({roleId, pageInfo}).then(response => {
+    UnitRoleApi.getRoleUserPage({roleId, pageInfo}).then(response => {
       const {records} = response.data;
-      setRoleMemberList(() => records);
+      setRoleUserList(() => records);
       setSelectedUnitIds([]);
     })
   }, [roleId, pageInfo])
@@ -66,7 +66,6 @@ const RoleMember = () => {
   }, [])
 
   const deleteRoleMember = useCallback((unit: any = undefined) => {
-    console.log('deleteRoleMember', unit)
     const unitIds = []
     if (unit) {
       unitIds.push(getRowKey(unit))
@@ -85,7 +84,6 @@ const RoleMember = () => {
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       setSelectedUnitIds(selectedRowKeys)
     }
   }
@@ -93,11 +91,11 @@ const RoleMember = () => {
   const getRowKey = (data: any) => data.unitId;
 
   const onSubmit = (unitList: any[]) => {
-    const roleMembers = unitList.map(unit => {
+    const roleUsers = unitList.map(unit => {
       const {teamId, userId} = unit;
-      return {unitRefId: teamId ? teamId : userId, unitType: teamId ? UnitType.Team : UnitType.Member}
+      return {unitRefId: teamId ? teamId : userId, unitType: teamId ? UnitType.Team : UnitType.User}
     })
-    UnitRoleApi.insertRoleUser({roleId, roleMembers}).then(() => {
+    UnitRoleApi.insertRoleUser({roleId, roleUsers}).then(() => {
       listRoleMember()
     })
   }
@@ -113,7 +111,7 @@ const RoleMember = () => {
         <Table
           {...tableProps({onDelete: deleteRoleMember})}
           size={'middle'}
-          dataSource={roleMemberList}
+          dataSource={roleUserList}
           pagination={false}
           rowSelection={rowSelection}
           rowKey={getRowKey}

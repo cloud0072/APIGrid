@@ -31,20 +31,20 @@ export const RecordApi = (dstId: string) => ({
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  insertBatch: (data: any) =>
+  insertBatch: ({type, records}: any) =>
     request<any>({
-      path: `/${prefix}/${dstId}/`,
+      path: `/${prefix}/${dstId}?type=${type}`,
       method: 'POST',
-      body: data,
+      body: records,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
-  updateBatch: (data: any) =>
+  updateBatch: ({type, records}: any) =>
     request<any>({
-      path: `/${prefix}/${dstId}/`,
+      path: `/${prefix}/${dstId}?type=${type}`,
       method: 'PUT',
-      body: data,
+      body: records,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,

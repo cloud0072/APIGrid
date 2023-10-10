@@ -1,4 +1,4 @@
-import {Button, Dropdown, message, Radio, Select, Space, Switch, theme, Tooltip} from "antd";
+import {Button, Dropdown, message, Popover, Radio, Select, Space, Switch, theme, Tooltip} from "antd";
 import BjhDropdown from "@/components/BjhDropdown";
 import {MacScrollbar} from "mac-scrollbar";
 import BjhDragList from "@/components/BjhDragList";
@@ -260,13 +260,13 @@ const GridToolbar = () => {
       <div className="bjh-grid-option-blank"/>
       <div className="bjh-grid-option-right">
         <Space>
-          <Tooltip title={'保存设置'}>
+          <Popover content={'保存设置'}>
             <Button
               type="text"
               onClick={handleSaveDst}
               icon={<SaveOutlined style={{color: token.colorPrimary}}/>}
             />
-          </Tooltip>
+          </Popover>
           <Dropdown.Button
             type="primary"
             icon={(<IconFont type="ant-down"/>)}

@@ -32,18 +32,18 @@ public class UnitUserController extends BaseController<UnitUser> {
         isDeleted = StringUtils.isEmpty(isDeleted) ? "0" : isDeleted;
         var teamId = request.getParameter("teamId");
         if (teamId == null || "0".equals(teamId)) {
-            var pageMemberUserVo = unitUserService.pageTeamUserByRootTeamId(page, isDeleted);
-            return AjaxResult.success(pageMemberUserVo);
+            var pageUserUserVo = unitUserService.pageTeamUserByRootTeamId(page, isDeleted);
+            return AjaxResult.success(pageUserUserVo);
         } else {
             List<Long> teamIds = unitTeamService.getAllTeamIdsInTeamTree(Long.valueOf(teamId));
-            var pageMemberUserVo = unitUserService.pageTeamUserByTeamIds(page, teamIds, isDeleted);
-            return AjaxResult.success(pageMemberUserVo);
+            var pageUserUserVo = unitUserService.pageTeamUserByTeamIds(page, teamIds, isDeleted);
+            return AjaxResult.success(pageUserUserVo);
         }
     }
 
 //    @Override
-//    protected AjaxResult selectEntityPage(UnitUser unitMember, HttpServletRequest request) {
-//        return super.selectEntityPage(unitMember, request);
+//    protected AjaxResult selectEntityPage(UnitUser unitUser, HttpServletRequest request) {
+//        return super.selectEntityPage(unitUser, request);
 //    }
 
     @PostMapping("/registerUnitUser")
@@ -63,8 +63,8 @@ public class UnitUserController extends BaseController<UnitUser> {
 
     @GetMapping("/getTeamUserById/{id}")
     public AjaxResult getTeamUserById(@PathVariable("id") String id) {
-        var memberUserVo = unitUserService.getTeamUserById(id);
-        return AjaxResult.success(memberUserVo);
+        var teamUserVo = unitUserService.getTeamUserById(id);
+        return AjaxResult.success(teamUserVo);
     }
 
 }

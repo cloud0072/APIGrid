@@ -5,7 +5,7 @@ const prefix = 'unitTeam'
 
 export const UnitTeamApi = {
   ...getBaseApi(prefix),
-  getTeamTree: (query: any, options: any = {}) =>
+  getTeamTree: (query?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/getTeamTree`,
       method: 'GET',
@@ -15,7 +15,7 @@ export const UnitTeamApi = {
       skipErrorHandler: false,
       ...options,
     }),
-  getSubUnitList: (query: any, options: any = {}) =>
+  getSubUnitList: (query?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/getSubUnitList`,
       method: 'GET',

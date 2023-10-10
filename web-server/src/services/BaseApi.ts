@@ -1,7 +1,7 @@
 import {ContentType, request} from "@/utils";
 
 export const getBaseApi = (prefix: string) => ({
-  getPage: (query: any, options: any = {}) =>
+  getPage: (query?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/page`,
       method: 'GET',
@@ -11,7 +11,7 @@ export const getBaseApi = (prefix: string) => ({
       skipErrorHandler: false,
       ...options,
     }),
-  getList: (query: any, options: any = {}) =>
+  getList: (query?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/list`,
       method: 'GET',

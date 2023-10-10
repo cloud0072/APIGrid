@@ -129,8 +129,7 @@
         vom.is_locked as isLocked,
         vom.is_admin as isAdmin,
         IF(vom.mobile != '' or vom.mobile is not null, CONCAT(LEFT(vom.mobile,3), '****' ,RIGHT(vom.mobile,4)),
-        vom.mobile)
-        as mobile,
+        vom.mobile) as mobile,
         vom.email,
         vom.avatar,
         vom.avatar_color as avatarColor,
@@ -138,7 +137,7 @@
         FROM ${tablePrefix}unit_user vom
         LEFT JOIN ${tablePrefix}unit vou on vom.id = vou.unit_ref_id AND vou.is_deleted = 0
         LEFT JOIN ${tablePrefix}unit_team_user voutmr on vom.id = voutmr.user_id
-        LEFT JOIN ${tablePrefix}unit_team vout on voutmr.team_id = vout.id AND vout.parent_id != 0
+        LEFT JOIN ${tablePrefix}unit_team vout on voutmr.team_id = vout.id
         WHERE vom.id IN
         <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
             #{item}

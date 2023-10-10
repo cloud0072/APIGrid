@@ -43,34 +43,34 @@ public class UnitRoleUserServiceImpl extends ServiceImpl<UnitRoleUserMapper, Uni
         var query = new QueryWrapper<UnitRoleUser>().eq("role_id", roleId);
         var pageInfo = unitRoleUserMapper.selectPage(page, query);
         var teamList = convertTeam(pageInfo.getRecords());
-        var memberList = convertMember(pageInfo.getRecords());
+        var userList = convertUser(pageInfo.getRecords());
         return pageInfo.convert(record -> {
             if (record.getUnitType() == 1) {
                 return teamList.stream().filter(t -> t.getUnitRefId().equals(record.getUnitRefId())).findFirst().get();
             } else {
-                return memberList.stream().filter(m -> m.getUnitRefId().equals(record.getUnitRefId())).findFirst().get();
+                return userList.stream().filter(m -> m.getUnitRefId().equals(record.getUnitRefId())).findFirst().get();
             }
         });
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<Long> insertRoleUser(Long roleId, List<UnitRoleUser> roleMemberList) {
-        var members = new ArrayList<UnitRoleUser>();
-        if (!roleMemberList.isEmpty()) {
+    public List<Long> insertRoleUser(Long roleId, List<UnitRoleUser> roleUserList) {
+        var users = new ArrayList<UnitRoleUser>();
+        if (!roleUserList.isEmpty()) {
             var query = new QueryWrapper<UnitRoleUser>().select("unit_ref_id").eq("role_id", roleId);
             var existIds = unitRoleUserMapper.selectList(query).stream().map(UnitRoleUser::getUnitRefId).collect(Collectors.toList());
-            roleMemberList.stream()
+            roleUserList.stream()
                     .filter(rm -> !existIds.contains(rm.getUnitRefId()))
-                    .forEach(rm -> members.add(UnitRoleUser.builder()
+                    .forEach(rm -> users.add(UnitRoleUser.builder()
                             .roleId(roleId)
                             .unitType(rm.getUnitType())
                             .unitRefId(rm.getUnitRefId())
                             .updateBy(SecurityUtils.getUserId())
                             .updateTime(new Date())
                             .build()));
-            saveBatch(members);
-            return members.stream().map(UnitRoleUser::getId).collect(Collectors.toList());
+            saveBatch(users);
+            return users.stream().map(UnitRoleUser::getId).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -97,9 +97,9 @@ public class UnitRoleUserServiceImpl extends ServiceImpl<UnitRoleUserMapper, Uni
      * @param records
      * @return
      */
-    private List<UnitRoleUserVo> convertMember(List<UnitRoleUser> records) {
-        var members = records.stream().filter(rm -> rm.getUnitType() == 3).collect(Collectors.toList());
-        var refIds = members.stream().map(UnitRoleUser::getUnitRefId).collect(Collectors.toList());
+    private List<UnitRoleUserVo> convertUser(List<UnitRoleUser> records) {
+        var users = records.stream().filter(rm -> rm.getUnitType() == 3).collect(Collectors.toList());
+        var refIds = users.stream().map(UnitRoleUser::getUnitRefId).collect(Collectors.toList());
         return refIds.isEmpty() ? new ArrayList<>() : unitUserMapper.getRoleUserByIds(refIds);
     }
 

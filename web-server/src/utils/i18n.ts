@@ -8,7 +8,7 @@ export const t = {
   // modal
   unit_modal_select_title: '选择成员/小组',
   unit_modal_select_search: '搜索成员/小组',
-  // member
+  // user
   user_table_title: '成员管理',
   user_table_create: '创建成员',
   user_modal_title_create: '创建用户',

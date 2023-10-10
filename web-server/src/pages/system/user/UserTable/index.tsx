@@ -8,9 +8,9 @@ import BaseAvatar from "@/components/BaseAvatar";
 import EditPasswordModal from "@/pages/system/user/modal/EditPasswordModal";
 import {ColumnsType} from "antd/lib/table";
 
-const MemberTable = () => {
+const UserTable = () => {
 
-  const {memberList} = useContext(TeamTreeContext);
+  const {userList} = useContext(TeamTreeContext);
   const [member, setMember] = useState<any>({});
   const [editMemberModalOpen, setEditMemberModalOpen] = useState<any>(false);
   const [editPasswordModalOpen, setEditPasswordModalOpen] = useState<any>(false);
@@ -83,7 +83,7 @@ const MemberTable = () => {
         <Table
           columns={columns}
           size={'middle'}
-          dataSource={memberList}
+          dataSource={userList}
           pagination={false}
           rowKey={record => String(record.userId)}
           // scroll={{ y: scrollHeight }}
@@ -101,4 +101,4 @@ const MemberTable = () => {
   )
 };
 
-export default MemberTable;
+export default UserTable;

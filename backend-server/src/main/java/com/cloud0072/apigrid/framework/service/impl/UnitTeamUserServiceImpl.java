@@ -13,7 +13,7 @@ public class UnitTeamUserServiceImpl extends ServiceImpl<UnitTeamUserMapper, Uni
 
     @Override
     public List<Long> getUserIdsByTeamId(Long teamId) {
-        return baseMapper.selectMemberIdsByTeamId(teamId);
+        return baseMapper.selectUserIdsByTeamId(teamId);
     }
 }
 

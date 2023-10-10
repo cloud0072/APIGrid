@@ -147,9 +147,8 @@ public class RedisCache {
      */
     public <T> BoundSetOperations<String, T> setCacheSet(final String key, final Set<T> dataSet) {
         BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
-        Iterator<T> it = dataSet.iterator();
-        while (it.hasNext()) {
-            setOperation.add(it.next());
+        for (T t : dataSet) {
+            setOperation.add(t);
         }
         return setOperation;
     }

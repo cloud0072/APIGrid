@@ -8,15 +8,15 @@ import RoleMember from "@/pages/system/role/RoleMember";
 
 export const UnitType = {
   Team: 1,
-  Member: 3
+  User: 3
 }
 
-export const RoleMemberContext = createContext({
+export const RoleUserContext = createContext<any>({
   roleId: undefined,
   roleList: [],
   setRoleId: undefined,
   setRoleList: undefined,
-} as any)
+})
 
 const PageRoleList = () => {
   const [roleId, setRoleId] = useState(0);
@@ -37,7 +37,7 @@ const PageRoleList = () => {
   return (
     <BasePageContainer>
       <div className={'base-panel'}>
-        <RoleMemberContext.Provider value={{
+        <RoleUserContext.Provider value={{
           roleId,
           roleList,
           setRoleId,
@@ -48,7 +48,7 @@ const PageRoleList = () => {
             <RoleList/>
             <RoleMember/>
           </BjhSplitPane>
-        </RoleMemberContext.Provider>
+        </RoleUserContext.Provider>
       </div>
     </BasePageContainer>
   )

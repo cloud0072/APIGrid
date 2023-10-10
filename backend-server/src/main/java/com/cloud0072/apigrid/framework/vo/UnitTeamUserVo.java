@@ -17,7 +17,7 @@ import java.util.Date;
 public class UnitTeamUserVo {
 
     /**
-     * member
+     * user
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;

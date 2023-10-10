@@ -23,7 +23,7 @@ public class MenuNodeServiceImpl extends ServiceImpl<MenuNodeMapper, MenuNode> i
     @Override
     public List<TreeNode> getNodeTree(QueryWrapper<MenuNode> wrapper) {
         var dataList = baseMapper.selectList(wrapper);
-        var treeList = TreeUtils.buildTree(dataList, "-1", "nodeType", "icon", "preNodeId");
+        var treeList = TreeUtils.buildTree(dataList, "0", "nodeType", "icon", "preNodeId");
         return TreeUtils.sortByPreNodeId(treeList);
     }
 

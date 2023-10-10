@@ -36,9 +36,9 @@ public class UnitTeamController extends BaseController<UnitTeam> {
     public AjaxResult getSubUnitList(Long teamId) {
         var result = AjaxResult.success();
         List<UnitTeamVo> teams = unitTeamService.listByTeamId(teamId);
-        List<UnitUserVo> members = unitUserService.listByTeamId(teamId);
+        List<UnitUserVo> users = unitUserService.listByTeamId(teamId);
         result.put("teams", teams);
-        result.put("members", members);
+        result.put("users", users);
         return result;
     }
 

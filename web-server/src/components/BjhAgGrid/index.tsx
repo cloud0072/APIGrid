@@ -18,6 +18,7 @@ import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {useQueryRecords} from "@/models/recordState";
 import {useQueryDatasheet} from "@/models/datasheetState";
 import {useParams} from "react-router-dom";
+import {RecordApi} from "@/services/datasheet/Record";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
@@ -84,7 +85,7 @@ const rowIndexCol: ColDef[] = [{
   editable: false,
   resizable: false,
   lockPinned: true,
-  pinned: "left",
+  lockPosition: 'left',
   suppressNavigable: true,
   cellClass: 'no-border',
   cellRenderer: RowIndexCell
@@ -170,6 +171,19 @@ const BjhAgGrid = () => {
     }
   }
 
+  const handleCellValueChanged = (e: any) => {
+    console.log('handleCellValueChanged', e)
+    const {column, data, value} = e;
+    // 发送给后端计算，然后获取新的行数据替换旧数据
+    if (column) {
+      console.log('RecordApi(nodeId).updateBatch')
+      const fieldId = column.colId as string;
+      const recId = data.recId;
+      const records = [{recId, ...{[fieldId]: value}}]
+      RecordApi(nodeId).updateBatch({type: 'fieldId', records})
+    }
+  }
+
   useEffect(() => {
     if (dstMeta) {
       console.log('init datasheet', dstMeta)
@@ -233,6 +247,7 @@ const BjhAgGrid = () => {
             onColumnMoved={handleColumnMoved}
             onColumnVisible={handleColumnVisible}
             onColumnResized={handleColumnResized}
+            onCellValueChanged={handleCellValueChanged}
             rowSelection='multiple' // Options - allows click selection of rows
             groupDisplayType={'multipleColumns'}
             suppressRowClickSelection={true}

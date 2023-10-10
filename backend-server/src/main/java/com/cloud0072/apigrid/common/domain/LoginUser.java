@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * 用户
@@ -16,7 +17,6 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
 public class LoginUser implements UserDetails {
 
     private Long userId;
@@ -50,14 +50,19 @@ public class LoginUser implements UserDetails {
      */
     private Integer isDeleted;
 
-    private String token;
-
     private Long loginTime;
 
     private Long expireTime;
 
+    private Set<String> permissions;
+
+    @JsonIgnore
+    private String token;
+
+    @JsonIgnore
     private String ipaddr;
 
+    @JsonIgnore
     private String browser;
 
 //    /**

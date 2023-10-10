@@ -4,11 +4,12 @@ import {DeleteOutlined, EditOutlined, MoreOutlined, UserOutlined} from "@ant-des
 import {Button, theme, Tooltip} from "antd";
 import {ContextMenu, ContextMenuTrigger, MenuItem} from "react-contextmenu";
 import {t} from "@/utils/i18n";
-import {RoleMemberContext} from "@/pages/system/role";
+import {RoleUserContext} from "@/pages/system/role";
 import EditRoleModal from "@/pages/system/role/modal/EditRoleModal";
 import {Scrollbars} from 'react-custom-scrollbars';
 import classNames from "classnames";
 import {UnitRoleApi} from "@/services/framework/UnitRole";
+import {MacScrollbar} from "mac-scrollbar";
 
 const ROLE_OPERATE = 'ROLE_OPERATE'
 const _ContextMenuTrigger: any = ContextMenuTrigger;
@@ -16,7 +17,7 @@ const _ContextMenu: any = ContextMenu;
 const _MenuItem: any = MenuItem;
 
 const RoleList = () => {
-  const {roleId, setRoleId, roleList, listUnitRole} = useContext(RoleMemberContext);
+  const {roleId, setRoleId, roleList, listUnitRole} = useContext(RoleUserContext);
 
   const {useToken} = theme;
   const {token} = useToken();
@@ -77,9 +78,12 @@ const RoleList = () => {
       <div className={styles.panelBtn}>
         <Button style={addBtnStyle} onClick={handleAddRoleClick}>{t.role_list_create}</Button>
       </div>
-      <Scrollbars style={{width: '100%', height: '100%'}}>
+      <MacScrollbar style={{width: '100%', height: '100%'}}>
         {roleList.map((item: any) => renderRole(item))}
-      </Scrollbars>
+      </MacScrollbar>
+      {/*<Scrollbars style={{width: '100%', height: '100%'}}>
+        {roleList.map((item: any) => renderRole(item))}
+      </Scrollbars>*/}
       {editRoleModalOpen && <EditRoleModal setEditRoleModalOpen={setEditRoleModalOpen} current={current}/>}
       <>
         <_ContextMenu id={ROLE_OPERATE}>

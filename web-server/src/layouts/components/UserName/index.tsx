@@ -1,14 +1,15 @@
+import type {FC} from 'react';
+import {useEffect, useState} from "react";
 import {useLogout} from '@/hooks';
 import {useQueryInitialState} from '@/models';
 import {BgColorsOutlined, LogoutOutlined, ProfileOutlined, UserOutlined} from '@ant-design/icons';
 import type {MenuProps} from 'antd';
 import {Avatar, Button, Dropdown, Modal, Space, theme} from 'antd';
-import type {FC} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useEffect, useState} from "react";
 import {useTheme} from "@/hooks/useTheme";
 import {layoutThemeList} from "@/utils/theme";
 import IconFont from "@/components/IconFont";
+import styles from './style.module.less';
 
 enum MenuKey {
   PROFILE = 'PROFILE',
@@ -37,7 +38,7 @@ const items: MenuProps['items'] = [
   },
 ];
 
-const UserName: FC = () => {
+const Index: FC = () => {
   const {data} = useQueryInitialState();
 
   const navigate = useNavigate();
@@ -75,22 +76,17 @@ const UserName: FC = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('data?.userInfo?.avatar', data?.userInfo?.avatar)
+  }, [data])
+
   return (
     <>
       <Dropdown menu={{items, onClick: ({key}) => handleMenuClick(key as MenuKey)}} placement="bottom" arrow>
-        <Button type="text">
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            height: '22px'
-          }}>
-            <Avatar icon={<UserOutlined/>} size="small"/>
-            <span style={{
-              color: 'white',
-              marginInline: '8px'
-            }}>{data?.userInfo?.nickName ?? ''}</span>
-          </div>
-        </Button>
+        <div className={styles.userName}>
+          <Avatar src={data?.userInfo?.avatar} size="small"/>
+          <span style={{color: 'white', marginInline: '8px'}}>{data?.userInfo?.nickName ?? ''}</span>
+        </div>
       </Dropdown>
       <Modal
         title="外观和配色"
@@ -100,12 +96,12 @@ const UserName: FC = () => {
         onOk={() => handleThemeModal(false)}
         onCancel={onCancelTheme}
       >
-        <div className="theme-color">
-          <div className="theme-color-title">配色</div>
-          <div className="theme-color-list">
+        <div className={'theme-color'}>
+          <div className={'theme-color-title'}>配色</div>
+          <div className={'theme-color-list'}>
             {layoutThemeList.map(item => (
               <div
-                className="theme-color-block"
+                className={'theme-color-block'}
                 key={item.mode}
                 style={{backgroundColor: item.colorPrimary}}
                 onClick={() => setThemeMode(item.mode)}
@@ -122,4 +118,4 @@ const UserName: FC = () => {
   );
 };
 
-export default UserName;
+export default Index;

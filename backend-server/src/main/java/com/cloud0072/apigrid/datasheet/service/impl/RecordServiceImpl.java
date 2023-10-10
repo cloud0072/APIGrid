@@ -99,8 +99,12 @@ public class RecordServiceImpl implements RecordService {
                 .stream().collect(Collectors.toMap(j -> j.getStr("recId"), j -> j));
         var result = new ArrayList<JSONObject>();
         jsonList.stream()
-                .map(json -> transformToId(dst, json))
+                // 转化行
+                .map(json -> "fieldId".equals(type) ? json : transformToId(dst, json))
+                // 合并值
                 .map(json -> mergeFields(pervs, json))
+                // TODO: 公式字段
+//                .map(json -> calcFormula(dst, json))
                 .filter(Objects::nonNull)
                 .map(this::setUpdateInfo)
                 .forEach(json -> {
