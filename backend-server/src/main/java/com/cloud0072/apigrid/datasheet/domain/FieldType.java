@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum FieldType {
-    TEXT(1),        //文本
+    TEXT(1),        //单行文本
     NUMBER(2),      //数字
     DATETIME(3),    //日期
     SELECT(4),      //选项
@@ -15,6 +15,8 @@ public enum FieldType {
     //    LINK(7),      //神奇关联
 //    LOOKUP(8),    //神奇引用
 //    CALC(9),      //智能公式
+    RICH_TEXT(10),      //多行文本
+    CHECKBOX(11),      //勾选
     NOT_SUPPORT(99),//未知
     ;
 

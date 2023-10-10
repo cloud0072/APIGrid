@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import {Checkbox, theme} from "antd";
 import IconFont from "@/components/IconFont";
-import styles from '../header/style.module.less';
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {ICellRendererParams} from "ag-grid-community";
+import styles from '../header/style.module.less';
 
 const RowIndexCell = (params: ICellRendererParams) => {
   const {node, data} = params;

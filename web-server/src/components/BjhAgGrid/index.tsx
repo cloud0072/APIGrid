@@ -2,7 +2,6 @@ import {useContext, useEffect, useMemo, useRef} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
 import GridToolBar from "@/components/BjhAgGrid/toolbar";
 import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
-import AddFieldCell from "@/components/BjhAgGrid/cell/AddFieldCell";
 import {AgGridReact} from "ag-grid-react";
 
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -19,6 +18,7 @@ import {useQueryRecords} from "@/models/recordState";
 import {useQueryDatasheet} from "@/models/datasheetState";
 import {useParams} from "react-router-dom";
 import {RecordApi} from "@/services/datasheet/Record";
+import dayjs from "dayjs";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
@@ -83,11 +83,12 @@ const rowIndexCol: ColDef[] = [{
   field: "row_index",
   width: 80,
   editable: false,
+  sortable: false,
   resizable: false,
   lockPinned: true,
   lockPosition: 'left',
   suppressNavigable: true,
-  cellClass: 'no-border',
+  cellClass: 'no-focus-border',
   cellRenderer: RowIndexCell
 }];
 
@@ -100,9 +101,69 @@ const addFieldCol: ColDef[] = [{
   lockPinned: true,
   lockPosition: 'right',
   suppressNavigable: true,
-  cellClass: 'no-border',
-  cellRenderer: AddFieldCell
+  cellClass: 'no-focus-border'
 }];
+//   TEXT(1),        //单行文本
+//   NUMBER(2),      //数字
+//   DATETIME(3),    //日期
+//   SELECT(4),      //选项
+//   FILE(5),        //附件
+//   MEMBER(6),      //成员
+// //    LINK(7),      //神奇关联
+// //    LOOKUP(8),    //神奇引用
+// //    CALC(9),      //智能公式
+//   RICH_TEXT(10),      //多行文本
+//   NOT_SUPPORT(99),//未知
+export const FieldTypeOptions = [
+  {value: 1, label: '单行文本'},
+  {value: 10, label: '多行文本'},
+  {value: 2, label: '数字'},
+  {value: 3, label: '日期'},
+  {value: 4, label: '选项'},
+  {value: 5, label: '附件'},
+  {value: 6, label: '成员'},
+  {value: 11, label: '勾选'},
+]
+
+const getCellConf = (fieldType: number) => {
+  switch (fieldType) {
+    case 1:
+      return {
+        cellEditor: 'agTextCellEditor'
+      }
+    case 2:
+      return {
+        cellEditor: 'agNumberCellEditor'
+      }
+    case 3:
+      return {
+        cellEditor: 'agDateStringCellEditor',
+        valueFormatter: (params: any) => params.value ? dayjs(params.value).format('YYYY-MM-DD') : params.value
+      }
+    case 4:
+      return {
+        cellEditor: 'agSelectCellEditor'
+      }
+    case 10:
+      return {
+        cellEditor: 'agLargeTextCellEditor',
+        cellEditorPopup: true,
+        cellEditorParams: {
+          maxLength: 200,
+          rows: 10,
+        }
+      }
+    case 11:
+      return {
+        cellEditor: 'agCheckboxCellEditor',
+        cellRenderer: 'agCheckboxCellRenderer'
+      }
+    default:
+      return {
+        cellEditor: 'agTextCellEditor'
+      }
+  }
+}
 
 const BjhAgGrid = () => {
 
@@ -128,10 +189,12 @@ const BjhAgGrid = () => {
 
   const {height} = useContext(LayoutContext);
   const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
+
   const colDefs = useMemo<ColDef[]>(() => {
     const local = view?.columns?.map(({fieldId, hidden, width}, index) => {
       const flag = !!view?.groupInfo?.find(col => col.fieldId === fieldId);
       const field = fieldMap[fieldId] as Field;
+      const cellConf = getCellConf(field.type);
       return {
         ...defaultColDef,
         field: fieldId,
@@ -140,6 +203,7 @@ const BjhAgGrid = () => {
         headerName: field.name,
         sortIndex: index + 1,
         rowGroup: flag,
+        ...cellConf
       } as ColDef
     }) || [];
     return rowIndexCol.concat(local).concat(addFieldCol);
@@ -172,11 +236,10 @@ const BjhAgGrid = () => {
   }
 
   const handleCellValueChanged = (e: any) => {
-    console.log('handleCellValueChanged', e)
     const {column, data, value} = e;
     // 发送给后端计算，然后获取新的行数据替换旧数据
     if (column) {
-      console.log('RecordApi(nodeId).updateBatch')
+      console.log('RecordApi(nodeId).updateBatch', e)
       const fieldId = column.colId as string;
       const recId = data.recId;
       const records = [{recId, ...{[fieldId]: value}}]
