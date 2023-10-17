@@ -1,0 +1,36 @@
+.fileDropdown {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  border-radius: 8px;
+  background: white;
+
+  .fileUpload {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 8px;
+  }
+
+  .fileBottom {
+    display: flex;
+    padding: 0 8px;
+
+    .fileBottomLeft {
+      width: 100%;
+    }
+
+    .fileBottomRight {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.uploadContainer {
+  width: 100%;
+  height: 100%;
+  border: 1px solid transparent;
+
+  &:focus {
+    border-color: dodgerblue;
+  }
+}

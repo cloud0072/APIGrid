@@ -1,4 +1,4 @@
-import {useContext, useEffect, useMemo, useRef} from "react";
+import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
 import GridToolBar from "@/components/BjhAgGrid/toolbar";
 import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
@@ -19,6 +19,9 @@ import {useQueryDatasheet} from "@/models/datasheetState";
 import {useParams} from "react-router-dom";
 import {RecordApi} from "@/services/datasheet/Record";
 import dayjs from "dayjs";
+import {useQueryUsers} from "@/models/unitState";
+import FileAssetEditor from "@/components/BjhAgGrid/cell/FileAssetEditor";
+import FileAssetCell from "@/components/BjhAgGrid/cell/FileAssetCell";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
@@ -103,17 +106,7 @@ const addFieldCol: ColDef[] = [{
   suppressNavigable: true,
   cellClass: 'no-focus-border'
 }];
-//   TEXT(1),        //单行文本
-//   NUMBER(2),      //数字
-//   DATETIME(3),    //日期
-//   SELECT(4),      //选项
-//   FILE(5),        //附件
-//   MEMBER(6),      //成员
-// //    LINK(7),      //神奇关联
-// //    LOOKUP(8),    //神奇引用
-// //    CALC(9),      //智能公式
-//   RICH_TEXT(10),      //多行文本
-//   NOT_SUPPORT(99),//未知
+// public enum FieldType
 export const FieldTypeOptions = [
   {value: 1, label: '单行文本'},
   {value: 10, label: '多行文本'},
@@ -123,10 +116,22 @@ export const FieldTypeOptions = [
   {value: 5, label: '附件'},
   {value: 6, label: '成员'},
   {value: 11, label: '勾选'},
+  {value: 20, label: '自增数字'},
+  {value: 21, label: '创建时间'},
+  {value: 22, label: '修改时间'},
+  {value: 23, label: '创建人'},
+  {value: 24, label: '修改人'},
 ]
 
-const getCellConf = (fieldType: number) => {
-  switch (fieldType) {
+const dateFormatter = (date: any) => dayjs(date).format('YYYY-MM-DD');
+
+const getCellConf = (field: any, users?: any[]) => {
+  const {type, property} = field;
+  // if (type == 6 || type == 23 || type == 24) {
+  //   const users = useAtomValueUsers();
+  //   console.log('users', users)
+  // }
+  switch (type) {
     case 1:
       return {
         cellEditor: 'agTextCellEditor'
@@ -138,30 +143,70 @@ const getCellConf = (fieldType: number) => {
     case 3:
       return {
         cellEditor: 'agDateStringCellEditor',
-        valueFormatter: (params: any) => params.value ? dayjs(params.value).format('YYYY-MM-DD') : params.value
+        valueFormatter: (params: any) => params.value ? dateFormatter(params.value) : params.value
       }
     case 4:
       return {
-        cellEditor: 'agSelectCellEditor'
+        cellEditor: 'agRichSelectCellEditor',
+        cellEditorParams: {
+          values: property?.options?.map((opt: any) => opt.id) || [],
+          filterList: true,
+          cellHeight: 32,
+        },
+        valueFormatter: (params: any) => property?.options?.find((opt: any) => opt.id === params.value)?.name,
+      }
+    case 5:
+      return {
+        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
+        cellRenderer: FileAssetCell,
+        cellEditor: FileAssetEditor,
+      }
+    case 6:
+      return {
+        cellEditor: 'agRichSelectCellEditor',
+        cellEditorParams: {
+          values: users?.map((opt: any) => opt.id) || [],
+          filterList: true,
+          cellHeight: 32,
+        },
+        valueFormatter: (params: any) => users?.find((opt: any) => opt.id === params.value)?.name,
       }
     case 10:
       return {
         cellEditor: 'agLargeTextCellEditor',
         cellEditorPopup: true,
-        cellEditorParams: {
-          maxLength: 200,
-          rows: 10,
-        }
       }
     case 11:
       return {
         cellEditor: 'agCheckboxCellEditor',
         cellRenderer: 'agCheckboxCellRenderer'
       }
-    default:
+    case 20:
       return {
-        cellEditor: 'agTextCellEditor'
+        editable: false,
       }
+    case 21:
+      return {
+        editable: false,
+        valueFormatter: (params: any) => dateFormatter(params.data.createTime)
+      }
+    case 22:
+      return {
+        editable: false,
+        valueFormatter: (params: any) => dateFormatter(params.data.updateTime)
+      }
+    case 23:
+      return {
+        editable: false,
+        valueFormatter: (params: any) => users?.find(u => u.id === params.data.createBy)?.name
+      }
+    case 24:
+      return {
+        editable: false,
+        valueFormatter: (params: any) => users?.find(u => u.id === params.data.updateBy)?.name
+      }
+    default:
+      return {}
   }
 }
 
@@ -181,22 +226,26 @@ const BjhAgGrid = () => {
     setIndeterminate,
     rowHeight,
     setFieldVisible,
-    setFieldWidth
+    setFieldWidth,
+    handleSaveDst
   } = useGrid();
 
   const {data: rowList, isLoading} = useQueryRecords(nodeId!);
   const {data: dstMeta} = useQueryDatasheet(nodeId!);
+  const {data: users} = useQueryUsers();
+
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const {height} = useContext(LayoutContext);
   const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
 
   const colDefs = useMemo<ColDef[]>(() => {
-    const local = view?.columns?.map(({fieldId, hidden, width}, index) => {
+    const local = view?.columns?.map((column, index) => {
+      const {fieldId, hidden, width} = column;
       const flag = !!view?.groupInfo?.find(col => col.fieldId === fieldId);
       const field = fieldMap[fieldId] as Field;
-      const cellConf = getCellConf(field.type);
+      const cellConf = getCellConf(field, users);
       return {
-        ...defaultColDef,
         field: fieldId,
         width: width || 160,
         hide: hidden || flag,
@@ -237,12 +286,13 @@ const BjhAgGrid = () => {
 
   const handleCellValueChanged = (e: any) => {
     const {column, data, value} = e;
-    // 发送给后端计算，然后获取新的行数据替换旧数据
+    // TODO: 发送给后端计算，然后获取新的行数据替换旧数据
     if (column) {
-      console.log('RecordApi(nodeId).updateBatch', e)
       const fieldId = column.colId as string;
       const recId = data.recId;
-      const records = [{recId, ...{[fieldId]: value}}]
+      const records = [{recId, [fieldId]: value}]
+
+      console.log(`RecordApi update ${nodeId} ${recId} ${fieldId}: ${value}`)
       RecordApi(nodeId).updateBatch({type: 'fieldId', records})
     }
   }
@@ -251,10 +301,26 @@ const BjhAgGrid = () => {
     if (dstMeta) {
       console.log('init datasheet', dstMeta)
       const {views} = dstMeta;
-      setDatasheet(dstMeta)
+      // const hasUsers = Object.keys(fieldMap)
+      //   .map(key => fieldMap[key])
+      //   .filter(field => [6, 23, 24].indexOf(field.type) >= 0).length > 0;
+      // if (hasUsers) {
+      // }
+      setDatasheet(() => {
+        setTimeout(() => {
+          setLoaded(true)
+        }, 100)
+        return dstMeta
+      })
       setViewId(views?.[0]?.id)
     }
   }, [dstMeta])
+
+  useEffect(() => {
+    if (loaded) {
+      handleSaveDst()
+    }
+  }, [datasheet])
 
   useEffect(() => {
     setRowData(rowList)

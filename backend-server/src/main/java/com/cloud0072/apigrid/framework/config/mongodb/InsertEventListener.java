@@ -19,7 +19,7 @@ public class InsertEventListener extends AbstractMongoEventListener<Object> {
             if (field.isAnnotationPresent(AutoId.class) && field.get(source) == null) {
                 AutoId autoId = field.getAnnotation(AutoId.class);
                 if (autoId.value() == AutoId.IdType.SNOWFLAKE && field.getType().equals(Long.class)) {
-                    field.set(source, IdUtils.snowflakeId());
+                    field.set(source, IdUtils.snowflakeId().toString());
                 } else if (autoId.value() == AutoId.IdType.UUID && field.getType().equals(String.class)) {
                     field.set(source, IdUtils.fastUUID());
                 }

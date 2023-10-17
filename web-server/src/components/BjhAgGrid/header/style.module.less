@@ -81,3 +81,32 @@
     }
   }
 }
+
+.formItemLabel {
+  line-height: 22px;
+  color: #000000e0;
+  padding-bottom: 8px;
+}
+
+.popoverContent {
+  min-width: 280px;
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 12px;
+    }
+  }
+
+  .selectItem {
+    display: flex;
+    width: 100%;
+    height: 32px;
+    padding: 2px 0;
+
+    .dynamicDeleteButton {
+      margin: 0 9px 0 9px;
+      flex-shrink: 0;
+    }
+  }
+
+}

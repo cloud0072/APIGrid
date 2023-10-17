@@ -28,7 +28,7 @@ const BjhDragList = ({items, idKey = 'id', children, onDragEnd}) => {
         // console.log('handleDragEnd oldIndex', oldIndex)
         // console.log('handleDragEnd newIndex', newIndex)
         // console.log('handleDragEnd newList', newList)
-        onDragEnd && onDragEnd(newList)
+        onDragEnd && onDragEnd(newList, {from: oldIndex, to: newIndex})
         return newList;
       });
     }

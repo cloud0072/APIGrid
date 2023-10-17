@@ -1,6 +1,9 @@
 import {atom, useAtom} from "jotai";
 import {Column, View} from "@/components/BjhAgGrid";
 import {RowHeightItems} from "@/components/BjhAgGrid/toolbar";
+import {throttle} from "lodash-es";
+import {DatasheetApi} from "@/services/datasheet/Datasheet";
+import {App} from "antd";
 
 const atomDatasheet = atom<any>({})
 const atomRowData = atom<any[]>([])
@@ -52,6 +55,8 @@ export const useGrid = () => {
   const [view] = useAtom(atomView)
   const [rowHeight] = useAtom(atomRowHeight)
 
+  const {message} = App.useApp()
+
   const setFieldMap = (val: any) => {
     setDatasheet((prev: any) => Object.assign({}, prev, {fieldMap: val}))
   }
@@ -77,6 +82,14 @@ export const useGrid = () => {
     setView(Object.assign({}, view, {columns}));
   }
 
+  const handleSaveDst = throttle(function () {
+    if (datasheet.dstId) {
+      DatasheetApi.updateByDstId(datasheet).then((response: any) => {
+        return response.code == 200 ? message.success('保存成功!') : message.error('保存失败');
+      })
+    }
+  }, 2000, {trailing: false})
+
   return {
     dstId, setDstId,
     rowData, setRowData,
@@ -91,5 +104,6 @@ export const useGrid = () => {
     rowHeight,
     setFieldVisible,
     setFieldWidth,
+    handleSaveDst,
   }
 }

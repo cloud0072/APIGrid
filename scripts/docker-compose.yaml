@@ -79,7 +79,8 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ${DATA_PATH}/.data/mongodb:/data/mongodb
+      - ${DATA_PATH}/.data/mongodb/db:/data/db
+      - ${DATA_PATH}/.data/mongodb/configdb:/data/configdb
     environment:
       - TZ=${TIMEZONE}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}

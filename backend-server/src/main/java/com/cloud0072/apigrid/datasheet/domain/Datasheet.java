@@ -24,7 +24,7 @@ public class Datasheet implements JSONEntity {
 
     @AutoId
     @Id
-    private Long _id;
+    private String _id;
     private String dstId;
     private String dstName;
     /**

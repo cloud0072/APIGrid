@@ -2,6 +2,7 @@ package com.cloud0072.apigrid.datasheet.controller;
 
 import cn.hutool.json.JSONObject;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
+import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.datasheet.service.RecordService;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/record/{dstId}")
 @RestController

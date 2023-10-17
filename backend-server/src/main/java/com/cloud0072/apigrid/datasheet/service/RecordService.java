@@ -21,5 +21,4 @@ public interface RecordService {
 
     void deleteByRecIds(String dstId, List<String> ids);
 
-
 }

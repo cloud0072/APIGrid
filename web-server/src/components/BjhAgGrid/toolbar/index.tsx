@@ -57,9 +57,8 @@ const GridToolbar = () => {
 
   const {useToken} = theme;
   const {token} = useToken();
-  const [messageApi, contextHolder] = message.useMessage();
 
-  const {datasheet, view, setView, fieldMap} = useGrid()
+  const {view, setView, fieldMap} = useGrid()
 
   const isFieldInGroup = useCallback((fieldId: string) => {
     return !!view.groupInfo?.find((item: Column) => item.fieldId === fieldId)
@@ -141,17 +140,9 @@ const GridToolbar = () => {
     setView(view);
   }
 
-  const handleSaveDst = throttle(function () {
-    if (datasheet.dstId) {
-      DatasheetApi.updateByDstId(datasheet).then((response: any) => {
-        return response.code == 200 ? messageApi.success('保存成功!') : messageApi.error('保存失败');
-      })
-    }
-  }, 2000, {trailing: false})
-
   return (
     <div className="bjh-grid-option">
-      {contextHolder}
+      {/*{contextHolder}*/}
       <div className="bjh-grid-option-left">
         <div className="prefix"/>
         <div className="content">
@@ -260,13 +251,13 @@ const GridToolbar = () => {
       <div className="bjh-grid-option-blank"/>
       <div className="bjh-grid-option-right">
         <Space>
-          <Popover content={'保存设置'}>
+          {/*<Popover content={'保存设置'}>
             <Button
               type="text"
               onClick={handleSaveDst}
               icon={<SaveOutlined style={{color: token.colorPrimary}}/>}
             />
-          </Popover>
+          </Popover>*/}
           <Dropdown.Button
             type="primary"
             icon={(<IconFont type="ant-down"/>)}

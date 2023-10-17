@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cloud0072.apigrid.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
@@ -36,6 +37,7 @@ public class UnitUser extends BaseEntity {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     private String mobile;
@@ -59,8 +61,10 @@ public class UnitUser extends BaseEntity {
     /**
      * 状态 0 未锁定 1 锁定
      */
+    @JsonIgnore
     private Integer isLocked;
 
+    @JsonIgnore
     private Integer isDeleted;
 
     @JsonSerialize(using = ToStringSerializer.class)

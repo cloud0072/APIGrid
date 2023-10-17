@@ -20,22 +20,22 @@ public class Record implements JSONEntity {
 
     @AutoId
     @Id
-    private Long _id;
+    private String _id;
     private String recId;
     private String dstId;
     private Integer isDeleted;
-    private Long createBy;
+    private String createBy;
     private Date createTime;
-    private Long updateBy;
+    private String updateBy;
     private Date updateTime;
 
     public Record(String dstId) {
-        this._id = IdUtils.snowflakeId();
+        this._id = IdUtils.snowflakeId().toString();
         this.recId = IdUtils.getRecordId();
         this.dstId = dstId;
         this.isDeleted = 0;
-        this.createBy = SecurityUtils.getUserId();
-        this.updateBy = SecurityUtils.getUserId();
+        this.createBy = SecurityUtils.getUserId().toString();
+        this.updateBy = SecurityUtils.getUserId().toString();
         this.createTime = new Date();
         this.updateTime = new Date();
     }

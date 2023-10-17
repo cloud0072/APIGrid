@@ -38,6 +38,8 @@ public class FileAsset extends BaseEntity {
 
     private String md5;
 
+    private Long size;
+
     private Integer isDeleted;
 
     @JsonSerialize(using = ToStringSerializer.class)

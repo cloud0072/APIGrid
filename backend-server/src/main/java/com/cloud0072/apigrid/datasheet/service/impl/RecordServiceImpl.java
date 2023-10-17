@@ -10,6 +10,7 @@ import com.cloud0072.apigrid.datasheet.util.MongoPageHelper;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -74,18 +75,18 @@ public class RecordServiceImpl implements RecordService {
         query.addCriteria(Criteria.where("recId").in(recIds));
         var update = new Update().set("isDeleted", 1)
                 .set("updateTime", new Date())
-                .set("updateBy", SecurityUtils.getUserId());
+                .set("updateBy", SecurityUtils.getUserId().toString());
         mongoTemplate.upsert(query, update, Datasheet.class);
     }
 
     @Override
     public List<JSONObject> batchInsert(String dstId, List<JSONObject> jsonList, String type) {
         var dst = datasheetService.findByDstId(dstId);
-        var result = jsonList.stream()
+        var list = jsonList.stream()
                 .map(json -> transformToId(dst, json))
                 .map(this::setCreateInfo)
                 .collect(Collectors.toList());
-        return new ArrayList<>(mongoTemplate.insert(result, getCollectionName(dst.getDstId())));
+        return new ArrayList<>(mongoTemplate.insert(list, getCollectionName(dst.getDstId())));
     }
 
     @Override
@@ -172,5 +173,24 @@ public class RecordServiceImpl implements RecordService {
     private String getCollectionName(String dstId) {
         return Constants.DST_PREFIX + dstId;
     }
+
+//    public JSONObject convertJson(JSONObject json) {
+//        var result = new JSONObject();
+//        json.keySet().forEach(key -> {
+//            var v = json.get(key);
+//            if (v instanceof Long) {
+//                result.put(key, v.toString());
+//            } else if (v instanceof Iterable) {
+//                var l = new ArrayList<>();
+//                for (Object i : (Iterable) v) {
+//                    l.add(i instanceof Long ? i.toString() : i);
+//                }
+//                result.put(key, l);
+//            } else {
+//                result.put(key, v);
+//            }
+//        });
+//        return result;
+//    }
 
 }

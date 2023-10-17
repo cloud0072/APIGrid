@@ -36,6 +36,8 @@ class BackendServerApplicationTests {
         var encoder = new BCryptPasswordEncoder();
         // $2a$10$xYCMDmP260KGErC1JsvcUOIbbjDsR3fE7Z3mLftka2EUgHDimc3f.
         System.out.println(encoder.encode("123456"));
+        // $2a$10$zx5T61nfOxoBI9yIb6ag7OLBlQsdF8y25NE5/jeUrAlAEuLUFYobu
+        System.out.println(encoder.encode("Bjh1517"));
     }
 
     @Test

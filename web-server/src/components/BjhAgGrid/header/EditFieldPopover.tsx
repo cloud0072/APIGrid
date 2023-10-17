@@ -1,12 +1,14 @@
 import React, {useMemo} from "react";
-import {Button, Form, Input, Popover, Select, Space} from "antd";
+import {Button, Checkbox, Form, Input, Popover, Select, Space, Typography} from "antd";
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {getNewId} from "@/utils/idUtils";
 import {FieldTypeOptions, View} from "@/components/BjhAgGrid";
-
-const {Item} = Form
-
+import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import BjhDragItem from "@/components/BjhDragItem";
+import BjhDragList from "@/components/BjhDragList";
+import styles from './style.module.less'
+import {MacScrollbar} from "mac-scrollbar";
 
 const EditFieldPopover = (props: any) => {
   const {open, onChange, column, children} = props;
@@ -17,11 +19,13 @@ const EditFieldPopover = (props: any) => {
     return field ? {
       fieldId: field.id,
       fieldName: field.name,
-      fieldType: field.type
+      fieldType: field.type,
+      property: field.property
     } as any : undefined
   }, [column])
 
   const [form] = Form.useForm<any>();
+  const fieldType = Form.useWatch('fieldType', form);
 
   const [localOpen, setLocalOpen] = useMergedState(false, {
     value: open,
@@ -36,9 +40,10 @@ const EditFieldPopover = (props: any) => {
   }
 
   const updateFieldMap = () => {
-    const {fieldId, fieldName, fieldType} = form.getFieldsValue()
+    const {fieldId, fieldName, fieldType, property} = form.getFieldsValue()
     const fId = fieldId || getNewId('fld');
-    const nFieldMap = Object.assign({}, fieldMap, {[fId]: {id: fId, name: fieldName, type: fieldType}});
+    const nField = {[fId]: {id: fId, name: fieldName, type: fieldType, property}}
+    const nFieldMap = Object.assign({}, fieldMap, nField);
     const nViews = !fieldId ? views?.map((v: View) => {
       v.columns.push({fieldId: fId})
       return v;
@@ -61,18 +66,87 @@ const EditFieldPopover = (props: any) => {
   )
 
   const contentRender = (
-    <div style={{minWidth: '280px'}}>
-      <Form form={form} layout="vertical" initialValues={fieldInfo}>
-        <Item name={'fieldId'} hidden>
-          <Input/>
-        </Item>
-        <Item label={'名称'} name={'fieldName'}>
-          <Input/>
-        </Item>
-        <Item label={'类型'} name={'fieldType'}>
-          <Select options={FieldTypeOptions} disabled={!!fieldInfo}/>
-        </Item>
-      </Form>
+    <div className={styles.popoverContent}>
+      <MacScrollbar style={{maxHeight: '400px', marginBottom: '4px'}}>
+        <Form form={form} layout="vertical" initialValues={fieldInfo}>
+          <Form.Item name={'fieldId'} hidden>
+            <Input/>
+          </Form.Item>
+          <Form.Item label={'名称'} name={'fieldName'}>
+            <Input/>
+          </Form.Item>
+          <Form.Item label={'类型'} name={'fieldType'}>
+            <Select options={FieldTypeOptions} disabled={!!fieldInfo}/>
+          </Form.Item>
+
+          {
+            fieldType == 4 ?
+              <>
+                {/*<Form.Item noStyle name={['property', 'multi']}>
+                  <div style={{marginBottom: '12px'}}>
+                    <Checkbox/><div style={{display: 'inline-block', marginLeft: '4px'}}>多选</div>
+                  </div>
+                </Form.Item>*/}
+                <div className={styles.formItemLabel}>备选项</div>
+                <Form.List name={['property', 'options']}>
+                  {(fields, {add, remove, move}, {errors}) => (
+                    <div style={{display: 'flex', flexDirection: 'column', rowGap: 2, marginBottom: '12px'}}>
+                      <BjhDragList onDragEnd={(_: any, {from, to}: any) => move(from, to)} items={fields} idKey={'key'}>
+                        {fields.map((field, index) => (
+                          <BjhDragItem key={field.key} id={field.key} handle={true} className={'bjh-col-drag-item'}>
+                            <div className={styles.selectItem}>
+                              <Form.Item name={[field.name, 'id']} hidden={true}>
+                                <Input/>
+                              </Form.Item>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'name']}
+                                style={{width: '100%'}}
+                                validateTrigger={['onChange', 'onBlur']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    whitespace: false,
+                                    message: "请输入选项内容.",
+                                  },
+                                ]}
+                                noStyle
+                              >
+                                <Input placeholder={`请输入选项内容`}/>
+                              </Form.Item>
+                              <MinusCircleOutlined
+                                className={styles.dynamicDeleteButton}
+                                onClick={() => remove(field.name)}
+                              />
+                            </div>
+                          </BjhDragItem>
+                        ))}
+                      </BjhDragList>
+                      <Form.Item noStyle>
+                        <div style={{height: '32px', padding: '4px 0'}}>
+                          <Button size={'small'} type="text"
+                                  onClick={() => add({id: getNewId('opt'), name: '选项' + (fields.length + 1)})}
+                                  icon={<PlusOutlined/>}>添加</Button>
+                        </div>
+                        <Form.ErrorList errors={errors}/>
+                      </Form.Item>
+                    </div>
+                  )}
+                </Form.List>
+              </> :
+              null
+          }
+
+          {/*<Form.Item noStyle shouldUpdate>
+            {() => (
+              <Typography>
+                <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+              </Typography>
+            )}
+          </Form.Item>*/}
+        </Form>
+      </MacScrollbar>
+
       <Space>
         <Button onClick={handleOk} type={'primary'}>确认</Button>
         <Button onClick={handleCancel}>取消</Button>
@@ -93,6 +167,6 @@ const EditFieldPopover = (props: any) => {
       {children}
     </Popover>
   )
-};
+}
 
 export default EditFieldPopover;

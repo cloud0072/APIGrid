@@ -83,6 +83,7 @@ CREATE TABLE apigrid_file_asset
     `token`       VARCHAR(255),
     `mime_type`   VARCHAR(32),
     `md5`         VARCHAR(255),
+    `size`        BIGINT(20),
     `is_deleted`  INT ( 1 ),
     `create_by`   BIGINT(20),
     `create_time` datetime ( 0 ),

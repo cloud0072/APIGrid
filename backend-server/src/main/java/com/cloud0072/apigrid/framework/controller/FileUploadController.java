@@ -1,5 +1,6 @@
 package com.cloud0072.apigrid.framework.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud0072.apigrid.common.constant.MinioProperties;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.exception.BackendException;
@@ -15,9 +16,11 @@ import lombok.SneakyThrows;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @RequestMapping("/upload")
@@ -79,8 +82,16 @@ public class FileUploadController {
         result.put("putUrl", putUrl);
         result.put("token", token);
         result.put("fileUrl", fileUrl);
-        result.put("id", fileAsset.getId());
+        result.put("id", fileAsset.getId().toString());
         return result;
+    }
+
+    @GetMapping("/getFileAssetByIds/{ids}")
+    public AjaxResult getFileAssetByIds(@PathVariable("ids") String ids) {
+        var fileIds = Arrays.asList(ids.split(","));
+        var list = fileAssetService.list(new QueryWrapper<FileAsset>().in("id", fileIds));
+        return AjaxResult.success(list);
+
     }
 
 }

@@ -31,6 +31,16 @@ export const UnitUserApi = {
       type: ContentType.Json,
       skipErrorHandler: false,
     }),
+  getUserOptions: (query?: any, options: any = {}) =>
+    request<any>({
+      path: `/${prefix}/options`,
+      method: 'GET',
+      query,
+      secure: true,
+      type: ContentType.Json,
+      skipErrorHandler: false,
+      ...options,
+    }),
 }
 
 
