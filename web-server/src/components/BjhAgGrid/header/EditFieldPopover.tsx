@@ -1,5 +1,5 @@
-import React, {useMemo} from "react";
-import {Button, Checkbox, Form, Input, Popover, Select, Space, Typography} from "antd";
+import React, {useMemo, useState} from "react";
+import {Button, Checkbox, Form, Input, Popover, Select, Space} from "antd";
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {getNewId} from "@/utils/idUtils";
@@ -32,6 +32,8 @@ const EditFieldPopover = (props: any) => {
     onChange: onChange
   })
 
+  const [multi, setMulti] = useState<boolean>(fieldInfo?.property?.multi || false)
+
   const handleOpenChange = (e: any) => {
     // 只接受关闭事件 点击浮层关闭，打开需要手动打开
     if (!e) {
@@ -41,6 +43,9 @@ const EditFieldPopover = (props: any) => {
 
   const updateFieldMap = () => {
     const {fieldId, fieldName, fieldType, property} = form.getFieldsValue()
+    if (fieldType == 4) {
+      Object.assign(property, {multi})
+    }
     const fId = fieldId || getNewId('fld');
     const nField = {[fId]: {id: fId, name: fieldName, type: fieldType, property}}
     const nFieldMap = Object.assign({}, fieldMap, nField);
@@ -82,11 +87,13 @@ const EditFieldPopover = (props: any) => {
           {
             fieldType == 4 ?
               <>
-                {/*<Form.Item noStyle name={['property', 'multi']}>
-                  <div style={{marginBottom: '12px'}}>
-                    <Checkbox/><div style={{display: 'inline-block', marginLeft: '4px'}}>多选</div>
-                  </div>
-                </Form.Item>*/}
+                {/*<Form.Item noStyle name={['property', 'multi']}>*/}
+                <div style={{marginBottom: '12px'}}>
+                  <Checkbox checked={multi} onChange={(e) => setMulti(e.target.checked)}
+                            defaultChecked={fieldInfo?.property?.multi}/>
+                  <div style={{display: 'inline-block', marginLeft: '4px'}}>多选</div>
+                </div>
+                {/*</Form.Item>*/}
                 <div className={styles.formItemLabel}>备选项</div>
                 <Form.List name={['property', 'options']}>
                   {(fields, {add, remove, move}, {errors}) => (

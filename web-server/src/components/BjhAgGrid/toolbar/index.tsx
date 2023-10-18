@@ -17,25 +17,25 @@ export const RowHeightItems = [
   {
     label: '紧凑',
     value: 0,
-    height: 5 * 6,
+    height: 32,
     icon: <IconFont type="ali-rightalignment"/>,
   },
   {
     label: '标准',
     value: 1,
-    height: 5 * 8,
+    height: 48,
     icon: <IconFont type="ali-rightalignment"/>,
   },
   {
     label: '宽松',
     value: 2,
-    height: 5 * 12,
+    height: 64,
     icon: <IconFont type="ali-rightalignment"/>,
   },
   {
     label: '超大',
     value: 3,
-    height: 5 * 16,
+    height: 96,
     icon: <IconFont type="ali-rightalignment"/>,
   },
 ]

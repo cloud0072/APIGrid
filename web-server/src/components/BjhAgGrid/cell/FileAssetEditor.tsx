@@ -7,6 +7,7 @@ import {FileUploadApi} from "@/services/framework/FileUpload";
 import {DefaultImage, getFileMd5, isImage, toUrl} from "@/utils/fileUtils";
 import {ICellEditorParams} from "ag-grid-community";
 import ReactDOM from "react-dom";
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 
 export type FileAsset = {
   id?: string;
@@ -20,9 +21,17 @@ export type FileAsset = {
 
 const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   const [editing, setEditing] = useState<boolean>(true);
+  const [localValue, setLocalValue] = useState<FileAsset[]>([]);
   const [fileList] = useState<UploadFile[]>([]);
-  const [fileAssets, setFileAssets] = useState<FileAsset[]>([]);
   const refContainer = useRef<HTMLDivElement>(null);
+
+  const {rowHeight} = useGrid()
+
+  const fileStyle = useMemo(() => {
+    return {
+      height: rowHeight - 6
+    }
+  }, [rowHeight])
 
   const focus = () => {
     window.setTimeout(() => {
@@ -34,7 +43,7 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   };
 
   const getValue = (): any => {
-    return fileAssets.map((f: any) => f.id);
+    return localValue.map((f: any) => f.id);
   }
 
   const handleOk = () => {
@@ -42,12 +51,12 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   }
 
   const handleCancel = () => {
-    // setFileAssets(props.value && props.value instanceof Array ? props.value : [])
+    // setLocalValue(props.value && props.value instanceof Array ? props.value : [])
     setEditing(false)
   }
 
   const handleDeleted = (id: string) => {
-    setFileAssets(prev => prev.filter(f => f.id != id))
+    setLocalValue(prev => prev.filter(f => f.id != id))
   }
 
   const columns: any = useMemo(() => [
@@ -109,7 +118,7 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
     FileUploadApi.getFileAssetByIds(ids).then(response => {
       const {data} = response;
       if (data) {
-        setFileAssets(data)
+        setLocalValue(data)
       }
     })
   }, [])
@@ -146,7 +155,7 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
       const {code, token, putUrl, id} = response;
       if (code == 200 && putUrl) {
         await FileUploadApi.upload(putUrl, file)
-        setFileAssets((prev: FileAsset[]) => prev.concat([{...params, id, token}]))
+        setLocalValue((prev: FileAsset[]) => prev.concat([{...params, id, token}]))
       }
       return false;
     },
@@ -162,7 +171,7 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
     <div className={styles.fileDropdown}>
       <div className={styles.fileUpload}>
         <Table
-          dataSource={fileAssets}
+          dataSource={localValue}
           columns={columns}
           rowKey={'id'}
           size={'small'}
@@ -196,17 +205,13 @@ const FileAssetEditor = React.forwardRef((props: ICellEditorParams, ref) => {
       dropdownRender={dropdownRender}
       width={600}
     >
-      <div ref={refContainer} className={styles.uploadContainer}>
-        <Space>
-          {fileAssets.map(f =>
-            <Image
-              key={f.id}
-              height={30}
-              src={toUrl(f.token)}
-              preview={false}
-            />
-          )}
-        </Space>
+      <div ref={refContainer} className={styles.uploadContainer} style={{padding: '0 2px'}}>
+        {localValue.map(f =>
+          <div className={styles.uploadFile} style={fileStyle}>
+            <Image key={f.id} height={fileStyle.height} src={isImage(f.mimeType) ? toUrl(f.token) : DefaultImage}
+                   preview={false}/>
+          </div>
+        )}
       </div>
     </BjhDropdown>
   )

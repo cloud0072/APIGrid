@@ -6,7 +6,7 @@ const BjhDropdown = (props: any) => {
   const {titleRender, dropdownRender, onClick, width, children, ...rest} = props;
   return (
     <Dropdown
-      dropdownRender={() => (
+      dropdownRender={(menu) => (
         <div className={styles.bjhDropdown} style={{width: width || '208px'}}>
           {titleRender && (
             <div className={styles.bjhDropdownHead}>
@@ -14,13 +14,13 @@ const BjhDropdown = (props: any) => {
             </div>
           )}
           <div className={styles.bjhDropdownBody}>
-            {dropdownRender && dropdownRender()}
+            {dropdownRender && dropdownRender(menu)}
           </div>
         </div>
       )}
       {...rest}
     >
-      <div onClick={onClick}>{children}</div>
+      <div style={{height: '100%', width: '100%'}} onClick={onClick}>{children}</div>
     </Dropdown>
   )
 }

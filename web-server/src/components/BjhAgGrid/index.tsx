@@ -22,6 +22,8 @@ import dayjs from "dayjs";
 import {useQueryUsers} from "@/models/unitState";
 import FileAssetEditor from "@/components/BjhAgGrid/cell/FileAssetEditor";
 import FileAssetCell from "@/components/BjhAgGrid/cell/FileAssetCell";
+import SelectCell from "@/components/BjhAgGrid/cell/SelectCell";
+import SelectEditor from "@/components/BjhAgGrid/cell/SelectEditor";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
@@ -147,16 +149,21 @@ const getCellConf = (field: any, users?: any[]) => {
       }
     case 4:
       return {
-        cellEditor: 'agRichSelectCellEditor',
-        cellEditorParams: {
-          values: property?.options?.map((opt: any) => opt.id) || [],
-          filterList: true,
-          cellHeight: 32,
-        },
-        valueFormatter: (params: any) => property?.options?.find((opt: any) => opt.id === params.value)?.name,
+        // cellEditor: 'agRichSelectCellEditor',
+        // cellEditorParams: {
+        //   values: property?.options?.map((opt: any) => opt.id) || [],
+        //   filterList: true,
+        //   cellHeight: 32,
+        // },
+        // valueFormatter: (params: any) => property?.options?.find((opt: any) => opt.id === params.value)?.name,
+        valueParser: (params: any) => params.value ? params.split(',') : [],
+        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
+        cellRenderer: SelectCell,
+        cellEditor: SelectEditor,
       }
     case 5:
       return {
+        valueParser: (params: any) => params.value ? params.split(',') : [],
         valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
         cellRenderer: FileAssetCell,
         cellEditor: FileAssetEditor,

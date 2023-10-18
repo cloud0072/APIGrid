@@ -4,7 +4,7 @@ import {layoutThemeList} from "@/utils/theme";
 import styles from './style.module.less';
 import classNames from "classnames";
 
-const getAvatarColor = (avatarColor: number = 10) => {
+const getRgbColor = (avatarColor: number = 10) => {
   return layoutThemeList[avatarColor]?.colorPrimary
 }
 
@@ -44,7 +44,7 @@ const UnitTag = (props: any) => {
     shape: AvatarType.User
   } : {
     style: {
-      backgroundColor: getAvatarColor(avatarColor),
+      backgroundColor: getRgbColor(avatarColor),
       color: 'white'
     },
     children: getFirstWordFromString(name)

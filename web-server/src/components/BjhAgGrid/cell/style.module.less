@@ -26,11 +26,59 @@
 }
 
 .uploadContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
   width: 100%;
   height: 100%;
-  border: 1px solid transparent;
+  padding-bottom: 1px;
 
   &:focus {
     border-color: dodgerblue;
+  }
+
+  .uploadFile {
+    display: flex;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  .uploadFile + .uploadFile {
+    margin-left: 3px;
+  }
+}
+
+.selectContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 1px;
+
+  &:focus {
+    border-color: dodgerblue;
+  }
+
+  .item {
+    height: 24px;
+    line-height: 0;
+    font-size: 0;
+  }
+
+  .item + .item {
+    margin-left: 3px;
+  }
+}
+
+.selectDropdown {
+  .selectBottom {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .selectBottomRight {
+    padding: 8px 8px 0;
   }
 }

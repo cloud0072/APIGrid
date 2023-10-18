@@ -63,4 +63,5 @@ public class MenuNodeController extends BaseController<MenuNode> {
         datasheetService.deleteByDstIds(Collections.singletonList(nodeId));
         return AjaxResult.success();
     }
+
 }

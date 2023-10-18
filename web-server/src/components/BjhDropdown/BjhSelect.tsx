@@ -8,7 +8,7 @@ const BjhSelect = ({items, value, onChange}: any) => {
           key={item.value}
           label={item.label}
           icon={item.icon}
-          active={value === item.value}
+          active={value.indexOf(item.value) >= 0}
           onClick={() => onChange(item)}
         />
       )}

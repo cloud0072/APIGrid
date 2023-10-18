@@ -1,0 +1,42 @@
+@import "~@/styles/lib_colors.less";
+@import "~@/styles/lib_mixins.less";
+
+.selectTag {
+  display: inline-block;
+  user-select: none;
+  vertical-align: middle;
+
+  .circle {
+    border-radius: 16px;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    line-height: 24px;
+    background-color: var(--lowestBg);
+    padding: 0 8px 0 2px;
+
+    :global {
+      .anticon {
+        vertical-align: initial;
+      }
+    }
+
+    .name {
+      font-size: 13px;
+      color: white;
+      padding-left: 4px;
+      max-width: 140px;
+      .ellipsis();
+    }
+
+    .closeBtn {
+      //fill: var(--thirdLevelText);
+      font-size: 12px;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+  }
+}
