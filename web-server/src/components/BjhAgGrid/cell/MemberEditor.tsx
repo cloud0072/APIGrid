@@ -6,24 +6,28 @@ import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import BjhDropdown from "@/components/BjhDropdown";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import SelectTag from "@/components/datasheet/SelectTag";
+import {useQueryUsers} from "@/models/unitState";
+import UnitTag from "@/components/datasheet/UnitTag";
 
-const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
+const MemberEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   const [editing, setEditing] = useState<boolean>(true);
   const [localValue, setLocalValue] = useState<any[]>([]);
   const refContainer = useRef<HTMLDivElement>(null);
+
   const {fieldMap} = useGrid();
-  const {options, multi} = useMemo(() => {
+  const multi = useMemo(() => {
     const {property} = fieldMap[props.colDef?.field as string]
-    return property ? property : {options: [], multi: false};
+    return property?.multi;
   }, [fieldMap])
 
-  // const options = useMemo(() => {
-  //   return property?.options || []
-  // }, [fieldMap])
+  const {data: users} = useQueryUsers();
+  const options = useMemo(() => {
+    return users || [];
+  }, [users])
 
   const items = useMemo(() => options.map((opt: any) => ({
     value: opt.id,
-    label: opt.name
+    label: <UnitTag deletable={false} {...opt} title={opt.name}/>
   })), [options])
 
   const getValue = (): any => {
@@ -55,6 +59,10 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
     const value = props.value.map((v: string) => options.find((opt: any) => opt.id == v)).filter((opt: any) => !!opt)
     setLocalValue(value)
   }, [])
+
+  // useEffect(() => {
+  //   console.log('localValue', localValue)
+  // }, [localValue])
 
   useEffect(() => {
     if (!editing) {
@@ -97,7 +105,7 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
       <div ref={refContainer} className={styles.selectContainer} style={{margin: '0 2px'}}>
         {localValue.map(i =>
           <div className={styles.item} key={i.id}>
-            <SelectTag deletable={true} name={i.name} id={i.id} onClose={() => handleClick(i.id)}/>
+            <UnitTag deletable={true} {...i} title={i.name} onClose={() => handleClick(i.id)}/>
           </div>
         )}
       </div>
@@ -105,4 +113,4 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   )
 });
 
-export default SelectEditor;
+export default MemberEditor;

@@ -29,7 +29,6 @@ const UnitTag = (props: any) => {
     avatarColor,
     nickName,
     onClose,
-    unitId,
     isLeave,
     title,
     maxWidth
@@ -60,7 +59,7 @@ const UnitTag = (props: any) => {
         <div className={styles.name} style={{maxWidth}}>{name}</div>
         {
           deletable &&
-          <CloseOutlined className={styles.closeBtn} size={8} onClick={() => onClose && onClose(unitId)}/>
+          <CloseOutlined className={styles.closeBtn} size={8} onClick={() => onClose && onClose()}/>
         }
       </div>
     </div>

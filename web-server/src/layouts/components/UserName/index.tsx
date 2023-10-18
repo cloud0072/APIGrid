@@ -76,10 +76,6 @@ const Index: FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('data?.userInfo?.avatar', data?.userInfo?.avatar)
-  }, [data])
-
   return (
     <>
       <Dropdown menu={{items, onClick: ({key}) => handleMenuClick(key as MenuKey)}} placement="bottom" arrow>

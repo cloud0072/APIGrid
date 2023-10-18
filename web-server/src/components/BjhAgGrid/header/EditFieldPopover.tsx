@@ -43,11 +43,13 @@ const EditFieldPopover = (props: any) => {
 
   const updateFieldMap = () => {
     const {fieldId, fieldName, fieldType, property} = form.getFieldsValue()
-    if (fieldType == 4) {
-      Object.assign(property, {multi})
+    const fieldProp = {};
+    if (fieldType == 4 || fieldType == 6) {
+      console.log('multi', multi)
+      Object.assign(fieldProp, property, {multi})
     }
     const fId = fieldId || getNewId('fld');
-    const nField = {[fId]: {id: fId, name: fieldName, type: fieldType, property}}
+    const nField = {[fId]: {id: fId, name: fieldName, type: fieldType, property: fieldProp}}
     const nFieldMap = Object.assign({}, fieldMap, nField);
     const nViews = !fieldId ? views?.map((v: View) => {
       v.columns.push({fieldId: fId})
@@ -144,6 +146,15 @@ const EditFieldPopover = (props: any) => {
               null
           }
 
+          {
+            fieldType == 6 ?
+              <div style={{marginBottom: '12px'}}>
+                <Checkbox checked={multi} onChange={(e) => setMulti(e.target.checked)}
+                          defaultChecked={fieldInfo?.property?.multi}/>
+                <div style={{display: 'inline-block', marginLeft: '4px'}}>多选</div>
+              </div> :
+              null
+          }
           {/*<Form.Item noStyle shouldUpdate>
             {() => (
               <Typography>

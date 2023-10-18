@@ -24,6 +24,8 @@ import FileAssetEditor from "@/components/BjhAgGrid/cell/FileAssetEditor";
 import FileAssetCell from "@/components/BjhAgGrid/cell/FileAssetCell";
 import SelectCell from "@/components/BjhAgGrid/cell/SelectCell";
 import SelectEditor from "@/components/BjhAgGrid/cell/SelectEditor";
+import MemberCell from "@/components/BjhAgGrid/cell/MemberCell";
+import MemberEditor from "@/components/BjhAgGrid/cell/MemberEditor";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
@@ -149,13 +151,6 @@ const getCellConf = (field: any, users?: any[]) => {
       }
     case 4:
       return {
-        // cellEditor: 'agRichSelectCellEditor',
-        // cellEditorParams: {
-        //   values: property?.options?.map((opt: any) => opt.id) || [],
-        //   filterList: true,
-        //   cellHeight: 32,
-        // },
-        // valueFormatter: (params: any) => property?.options?.find((opt: any) => opt.id === params.value)?.name,
         valueParser: (params: any) => params.value ? params.split(',') : [],
         valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
         cellRenderer: SelectCell,
@@ -170,13 +165,17 @@ const getCellConf = (field: any, users?: any[]) => {
       }
     case 6:
       return {
-        cellEditor: 'agRichSelectCellEditor',
-        cellEditorParams: {
-          values: users?.map((opt: any) => opt.id) || [],
-          filterList: true,
-          cellHeight: 32,
-        },
-        valueFormatter: (params: any) => users?.find((opt: any) => opt.id === params.value)?.name,
+        // cellEditor: 'agRichSelectCellEditor',
+        // cellEditorParams: {
+        //   values: users?.map((opt: any) => opt.id) || [],
+        //   filterList: true,
+        //   cellHeight: 32,
+        // },
+        // valueFormatter: (params: any) => users?.find((opt: any) => opt.id === params.value)?.name,
+        valueParser: (params: any) => params.value ? params.split(',') : [],
+        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
+        cellRenderer: MemberCell,
+        cellEditor: MemberEditor,
       }
     case 10:
       return {
