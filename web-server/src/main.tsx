@@ -5,6 +5,8 @@ import 'mac-scrollbar/dist/mac-scrollbar.css';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
+import weekdays from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
 
 import React from 'react';
 import App from "@/App";
@@ -25,6 +27,8 @@ export const bootstrap = async () => {
   }
 
   dayjs.locale('zh-cn');
+  dayjs.extend(weekdays)
+  dayjs.extend(localeData)
 
   const queryClient = new QueryClient({
     defaultOptions: {

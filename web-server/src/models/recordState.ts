@@ -1,32 +1,41 @@
-import {atom, useAtomValue, useSetAtom} from "jotai";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {DatasheetApi} from "@/services/datasheet/Datasheet";
+import {atom, useAtom} from "jotai";
 import {RecordApi} from "@/services/datasheet/Record";
-import {useState} from "react";
 
-const atomRecords = atom<any>({});
-export const useSetAtomRecords = () => useSetAtom(atomRecords);
-export const useAtomValueRecords = () => useAtomValue(atomRecords);
+const atomLoading = atom<boolean>(false);
+const atomRowData = atom<any[]>([]);
+const atomPageSize = atom<number>(20);
+const atomPageNum = atom<number>(1);
 
-export const useQueryRecords = (dstId: string) => {
-  const setRecords = useSetAtomRecords();
-  const records = useAtomValueRecords();
-
-  return useQuery(
-    ['record', dstId],
-    async () => {
-      const response = await RecordApi(dstId).getList()
-      setRecords(Object.assign(records, {dstId: response.data}));
-      return records.dstId
-    },
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-    },
-  )
+export const usePageInfo = () => {
+  const [pageSize, setPageSize] = useAtom(atomPageSize)
+  const [pageNum, setPageNum] = useAtom(atomPageNum)
+  return {
+    pageSize,
+    setPageSize,
+    pageNum,
+    setPageNum,
+  }
 }
 
-export const useRefreshRecord = (dstId: string) => {
-  const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries(['datasheet', dstId]);
-};
+export const useQueryRecords = (dstId: string) => {
+  const [rowData, setRowData] = useAtom(atomRowData);
+  const [loading, setLoading] = useAtom(atomLoading);
+  const {pageNum, pageSize} = usePageInfo()
+
+  const handleGetRecords = async (params: any) => {
+    setLoading(true)
+    const response = await RecordApi(dstId).getPage({pageNum, pageSize, params})
+    const data = response?.data?.content || []
+    setRowData(data);
+    setLoading(false)
+    return data;
+  }
+
+  return {
+    loading,
+    pageNum,
+    pageSize,
+    rowData,
+    handleGetRecords
+  }
+}

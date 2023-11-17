@@ -1,7 +1,6 @@
 import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import GridHeader from "@/components/BjhAgGrid/header";
 import GridToolBar from "@/components/BjhAgGrid/toolbar";
-import RowIndexCell from '@/components/BjhAgGrid/cell/RowIndexCell'
 import {AgGridReact} from "ag-grid-react";
 
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -14,9 +13,6 @@ import './style.less';
 import {Spin} from "antd";
 import {LayoutContext} from "@/layouts";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
-import {useQueryRecords} from "@/models/recordState";
-import {useQueryDatasheet} from "@/models/datasheetState";
-import {useParams} from "react-router-dom";
 import {RecordApi} from "@/services/datasheet/Record";
 import dayjs from "dayjs";
 import {useQueryUsers} from "@/models/unitState";
@@ -26,221 +22,38 @@ import SelectCell from "@/components/BjhAgGrid/cell/SelectCell";
 import SelectEditor from "@/components/BjhAgGrid/cell/SelectEditor";
 import MemberCell from "@/components/BjhAgGrid/cell/MemberCell";
 import MemberEditor from "@/components/BjhAgGrid/cell/MemberEditor";
+import {useQueryRecords} from "@/models/recordState";
+import {
+  addFieldCol,
+  ColDef,
+  Column,
+  defaultColDef,
+  Field,
+  getCellConf,
+  rowIndexCol
+} from "@/components/BjhAgGrid/constants";
 
 LicenseManager.prototype.validateLicense = () => true
 LicenseManager.prototype.isDisplayWatermark = () => false
 
-export type Column = {
-  fieldId: string,
-  desc?: boolean,
-  hidden?: boolean,
-  statType?: number,
-  width?: number,
-}
-
-export type Field = {
-  id: string,
-  name: string,
-  type: number,
-  property?: {
-    defaultValue?: string,
-    precision?: number,
-    symbolAlign?: number,
-    options?: any[]
-  }
-}
-
-export type View = {
-  id: string,
-  name: string,
-  rowHeightLevel: number,
-  frozenColumnCount: number,
-  sortInfo?: Column[],
-  groupInfo?: Column[],
-  filterInfo?: Column[],
-  columns: Column[],
-}
-
-export type ColDef = {
-  sortIndex?: number,
-  field?: string,
-  width?: number,
-  editable?: boolean,
-  resizable?: boolean,
-  sortable?: boolean,
-  lockPinned?: boolean,
-  hide?: boolean,
-  rowGroup?: boolean,
-  suppressNavigable?: boolean,
-  headerName?: string,
-  cellClass?: string,
-  pinned?: ("left" | "right"),
-  lockPosition?: ("left" | "right"),
-  cellRenderer?: any
-}
-
-export const defaultColDef = {
-  sortable: true,
-  resizable: true,
-  editable: true,
-  lockPinned: true,
-};
-
-const rowIndexCol: ColDef[] = [{
-  field: "row_index",
-  width: 80,
-  editable: false,
-  sortable: false,
-  resizable: false,
-  lockPinned: true,
-  lockPosition: 'left',
-  suppressNavigable: true,
-  cellClass: 'no-focus-border',
-  cellRenderer: RowIndexCell
-}];
-
-const addFieldCol: ColDef[] = [{
-  field: "add_field",
-  width: 80,
-  editable: false,
-  resizable: false,
-  sortable: false,
-  lockPinned: true,
-  lockPosition: 'right',
-  suppressNavigable: true,
-  cellClass: 'no-focus-border'
-}];
-// public enum FieldType
-export const FieldTypeOptions = [
-  {value: 1, label: '单行文本'},
-  {value: 10, label: '多行文本'},
-  {value: 2, label: '数字'},
-  {value: 3, label: '日期'},
-  {value: 4, label: '选项'},
-  {value: 5, label: '附件'},
-  {value: 6, label: '成员'},
-  {value: 11, label: '勾选'},
-  {value: 20, label: '自增数字'},
-  {value: 21, label: '创建时间'},
-  {value: 22, label: '修改时间'},
-  {value: 23, label: '创建人'},
-  {value: 24, label: '修改人'},
-]
-
-const dateFormatter = (date: any) => dayjs(date).format('YYYY-MM-DD');
-
-const getCellConf = (field: any, users?: any[]) => {
-  const {type, property} = field;
-  // if (type == 6 || type == 23 || type == 24) {
-  //   const users = useAtomValueUsers();
-  //   console.log('users', users)
-  // }
-  switch (type) {
-    case 1:
-      return {
-        cellEditor: 'agTextCellEditor'
-      }
-    case 2:
-      return {
-        cellEditor: 'agNumberCellEditor'
-      }
-    case 3:
-      return {
-        cellEditor: 'agDateStringCellEditor',
-        valueFormatter: (params: any) => params.value ? dateFormatter(params.value) : params.value
-      }
-    case 4:
-      return {
-        valueParser: (params: any) => params.value ? params.split(',') : [],
-        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
-        cellRenderer: SelectCell,
-        cellEditor: SelectEditor,
-      }
-    case 5:
-      return {
-        valueParser: (params: any) => params.value ? params.split(',') : [],
-        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
-        cellRenderer: FileAssetCell,
-        cellEditor: FileAssetEditor,
-      }
-    case 6:
-      return {
-        // cellEditor: 'agRichSelectCellEditor',
-        // cellEditorParams: {
-        //   values: users?.map((opt: any) => opt.id) || [],
-        //   filterList: true,
-        //   cellHeight: 32,
-        // },
-        // valueFormatter: (params: any) => users?.find((opt: any) => opt.id === params.value)?.name,
-        valueParser: (params: any) => params.value ? params.split(',') : [],
-        valueFormatter: (params: any) => params.value ? params.value.join(',') : '',
-        cellRenderer: MemberCell,
-        cellEditor: MemberEditor,
-      }
-    case 10:
-      return {
-        cellEditor: 'agLargeTextCellEditor',
-        cellEditorPopup: true,
-      }
-    case 11:
-      return {
-        cellEditor: 'agCheckboxCellEditor',
-        cellRenderer: 'agCheckboxCellRenderer'
-      }
-    case 20:
-      return {
-        editable: false,
-      }
-    case 21:
-      return {
-        editable: false,
-        valueFormatter: (params: any) => dateFormatter(params.data.createTime)
-      }
-    case 22:
-      return {
-        editable: false,
-        valueFormatter: (params: any) => dateFormatter(params.data.updateTime)
-      }
-    case 23:
-      return {
-        editable: false,
-        valueFormatter: (params: any) => users?.find(u => u.id === params.data.createBy)?.name
-      }
-    case 24:
-      return {
-        editable: false,
-        valueFormatter: (params: any) => users?.find(u => u.id === params.data.updateBy)?.name
-      }
-    default:
-      return {}
-  }
-}
-
 const BjhAgGrid = () => {
 
   const gridRef = useRef<any>(null); // Optional - for accessing Grid's API
-  const {nodeId} = useParams() as any;
   const {
-    dstId, setDstId,
-    viewId, setViewId,
+    dstId,
     checkAll, setCheckAll,
     checkedList, setCheckedList,
-    rowData, setRowData,
     view, setView,
     fieldMap,
-    datasheet, setDatasheet,
+    datasheet,
     setIndeterminate,
     rowHeight,
     setFieldVisible,
     setFieldWidth,
-    handleSaveDst
+    handleSubmitDatasheet,
   } = useGrid();
 
-  const {data: rowList, isLoading} = useQueryRecords(nodeId!);
-  const {data: dstMeta} = useQueryDatasheet(nodeId!);
   const {data: users} = useQueryUsers();
-
-  const [loaded, setLoaded] = useState<boolean>(false);
 
   const {height} = useContext(LayoutContext);
   const gridStyle = useMemo<any>(() => ({height: `${height - 24 - 48}px`, width: '100%'}), [height]);
@@ -298,53 +111,19 @@ const BjhAgGrid = () => {
       const recId = data.recId;
       const records = [{recId, [fieldId]: value}]
 
-      console.log(`RecordApi update ${nodeId} ${recId} ${fieldId}: ${value}`)
-      RecordApi(nodeId).updateBatch({type: 'fieldId', records})
+      console.log(`RecordApi update ${dstId} ${recId} ${fieldId}: ${value}`)
+      RecordApi(dstId).updateBatch({type: 'fieldId', records})
     }
   }
 
+  const {loading, rowData, handleGetRecords} = useQueryRecords(dstId)
   useEffect(() => {
-    if (dstMeta) {
-      console.log('init datasheet', dstMeta)
-      const {views} = dstMeta;
-      // const hasUsers = Object.keys(fieldMap)
-      //   .map(key => fieldMap[key])
-      //   .filter(field => [6, 23, 24].indexOf(field.type) >= 0).length > 0;
-      // if (hasUsers) {
-      // }
-      setDatasheet(() => {
-        setTimeout(() => {
-          setLoaded(true)
-        }, 100)
-        return dstMeta
-      })
-      setViewId(views?.[0]?.id)
-    }
-  }, [dstMeta])
-
-  useEffect(() => {
-    if (loaded) {
-      handleSaveDst()
-    }
-  }, [datasheet])
-
-  useEffect(() => {
-    setRowData(rowList)
-  }, [rowList])
+    handleGetRecords(view?.filterInfo)
+  }, [])
 
   useEffect(() => {
     gridRef?.current?.api && gridRef?.current?.api?.resetRowHeights();
   }, [rowHeight])
-
-  useEffect(() => {
-    if (nodeId != dstId) {
-      setDstId(nodeId)
-    }
-  }, [nodeId])
-
-  useEffect(() => {
-    setCheckAll(false)
-  }, [dstId])
 
   useEffect(() => {
     setCheckedList(checkAll ? rowData : [])
@@ -365,12 +144,16 @@ const BjhAgGrid = () => {
     }
   }, [checkedList, rowData?.length])
 
+  useEffect(() => {
+    handleSubmitDatasheet()
+  }, [datasheet])
+
   return (
     <div className="bjh-grid-body">
 
       <GridToolBar/>
 
-      <Spin spinning={isLoading}>
+      <Spin spinning={loading}>
         <div className="ag-theme-alpine" style={gridStyle}>
           <AgGridReact
             ref={gridRef} // Ref for accessing Grid's API

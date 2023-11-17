@@ -10,7 +10,6 @@ import com.cloud0072.apigrid.datasheet.util.MongoPageHelper;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,19 +36,16 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public Page<JSONObject> page(String dstId, Query query, PageRequest page, String type) {
-        return mongoPageHelper.pageQuery(query, page, JSONObject.class, dstId);
+        var datasheet = datasheetService.findByDstId(dstId);
+        return mongoPageHelper.pageQuery(query, page, JSONObject.class, getCollectionName(dstId),
+                (json) -> recordTransform(datasheet, type, json));
     }
 
     @Override
-    public List<JSONObject> list(String dstId, JSONObject entity, String type) {
-        var dst = datasheetService.findByDstId(dstId);
-        var query = new Query();
+    public List<JSONObject> list(String dstId, Query query, String type) {
         var result = mongoTemplate.find(query, JSONObject.class, getCollectionName(dstId));
-        if (Constants.FIELD_NAME.equals(type)) {
-            return result.stream().map(json -> transformToName(dst, json)).collect(Collectors.toList());
-        } else {
-            return result;
-        }
+        var datasheet = datasheetService.findByDstId(dstId);
+        return result.stream().map(json -> recordTransform(datasheet, type, json)).collect(Collectors.toList());
     }
 
     @Override
@@ -136,6 +132,10 @@ public class RecordServiceImpl implements RecordService {
                 .filter(key -> key.startsWith("fld"))
                 .forEach(key -> perv.set(key, json.get(key)));
         return perv;
+    }
+
+    private JSONObject recordTransform(Datasheet datasheet, String type, JSONObject json) {
+        return Constants.FIELD_NAME.equals(type) ? transformToName(datasheet, json) : json;
     }
 
     private JSONObject transformToId(Datasheet dst, JSONObject json) {

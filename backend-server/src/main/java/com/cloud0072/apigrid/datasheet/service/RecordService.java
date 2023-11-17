@@ -11,7 +11,7 @@ public interface RecordService {
 
     Page<JSONObject> page(String dstId, Query query, PageRequest page, String type);
 
-    List<JSONObject> list(String dstId, JSONObject entity, String type);
+    List<JSONObject> list(String dstId, Query query, String type);
 
     JSONObject findByRecId(String dstId, String recId, String type);
 

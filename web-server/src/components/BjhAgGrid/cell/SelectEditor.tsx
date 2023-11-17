@@ -80,8 +80,8 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
       <div className={styles.selectBottom}>
         <div className={styles.selectBottomRight}>
           <Space>
-            <Button size={'small'} onClick={handleOk} type={'primary'}>确认</Button>
-            <Button size={'small'} onClick={handleCancel}>取消</Button>
+            <Button onClick={handleOk} type={'primary'}>确认</Button>
+            <Button onClick={handleCancel}>取消</Button>
           </Space>
         </div>
       </div>

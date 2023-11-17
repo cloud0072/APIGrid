@@ -1,6 +1,9 @@
 import BjhSelectItem from "@/components/BjhDropdown/BjhSelectItem";
 
 const BjhSelect = ({items, value, onChange}: any) => {
+  const isActive = (v: any) => {
+    return value instanceof Array ? value.indexOf(v) >= 0 : value == v
+  }
   return (
     <div className="bjh-dropdown-select">
       {items.map((item: any) =>
@@ -8,7 +11,7 @@ const BjhSelect = ({items, value, onChange}: any) => {
           key={item.value}
           label={item.label}
           icon={item.icon}
-          active={value.indexOf(item.value) >= 0}
+          active={isActive(item.value)}
           onClick={() => onChange(item)}
         />
       )}

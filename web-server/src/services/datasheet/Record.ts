@@ -3,21 +3,21 @@ import {ContentType, request} from "@/utils";
 const prefix = 'record'
 
 export const RecordApi = (dstId: string) => ({
-  getPage: (query?: any, options: any = {}) =>
+  getPage: (data?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/${dstId}/page`,
-      method: 'GET',
-      query,
+      method: 'POST',
+      body: data,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,
       ...options,
     }),
-  getList: (query?: any, options: any = {}) =>
+  getList: (data?: any, options: any = {}) =>
     request<any>({
       path: `/${prefix}/${dstId}/list`,
-      method: 'GET',
-      query,
+      method: 'POST',
+      body: data,
       secure: true,
       type: ContentType.Json,
       skipErrorHandler: false,

@@ -1,11 +1,11 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Checkbox, theme} from "antd";
 import IconFont from "@/components/IconFont";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {ICellRendererParams} from "ag-grid-community";
 import styles from '../header/style.module.less';
 
-const RowIndexCell = (params: ICellRendererParams) => {
+const RowIndexCell = React.forwardRef((params: ICellRendererParams, ref) => {
   const {node, data} = params;
   const {useToken} = theme;
   const {token} = useToken();
@@ -39,6 +39,6 @@ const RowIndexCell = (params: ICellRendererParams) => {
       </div>
     </div>
   )
-}
+})
 
 export default RowIndexCell;

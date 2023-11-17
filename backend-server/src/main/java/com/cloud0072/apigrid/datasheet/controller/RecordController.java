@@ -4,6 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.cloud0072.apigrid.common.domain.AjaxResult;
 import com.cloud0072.apigrid.common.util.JSONUtils;
 import com.cloud0072.apigrid.datasheet.service.RecordService;
+import com.cloud0072.apigrid.datasheet.util.QueryUtils;
+import com.cloud0072.apigrid.datasheet.vo.DatasheetQuery;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,28 +25,18 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
-    private PageRequest getPageInfo(HttpServletRequest request) {
-        String pageSize = request.getParameter("pageSize");
-        String pageNum = request.getParameter("pageNum");
-        int size = StringUtils.isEmpty(pageSize) ? 20 : Integer.parseInt(pageSize);
-        int num = StringUtils.isEmpty(pageNum) ? 1 : Integer.parseInt(pageNum);
-        return PageRequest.of(num, size);
+    @PostMapping("/page")
+    public AjaxResult selectEntityPage(@PathVariable("dstId") String dstId, @RequestBody DatasheetQuery dq) {
+        var page = QueryUtils.getPageInfo(dq);
+        var query = QueryUtils.getQuery(dq);
+        var result = recordService.page(dstId, query, page, dq.getType());
+        return AjaxResult.success(result);
     }
 
-    @GetMapping("/page")
-    public AjaxResult selectEntityPage(@PathVariable("dstId") String dstId, HttpServletRequest request) {
-        var type = request.getParameter("type");
-        var query = new Query();
-//        query.addCriteria(Criteria.byExample(entity));
-        PageRequest page = getPageInfo(request);
-        return AjaxResult.success(recordService.page(dstId, query, page, type));
-    }
-
-    @GetMapping("/list")
-    public AjaxResult list(@PathVariable("dstId") String dstId, HttpServletRequest request) {
-        var type = request.getParameter("type");
-//        entity.setIsDeleted(0);
-        var result = recordService.list(dstId, null, type);
+    @PostMapping("/list")
+    public AjaxResult list(@PathVariable("dstId") String dstId, @RequestBody DatasheetQuery dq) {
+        var query = QueryUtils.getQuery(dq);
+        var result = recordService.list(dstId, query, dq.getType());
         return AjaxResult.success(result);
     }
 

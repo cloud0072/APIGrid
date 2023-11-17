@@ -3,12 +3,12 @@ import {Button, Checkbox, Form, Input, Popover, Select, Space} from "antd";
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {getNewId} from "@/utils/idUtils";
-import {FieldTypeOptions, View} from "@/components/BjhAgGrid";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import BjhDragItem from "@/components/BjhDragItem";
 import BjhDragList from "@/components/BjhDragList";
 import styles from './style.module.less'
 import {MacScrollbar} from "mac-scrollbar";
+import {FieldTypeOptions, View} from "@/components/BjhAgGrid/constants";
 
 const EditFieldPopover = (props: any) => {
   const {open, onChange, column, children} = props;

@@ -1,10 +1,11 @@
 import BjhAgGrid from '@/components/BjhAgGrid';
 import {BasePageContainer} from "@/components";
-import {useParams, useLoaderData} from "react-router-dom";
-import {useContext, useEffect, Suspense} from "react";
+import {useContext, useEffect} from "react";
 import {LayoutContext} from "@/layouts";
+import {useParams} from "react-router-dom";
 import {useQueryDatasheet} from "@/models/datasheetState";
-import {useQueryRecords} from "@/models/recordState";
+import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
+import {Spin} from "antd";
 
 /**
  * 加载流程
@@ -17,16 +18,33 @@ import {useQueryRecords} from "@/models/recordState";
  */
 const DatasheetPanel = () => {
   const {setMenuType} = useContext(LayoutContext);
+  const {nodeId} = useParams() as any;
+  const {data: dst, isFetched} = useQueryDatasheet(nodeId!);
+  const {dstId, view, setDstId, setDatasheet, setViewId, setCheckAll} = useGrid();
 
   useEffect(() => {
     setMenuType('datasheet')
   }, [])
 
+  useEffect(() => {
+    if (nodeId != dstId) {
+      setDstId(nodeId)
+      setCheckAll(false)
+    }
+  }, [nodeId])
+
+  useEffect(() => {
+    if (dst) {
+      console.log('init datasheet', dst)
+      const {views} = dst;
+      setViewId(views?.[0]?.id)
+      setDatasheet(dst)
+    }
+  }, [dst])
+
   return (
     <BasePageContainer>
-      {/*<Suspense fallback={<div>Loading...</div>}>*/}
-      <BjhAgGrid/>
-      {/*</Suspense>*/}
+      {isFetched && view ? <BjhAgGrid/> : <Spin spinning={true}/>}
     </BasePageContainer>
   );
 };

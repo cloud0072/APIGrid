@@ -4,7 +4,7 @@ import './style.less';
 
 const BjhButton = (props) => {
   return (
-    <div className={`bjh-btn bjh-btn-${props.size || 'middle'}`} {...props}>
+    <div {...props} className={`bjh-btn bjh-btn-${props.size || 'middle'}`}>
       {props.icon && <IconFont type={props.icon} className="bjh-btn-icon"/>}
       {props.text && <div className="bjh-btn-label">{props.text}</div>}
     </div>

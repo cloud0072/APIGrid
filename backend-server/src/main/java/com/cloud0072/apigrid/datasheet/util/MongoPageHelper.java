@@ -18,10 +18,10 @@ import java.util.Collections;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.cloud0072.apigrid.datasheet.util.QueryUtils.FIRST_PAGE_NUM;
+
 @Component
 public class MongoPageHelper {
-
-    public static final int FIRST_PAGE_NUM = 1;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -33,16 +33,17 @@ public class MongoPageHelper {
     public <T, R> Page<R> pageQuery(Query query, PageRequest page, Class<T> entityClass, String collectionName, Function<T, R> mapper) {
         var pageSize = page.getPageSize();
         var pageNum = page.getPageNumber();
+        var sort = page.getSort();
         //分页逻辑
         var total = mongoTemplate.count(query, collectionName);
-
         var pages = (int) Math.ceil(total / (double) pageSize);
         if (pageNum <= 0 || pageNum > pages) {
             pageNum = FIRST_PAGE_NUM;
         }
-        var criteria = new Criteria();
-        var sort = Sort.by(Collections.singletonList(new Order(Direction.ASC, Constants.ID)));
-        query = query.addCriteria(criteria).with(sort);
+        //排序如果为空则添加基础排序
+        var pageSort = !sort.isEmpty() ? sort :
+                Sort.by(Collections.singletonList(new Order(Direction.ASC, Constants.ID)));
+        query = query.addCriteria(Criteria.where("isDeleted").is(0)).with(pageSort);
         var skip = pageSize * (pageNum - 1);
         query.skip(skip).limit(pageSize);
 

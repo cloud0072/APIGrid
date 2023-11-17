@@ -1,12 +1,10 @@
 import {atom, useAtom} from "jotai";
-import {Column, View} from "@/components/BjhAgGrid";
-import {RowHeightItems} from "@/components/BjhAgGrid/toolbar";
-import {throttle} from "lodash-es";
+import {Column, Field, View, RowHeightItems} from "@/components/BjhAgGrid/constants";
+import {isEqual, throttle} from "lodash-es";
 import {DatasheetApi} from "@/services/datasheet/Datasheet";
 import {App} from "antd";
 
 const atomDatasheet = atom<any>({})
-const atomRowData = atom<any[]>([])
 const atomDstId = atom<string>('')
 const atomViewId = atom<string>('')
 const atomCheckedList = atom<any[]>([])
@@ -39,12 +37,10 @@ const atomRowHeight = atom<number>((get) => {
 })
 
 export const useGrid = () => {
-
   /**
    * 当前dst, 未持久化保存
    */
   const [datasheet, setDatasheet] = useAtom(atomDatasheet);
-  const [rowData, setRowData] = useAtom(atomRowData);
   const [dstId, setDstId] = useAtom(atomDstId);
   const [viewId, setViewId] = useAtom(atomViewId);
   const [indeterminate, setIndeterminate] = useAtom(atomIndeterminate);
@@ -57,15 +53,11 @@ export const useGrid = () => {
 
   const {message} = App.useApp()
 
-  const setFieldMap = (val: any) => {
-    setDatasheet((prev: any) => Object.assign({}, prev, {fieldMap: val}))
-  }
-  const setViews = (val: View[]) => {
-    setDatasheet((prev: any) => Object.assign({}, prev, {views: val}))
-  }
   const setView = (val: View) => {
-    const nVal = views.map((v: View) => v.id === val.id ? val : v);
-    setDatasheet((prev: any) => Object.assign({}, prev, {views: nVal}))
+    if (!isEqual(val, views.find(v => v.id == val.id))) {
+      const nVal = views.map((v: View) => v.id === val.id ? val : v);
+      setDatasheet((prev: any) => Object.assign({}, prev, {views: nVal}))
+    }
   }
 
   const setFieldVisible = (fieldId: string, hidden: boolean) => {
@@ -82,28 +74,36 @@ export const useGrid = () => {
     setView(Object.assign({}, view, {columns}));
   }
 
-  const handleSaveDst = throttle(function () {
+  const findFieldType = (fieldId: string) => {
+    if (!fieldId) {
+      return null;
+    }
+    const f = fieldMap?.[fieldId] as Field;
+    return f.type;
+  }
+
+  const handleSubmitDatasheet = throttle(() => {
     if (datasheet.dstId) {
       DatasheetApi.updateByDstId(datasheet).then((response: any) => {
-        return response.code == 200 ? message.success('保存成功!') : message.error('保存失败');
+        return response.code == 200 ? null : message.error('保存失败');
       })
     }
-  }, 2000, {trailing: false})
+  }, 1000, {trailing: false})
 
   return {
     dstId, setDstId,
-    rowData, setRowData,
     datasheet, setDatasheet,
     viewId, setViewId,
     indeterminate, setIndeterminate,
     checkAll, setCheckAll,
     checkedList, setCheckedList,
-    fieldMap, setFieldMap,
-    views, setViews,
-    view, setView,
     rowHeight,
+    fieldMap,
+    views,
+    view, setView,
     setFieldVisible,
     setFieldWidth,
-    handleSaveDst,
+    findFieldType,
+    handleSubmitDatasheet,
   }
 }
