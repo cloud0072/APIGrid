@@ -7,7 +7,7 @@ import {t} from "@/utils/i18n";
 import {MenuActionKey, MenuLabel} from "@/layouts/components/MenuNodePanel/MenuContext";
 import EditFieldPopover from "@/components/BjhAgGrid/header/EditFieldPopover";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
-import {View} from "@/components/BjhAgGrid";
+import {View} from "@/components/BjhAgGrid/constants";
 
 const items = [
   {

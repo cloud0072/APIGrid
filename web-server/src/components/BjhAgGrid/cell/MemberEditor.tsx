@@ -8,6 +8,7 @@ import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import SelectTag from "@/components/datasheet/SelectTag";
 import {useQueryUsers} from "@/models/unitState";
 import UnitTag from "@/components/datasheet/UnitTag";
+import ReactDOM from "react-dom";
 
 const MemberEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   const [editing, setEditing] = useState<boolean>(true);
@@ -29,6 +30,15 @@ const MemberEditor = React.forwardRef((props: ICellEditorParams, ref) => {
     value: opt.id,
     label: <UnitTag deletable={false} {...opt} title={opt.name}/>
   })), [options])
+
+  const focus = () => {
+    window.setTimeout(() => {
+      let container: any = ReactDOM.findDOMNode(refContainer.current);
+      if (container) {
+        container.click();
+      }
+    });
+  };
 
   const getValue = (): any => {
     return localValue.map((opt: any) => opt.id);
@@ -53,6 +63,7 @@ const MemberEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   }
 
   useEffect(() => {
+    focus()
     if (!props.value || props.value.length < 1) {
       return
     }

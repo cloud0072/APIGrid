@@ -2,6 +2,7 @@ package com.cloud0072.apigrid.datasheet.service.impl;
 
 import cn.hutool.json.JSONObject;
 import com.cloud0072.apigrid.common.constant.Constants;
+import com.cloud0072.apigrid.common.util.IdUtils;
 import com.cloud0072.apigrid.common.util.SecurityUtils;
 import com.cloud0072.apigrid.datasheet.domain.Datasheet;
 import com.cloud0072.apigrid.datasheet.service.DatasheetService;
@@ -112,6 +113,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     private JSONObject setCreateInfo(JSONObject json) {
+        json.set(Constants.REC_ID, json.containsKey(Constants.REC_ID) ? json.get(Constants.REC_ID) : IdUtils.getRecordId());
         json.set(Constants.CREATE_BY, SecurityUtils.getUserId().toString());
         json.set(Constants.CREATE_TIME, new Date());
         return json;

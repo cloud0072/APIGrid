@@ -4,6 +4,7 @@ import IconFont from "@/components/IconFont";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {ICellRendererParams} from "ag-grid-community";
 import styles from '../header/style.module.less';
+import {useEditModal} from "@/components/BjhAgGrid/hooks/useEditModal";
 
 const RowIndexCell = React.forwardRef((params: ICellRendererParams, ref) => {
   const {node, data} = params;
@@ -21,6 +22,11 @@ const RowIndexCell = React.forwardRef((params: ICellRendererParams, ref) => {
     setCheckedList(prev => checked ? prev.concat([data]) : prev.filter(i => i._id != data._id))
   }
 
+  const {handleEdit} = useEditModal();
+  const handleClick = () => {
+    handleEdit(data)
+  }
+
   // 全选控制行选
   useEffect(() => {
     if (!indeterminate) {
@@ -34,7 +40,7 @@ const RowIndexCell = React.forwardRef((params: ICellRendererParams, ref) => {
       <div className={styles.rowIndexCheckbox}>
         <Checkbox checked={checked} onChange={onChange}/>
       </div>
-      <div className={`${styles.rowIndexIcon} ${checked ?? styles.checked}`}>
+      <div className={`${styles.rowIndexIcon} ${checked ?? styles.checked}`} onClick={handleClick}>
         <IconFont type="adms-fangda" style={{color: token.colorTextSecondary}}/>
       </div>
     </div>

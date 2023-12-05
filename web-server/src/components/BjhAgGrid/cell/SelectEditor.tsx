@@ -6,6 +6,7 @@ import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import BjhDropdown from "@/components/BjhDropdown";
 import BjhSelect from "@/components/BjhDropdown/BjhSelect";
 import SelectTag from "@/components/datasheet/SelectTag";
+import ReactDOM from "react-dom";
 
 const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   const [editing, setEditing] = useState<boolean>(true);
@@ -25,6 +26,15 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
     value: opt.id,
     label: opt.name
   })), [options])
+
+  const focus = () => {
+    window.setTimeout(() => {
+      let container: any = ReactDOM.findDOMNode(refContainer.current);
+      if (container) {
+        container.click();
+      }
+    });
+  };
 
   const getValue = (): any => {
     return localValue.map((opt: any) => opt.id);
@@ -49,6 +59,7 @@ const SelectEditor = React.forwardRef((props: ICellEditorParams, ref) => {
   }
 
   useEffect(() => {
+    focus()
     if (!props.value || props.value.length < 1) {
       return
     }

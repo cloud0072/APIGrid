@@ -59,6 +59,15 @@ export type ColDef = {
   cellRenderer?: any
 }
 
+export type FileAsset = {
+  id?: string;
+  fileName?: string;
+  fileUrl?: string;
+  token?: string;
+  md5?: string;
+  mimeType: string;
+  size: number;
+}
 
 export const RowHeightItems = [
   {
@@ -223,7 +232,6 @@ export const addFieldCol: ColDef[] = [{
   suppressNavigable: true,
   cellClass: 'no-focus-border'
 }];
-
 
 export const dateFormatter = (date: any) => dayjs(date).format('YYYY-MM-DD');
 

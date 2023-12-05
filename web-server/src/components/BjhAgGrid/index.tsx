@@ -118,7 +118,7 @@ const BjhAgGrid = () => {
 
   const {loading, rowData, handleGetRecords} = useQueryRecords(dstId)
   useEffect(() => {
-    handleGetRecords(view?.filterInfo)
+    handleGetRecords()
   }, [])
 
   useEffect(() => {

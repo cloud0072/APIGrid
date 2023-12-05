@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useMemo} from "react";
 import dayjs from "dayjs";
 import styles from "@/components/BjhAgGrid/toolbar/style.module.less";
 import {Checkbox, DatePicker, Form, Input, InputNumber, Modal, Select} from "antd";
@@ -6,10 +6,25 @@ import {useEditModal} from "@/components/BjhAgGrid/hooks/useEditModal";
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
 import {findSuperType} from "@/components/BjhAgGrid/constants";
 import {useQueryUsers} from "@/models/unitState";
+import useFileAsset from "@/components/BjhAgGrid/hooks/useFileAsset";
+
+const FileUploadItem = (props: any) => {
+  const {
+    UploadRender,
+  } = useFileAsset({
+    value: props.defaultValue,
+    onChange: props.onChange,
+    hideAction: true
+  })
+
+  return (
+    <UploadRender />
+  )
+}
 
 const RecordEditModal = () => {
   const {view, fieldMap} = useGrid();
-  const {record, openModal, handleClose} = useEditModal();
+  const {record, setRecord, openModal, handleClose, handleOk} = useEditModal();
   const [form] = Form.useForm();
 
   const {data: users} = useQueryUsers();
@@ -21,15 +36,26 @@ const RecordEditModal = () => {
       .map(col => fieldMap[col.fieldId])
   }, [view, fieldMap]);
 
-  const handleOk = () => {
-    handleClose();
+  const isMulti = (fieldId: string) => {
+    return fieldMap[fieldId]?.property?.multi || false;
   }
 
-  useEffect(() => {
-    console.log('fieldMap', fieldMap)
-  }, [])
+  const selectItems = (fieldId: string) => {
+    return fieldMap[fieldId]?.property?.options.map((opt: any) => ({
+      value: opt.id,
+      label: opt.name
+    })) || []
+  }
+
   return (
-    <Modal title={record._id ? '修改' : '创建'} open={openModal} onOk={handleOk} onCancel={handleClose}>
+    <Modal
+      title={record?._id ? '修改' : '创建'}
+      open={openModal}
+      onOk={handleOk}
+      onCancel={handleClose}
+      maskClosable={false}
+      width={800}
+    >
       <Form layout={'vertical'} form={form}>
         {fields.map((f, i) => {
           const {id: fieldId, name, type: fieldType} = f;
@@ -38,8 +64,13 @@ const RecordEditModal = () => {
 
           const onChange = (e: any) => {
             const v = e?.target?.value || e;
-            record[fieldId] = type == 'date' ? v?.format('YYYY-MM-DD') : v instanceof Array ? v.join(',') : v;
+            setRecord((r: any) => {
+              // 不需要转换json格式 v instanceof Array ? v.join(',') :
+              const nVal = type == 'date' ? v?.format('YYYY-MM-DD') : v;
+              return Object.assign(r, {[fieldId]: nVal});
+            })
           };
+          // 成员/选择
           const InputValue = () => {
             switch (fieldType) {
               case 1:
@@ -73,30 +104,30 @@ const RecordEditModal = () => {
                 />
               case 4:
                 // 选择
-                const multi = fieldMap[fieldId]?.property?.multi || false;
-                const items = fieldMap[fieldId]?.property?.options.map((opt: any) => ({
-                  value: opt.id,
-                  label: opt.name
-                })) || []
                 return <Select
                   className={styles.formInput}
-                  defaultValue={value?.split(',')}
+                  defaultValue={value}
                   onChange={onChange}
-                  mode={multi ? 'multiple' : undefined}
-                  options={items}
+                  options={selectItems(fieldId)}
+                  mode={isMulti(fieldId) ? 'multiple' : undefined}
                 />
               case 5 :
                 return (
-                  <div>文件上传</div>
+                  <FileUploadItem
+                    className={styles.formInput}
+                    defaultValue={value}
+                    onChange={onChange}
+                  />
                 )
               case 6 :
               case 23 :
               case 24 :
                 return <Select
                   className={styles.formInput}
-                  defaultValue={value?.split(',')}
+                  defaultValue={value}
                   onChange={onChange}
                   options={userItems}
+                  mode={isMulti(fieldId) ? 'multiple' : undefined}
                   disabled={fieldType == 23 || fieldType == 24}
                 />
               case 11 :

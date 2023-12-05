@@ -2,8 +2,10 @@ import {Checkbox} from "antd";
 import React from "react";
 import styles from '../header/style.module.less';
 import {useGrid} from "@/components/BjhAgGrid/hooks/useGrid";
+import {useEditModal} from "@/components/BjhAgGrid/hooks/useEditModal";
+import {IHeaderParams} from "ag-grid-community";
 
-const RowIndexHeader = (params: any) => {
+const RowIndexHeader = (params: IHeaderParams ) => {
   const {api} = params;
   const {indeterminate, setIndeterminate, checkAll, setCheckAll} = useGrid();
 

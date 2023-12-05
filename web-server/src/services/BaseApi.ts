@@ -31,7 +31,7 @@ export const getBaseApi = (prefix: string) => ({
     }),
   insert: (data: any) =>
     request<any>({
-      path: `/${prefix}/`,
+      path: `/${prefix}`,
       method: 'POST',
       body: data,
       secure: true,
@@ -40,7 +40,7 @@ export const getBaseApi = (prefix: string) => ({
     }),
   updateById: (data: any) =>
     request<any>({
-      path: `/${prefix}/`,
+      path: `/${prefix}`,
       method: 'PUT',
       body: data,
       secure: true,

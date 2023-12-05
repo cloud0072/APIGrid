@@ -10,7 +10,7 @@ const BjhDropdown = (props: any) => {
         <div className={styles.bjhDropdown} style={{width: width || '208px'}}>
           {titleRender && (
             <div className={styles.bjhDropdownHead}>
-              {titleRender()}
+              {titleRender}
             </div>
           )}
           <div className={styles.bjhDropdownBody}>
